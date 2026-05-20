@@ -66,7 +66,8 @@ For example, `EnemyKilledEventHandler` injects `AudioService`, `VfxService`, etc
 
 ## Code Standards
 
-- Use modern C# features (file-scoped namespaces, pattern matching, async/await).
+- Use standard block-scoped namespaces since file-scoped namespaces are not supported.
+- Use pattern matching, async/await where possible.
 - Avoid `Debug.Log` loops, rely on proper logging or breakpoints.
 - Always use `UniTask` instead of Coroutines.
 - Models and logic must be unit-testable outside of Unity.
