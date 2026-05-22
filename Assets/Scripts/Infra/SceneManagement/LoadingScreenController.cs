@@ -5,27 +5,30 @@ namespace Infra.SceneManagement
     using UnityEngine.UIElements;
     using Cysharp.Threading.Tasks;
 
+    [RequireComponent(typeof(UIDocument))]
     public class LoadingScreenController : MonoBehaviour
     {
-        [SerializeField] private UIDocument _uiDocument;
-        private VisualElement _rootElement;
+        private UIDocument _uiDocument;
 
         private void Awake()
         {
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
-            if (_uiDocument != null)
+
+            _uiDocument = GetComponent<UIDocument>();
+
+            if (_uiDocument != null && _uiDocument.rootVisualElement != null)
             {
-                _rootElement = _uiDocument.rootVisualElement;
-                if (_rootElement != null)
-                {
-                    _rootElement.style.display = DisplayStyle.None;
-                }
+                _uiDocument.rootVisualElement.style.display = DisplayStyle.None;
             }
         }
 
         public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
         {
-            if (_rootElement != null) _rootElement.style.display = DisplayStyle.Flex;
+            if (_uiDocument != null && _uiDocument.rootVisualElement != null)
+            {
+                _uiDocument.rootVisualElement.style.display = DisplayStyle.Flex;
+            }
 
             // Optional future step: Trigger fade-in here
 
@@ -33,7 +36,10 @@ namespace Infra.SceneManagement
 
             // Optional future step: Trigger fade-out here
 
-            if (_rootElement != null) _rootElement.style.display = DisplayStyle.None;
+            if (_uiDocument != null && _uiDocument.rootVisualElement != null)
+            {
+                _uiDocument.rootVisualElement.style.display = DisplayStyle.None;
+            }
         }
 
         public async UniTask UnloadSceneAsync(string sceneName)
