@@ -7,9 +7,9 @@ namespace Boot
 
     public class BootManager : IAsyncStartable
     {
-        private readonly LoadingScreenController _loadingScreen;
+        private readonly SceneLoader _loadingScreen;
 
-        public BootManager(LoadingScreenController loadingScreen)
+        public BootManager(SceneLoader loadingScreen)
         {
             _loadingScreen = loadingScreen;
         }

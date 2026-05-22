@@ -9,7 +9,7 @@ namespace Boot
 
     public class RootLifetimeScope : LifetimeScope
     {
-        [SerializeField] private LoadingScreenController _loadingScreenPrefab;
+        [SerializeField] private SceneLoader _loadingScreenPrefab;
 
         protected override void Configure(IContainerBuilder builder)
         {

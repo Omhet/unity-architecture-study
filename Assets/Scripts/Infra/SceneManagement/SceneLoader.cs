@@ -6,7 +6,7 @@ namespace Infra.SceneManagement
     using Cysharp.Threading.Tasks;
 
     [RequireComponent(typeof(UIDocument))]
-    public class LoadingScreenController : MonoBehaviour
+    public class SceneLoader : MonoBehaviour
     {
         private UIDocument _uiDocument;
 
