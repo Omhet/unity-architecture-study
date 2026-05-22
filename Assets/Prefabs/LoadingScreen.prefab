@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e595a8687b214d73a790fcf6832dbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Infra.SceneManagement.LoadingScreenController
-  _uiDocument: {fileID: 0}
+  _uiDocument: {fileID: 5933758513051818054}
 --- !u!114 &5933758513051818054
 MonoBehaviour:
   m_ObjectHideFlags: 0
