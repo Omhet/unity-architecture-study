@@ -1,0 +1,30 @@
+.menu-container {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: #2b2b2b;
+}
+
+.title-text {
+    color: white;
+    font-size: 60px;
+    -unity-font-style: bold;
+    margin-bottom: 40px;
+}
+
+.play-button {
+    font-size: 32px;
+    padding: 20px 40px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+    -unity-font-style: bold;
+}
+
+.play-button:hover {
+    background-color: #45a049;
+}
+
+.play-button:active {
+    background-color: #3d8b40;
+}
