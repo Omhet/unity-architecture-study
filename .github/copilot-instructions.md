@@ -7,7 +7,7 @@ This project follows a strict, highly decoupled Modern Unity Architecture stack.
 - **Dependency Injection:** VContainer
 - **Asynchronous Flow:** UniTask
 - **Reactive State (Rx):** R3 (State management & local bindings)
-- **Event Bus:** MessagePipe (Decoupled Domain Event broadcasting)
+- **Event Bus & Command Sourcing:** VitalRouter (Decoupled Domain Event broadcasting and Intent logging via zero-allocation structs)
 - **Animations/Tweens:** PrimeTween, Animancer
 - **Data & Saving:** Addressables (Asset Loading), Newtonsoft.Json (Human-readable Saves Configs)
 - **Input:** Unity New Input System
@@ -22,41 +22,43 @@ Always use file-scoped namespaces following the `Layer.Feature` convention. Neve
 - **`View`:** MonoBehaviours, UI Toolkit, Audio, VFX.
 - **`Flow`:** The Orchestration layer linking inputs, executing core logic, and handling domain events.
 
-## 3. Structural Components & Flow Execution
+## 3. Structural Components, Roles & Definitions
 
-### A. The Models (State)
+### Banned Terms (Do not use these in architecture)
 
-- Pure data containers living in the `Core` layer using R3.
-- Store primitive data via `ReactiveProperty<T>` and collections via `ObservableList<T>`.
-- Expose to `View` layers securely via `IReadOnlyReactiveProperty<T>`.
+- 🚫 **`Controller`**: Too vague. Specify if it is a Translator or a Handler.
+- 🚫 **`Presenter`**: Implies tight coupling to a View. We split this into View -> Translator -> Handler.
+- 🚫 **`Orchestrator` / `Coordinator`**: Use specific Handlers.
 
-### B. Core Services (Logic & Math)
+### A. The Core Domain (Pure C# - The "Brain")
 
-- Pure C# classes taking `Models` via VContainer constructor injection.
-- Execute validation and business rules, then strictly update the Model's Rx State directly.
-- **Strict Rule:** Core logic does not push events, play sounds, or format UI text. It only modifies state.
+- **`Model`**: A pure data container holding reactive state (`R3.ReactiveProperty`). It has NO game logic.
+- **`Service`**: Pure C# business rules. Takes raw data, does math or validation, and strictly updates the Model's Rx State directly.
+- **`DTO`** (Data Transfer Object): A dumb data structure used only for saving to disk or loading JSON configs. No observables.
 
-### C. Views & UI (Presentation)
+### B. The Presentation Layer (Unity MonoBehaviours - The "Body")
 
-- `MonoBehaviours` that inject a Read-Only Model.
-- They `.Subscribe()` directly to the model's properties (R3) and update specific visual elements dynamically when the data changes.
-- Do not write logic, math, or damage calculations here.
+- **`View`**: A strict, passive visual component. It takes data and shows it, or takes a physical user click and emits an `Observable<Vector2>`. It has ZERO game logic. Always extracts a pure C# Interface (e.g., `IMainMenuView`) to allow headless unit testing of the Flow layer. Views are registered _into_ VContainer via `builder.RegisterComponent(viewBase).AsImplementedInterfaces()`.
 
-### D. The Flow Layer (Input & Event Handling)
+### C. The Flow Layer (Event Handling - The "Nerves")
 
-The "glue" that connects isolated systems together.
+The "glue" that connects isolated systems together using VitalRouter.
 
-#### 1. Input-to-Logic Flow
+- **`Translator`**: A pure C# bridge class. Its ONLY job is to subscribe to a `View`'s generic UI signal (like `R3.Observable`) and translate it into a globally meaningful `VitalRouter.ICommand` (an "Intent"). (e.g., `MenuInputTranslator`).
+- **`Handler`**: Replaces the "Controller". A Handler uses source-generator declarative routing (partial class with `[Routes]`). It listens to commands and decides what to do: call a Service to do logic, play a sound, etc. (e.g., `SceneFlowHandler` handles `PlayIntentCommand`).
 
-- `Infra.InputReader` reads raw Gamepad/Mouse data.
-- A Controller (e.g., `Flow.Combat.PlayerInputHandler`) listens to the infrastructure input.
-- It calls domain services (e.g., `DamageService.ApplyDamage()`) directly via Dependency Injection.
-- It evaluates the result and publishes a semantic Domain Event via MessagePipe (e.g., `_publisher.Publish(new EnemyKilledEvent())`).
+#### 1. Input-to-Logic Flow (Command Sourcing)
 
-#### 2. The Pragmatic Event Handler Pattern (One Handler Per Event)
+- UI `View` emits generic R3 event (`Observable<Unit>`).
+- `Translator` maps this to a VitalRouter `ICommand` struct representing user _intent_.
+- A `Handler` catches the command, calling domain `Service` logic.
+- Upon success, the `Handler` or `Service` fires a new `ICommand` domain event (e.g., `CoinEarnedCommand`).
 
-Use a single, unified handler per domain event in the `Flow` layer to manage side effects. This prioritizes cohesion and readability.
-For example, `EnemyKilledEventHandler` injects `AudioService`, `VfxService`, etc., subscribes to `EnemyKilledEvent`, and sequentially calls `_audio.Play()`, `_vfx.Spawn()`, etc.
+#### 2. VitalRouter Infrastructure
+
+- **`Router`**: The global message bus.
+- **`Route`**: The destination method marked with `[Route]` inside a Handler.
+- **`Interceptor`**: Middleware filters (e.g., `CommandLoggingInterceptor`) to catch commands globally and log them for End-to-End Test Replays.
 
 ## 4. Booting and Scene Flow Structure (Additive Loading)
 
