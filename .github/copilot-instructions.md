@@ -30,6 +30,8 @@ Always use file-scoped namespaces following the `Layer.Feature` convention. Neve
 - 🚫 **`Presenter`**: Implies tight coupling to a View. We use View -> Handler.
 - 🚫 **`Orchestrator` / `Coordinator`**: Use specific Handlers.
 - 🚫 **`Translator`**: Boilerplate. Views should directly publish VitalRouter intent commands.
+- 🚫 **`Manager`**: Vague God Object smell. Use action-based names for Facades (e.g., `AudioPlayer`, `VfxSpawner`, `SceneLoader`).
+- 🚫 **`System`**: Do not use for presentation logic. Only acceptable for low-level I/O infra (e.g., `SaveSystem`).
 
 ### A. The Core Domain (Pure C# - The "Brain")
 
@@ -45,7 +47,7 @@ Always use file-scoped namespaces following the `Layer.Feature` convention. Neve
 
 The "glue" that connects isolated systems together using VitalRouter.
 
-- **`Handler`**: Replaces the "Controller". A Handler uses source-generator declarative routing (partial class with `[Routes]`). It listens to commands from Views or Services and decides what to do: call a Service to do logic, play a sound, etc. (e.g., `SceneFlowHandler` handles `PlayIntentCommand`).
+- **`Handler`**: Replaces the "Controller". A Handler uses source-generator declarative routing (partial class with `[Routes]`). It listens to commands from Views or Services and decides what to do: call a Service to do logic, play a sound, etc. (e.g., `SceneFlowHandler` handles `PlayIntentCommand`). Handlers are grouped by **Technical System** or **Feature** (e.g., `AudioFlowHandler`, `VfxFlowHandler`, `EconomyFlowHandler`) to keep dependencies strictly isolated. Do not name handlers after a specific event (e.g., `CoinEarnedEventHandler` 🚫).
 
 #### 1. Input-to-Logic Flow (Command Sourcing)
 
