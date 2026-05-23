@@ -23,7 +23,6 @@ namespace Flow.Menu
         {
             _subscription = _view.OnPlayClicked.Subscribe(_ =>
             {
-                // Move from Menu to Gameplay scene
                 _sceneLoader.LoadSceneAsync("Game").Forget();
             });
         }
