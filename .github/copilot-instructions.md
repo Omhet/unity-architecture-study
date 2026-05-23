@@ -26,9 +26,10 @@ Always use file-scoped namespaces following the `Layer.Feature` convention. Neve
 
 ### Banned Terms (Do not use these in architecture)
 
-- 🚫 **`Controller`**: Too vague. Specify if it is a Translator or a Handler.
-- 🚫 **`Presenter`**: Implies tight coupling to a View. We split this into View -> Translator -> Handler.
+- 🚫 **`Controller`**: Too vague. Use specific Route Handlers.
+- 🚫 **`Presenter`**: Implies tight coupling to a View. We use View -> Handler.
 - 🚫 **`Orchestrator` / `Coordinator`**: Use specific Handlers.
+- 🚫 **`Translator`**: Boilerplate. Views should directly publish VitalRouter intent commands.
 
 ### A. The Core Domain (Pure C# - The "Brain")
 
@@ -38,20 +39,18 @@ Always use file-scoped namespaces following the `Layer.Feature` convention. Neve
 
 ### B. The Presentation Layer (Unity MonoBehaviours - The "Body")
 
-- **`View`**: A strict, passive visual component. It takes data and shows it, or takes a physical user click and emits an `Observable<Vector2>`. It has ZERO game logic. Always extracts a pure C# Interface (e.g., `IMainMenuView`) to allow headless unit testing of the Flow layer. Views are registered _into_ VContainer via `builder.RegisterComponent(viewBase).AsImplementedInterfaces()`.
+- **`View`**: A strict visual component. It takes data and shows it, or detects a physical user interaction and directly publishes a global `VitalRouter.ICommand` (an "Intent"). It has ZERO core game logic. Views are registered _into_ VContainer via `builder.RegisterComponent(viewBase)`.
 
 ### C. The Flow Layer (Event Handling - The "Nerves")
 
 The "glue" that connects isolated systems together using VitalRouter.
 
-- **`Translator`**: A pure C# bridge class. Its ONLY job is to subscribe to a `View`'s generic UI signal (like `R3.Observable`) and translate it into a globally meaningful `VitalRouter.ICommand` (an "Intent"). (e.g., `MenuInputTranslator`).
-- **`Handler`**: Replaces the "Controller". A Handler uses source-generator declarative routing (partial class with `[Routes]`). It listens to commands and decides what to do: call a Service to do logic, play a sound, etc. (e.g., `SceneFlowHandler` handles `PlayIntentCommand`).
+- **`Handler`**: Replaces the "Controller". A Handler uses source-generator declarative routing (partial class with `[Routes]`). It listens to commands from Views or Services and decides what to do: call a Service to do logic, play a sound, etc. (e.g., `SceneFlowHandler` handles `PlayIntentCommand`).
 
 #### 1. Input-to-Logic Flow (Command Sourcing)
 
-- UI `View` emits generic R3 event (`Observable<Unit>`).
-- `Translator` maps this to a VitalRouter `ICommand` struct representing user _intent_.
-- A `Handler` catches the command, calling domain `Service` logic.
+- UI `View` detects interaction and directly publishes a VitalRouter `ICommand` struct representing user _intent_ (e.g. `PlayIntentCommand`).
+- A `Handler` catches the intent command, calling domain `Service` logic.
 - Upon success, the `Handler` or `Service` fires a new `ICommand` domain event (e.g., `CoinEarnedCommand`).
 
 #### 2. VitalRouter Infrastructure
