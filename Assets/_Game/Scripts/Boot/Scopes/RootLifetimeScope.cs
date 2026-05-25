@@ -1,6 +1,7 @@
-namespace App.Root.View
+namespace App.Boot
 {
-    using App.Root.Flow;
+    using App.Infra.Saving;
+    using App.Infra.SceneManagement;
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;

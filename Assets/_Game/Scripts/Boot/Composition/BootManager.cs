@@ -1,7 +1,7 @@
-namespace App.Root.Flow
+namespace App.Boot
 {
     using System.Threading;
-    using App.Root.View;
+    using App.Infra.SceneManagement;
     using VContainer.Unity;
     using Cysharp.Threading.Tasks;
 

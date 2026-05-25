@@ -1,6 +1,7 @@
-namespace App.Menu.View
+namespace App.Boot
 {
     using App.Menu.Flow;
+    using App.Menu.View;
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;

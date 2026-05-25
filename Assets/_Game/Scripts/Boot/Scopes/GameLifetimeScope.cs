@@ -1,4 +1,4 @@
-namespace App.Root.View
+namespace App.Boot
 {
     using VContainer;
     using VContainer.Unity;

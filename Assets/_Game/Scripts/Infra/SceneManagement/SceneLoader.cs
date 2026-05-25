@@ -1,4 +1,4 @@
-namespace App.Root.View
+namespace App.Infra.SceneManagement
 {
     using UnityEngine;
     using UnityEngine.SceneManagement;

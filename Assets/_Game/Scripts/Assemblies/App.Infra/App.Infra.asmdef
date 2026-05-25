@@ -1,13 +1,9 @@
 {
-    "name": "App.Flow",
+    "name": "App.Infra",
     "rootNamespace": "",
     "references": [
         "App.Core",
-        "App.View",
-        "App.Infra",
-        "VContainer",
-        "UniTask",
-        "R3.Unity"
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

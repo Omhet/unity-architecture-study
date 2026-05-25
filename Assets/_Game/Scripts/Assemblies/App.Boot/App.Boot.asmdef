@@ -1,13 +1,15 @@
 {
-    "name": "App.Flow",
+    "name": "App.Boot",
     "rootNamespace": "",
     "references": [
         "App.Core",
         "App.View",
+        "App.Flow",
         "App.Infra",
         "VContainer",
-        "UniTask",
-        "R3.Unity"
+        "MessagePipe",
+        "MessagePipe.VContainer",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
