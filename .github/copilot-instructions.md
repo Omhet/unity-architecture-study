@@ -64,6 +64,15 @@ Core architectural layer definitions:
 - `App.Flow` -> may depend on `App.Core`, `App.View`, `App.Infra`.
 - `App.Boot` -> may depend on `App.Core`, `App.View`, `App.Flow`, `App.Infra`.
 
+## Shared Guideline
+
+Add a `Shared` area only for stable, cross-feature artifacts that have no single feature owner.
+
+- Folder: `Assets/_Game/Scripts/Shared/`
+- Typical contents: cross-feature `ICommand`/event contracts, value objects, small pure helpers, domain-wide enums, and interface abstractions (logging, clock, id generator).
+- Avoid: concrete SDK adapters, feature-specific logic, and presentation implementations.
+- Rule of thumb: extract to `Shared` only when 2–3 features depend on the item.
+
 ## 3. Structural Components, Roles & Definitions
 
 ### Banned Terms (Do not use these in architecture)
