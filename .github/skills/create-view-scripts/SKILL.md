@@ -1,17 +1,16 @@
 ---
 name: create-view-scripts
-description: 'Use when: The user wants to create or scaffold UI Toolkit View scripts for a feature using code-first layout and USS-based styling in the Modern Unity Clean Architecture.'
+description: 'Use when: The user wants to create or scaffold general View scripts for a feature, independent of a specific presentation framework.'
 user-invocable: true
 ---
 
 # Skill: Create View Scripts
 
-This skill scaffolds View-layer scripts for a feature under Vertical Slicing, with optional USS styling.
+This skill scaffolds general View-layer scripts for a feature under Vertical Slicing.
 
 ## Target Paths
 
 - C# View scripts: `Assets/_Game/Scripts/Features/[FeatureName]/View/`
-- Feature styles: `Assets/_Game/UI/[FeatureName]/`
 
 ## Guardrails (Hard Rules)
 
@@ -19,10 +18,9 @@ This skill scaffolds View-layer scripts for a feature under Vertical Slicing, wi
     - Allowed: Build layout, bind read-only model state, publish intent commands.
     - Forbidden: Domain/business logic, save/load, scene loading decisions.
 2. Views publish `ICommand` intents; they never call domain services directly.
-3. Use class-based styling via USS (`AddToClassList`) rather than inline styles whenever possible.
-4. Stylesheet reference is optional; layout must render correctly even when no stylesheet is assigned.
-5. If assigned, attach a single scene-referenced stylesheet.
-6. View lifecycle must cleanly unsubscribe/dispose bindings.
+3. Keep View implementation framework-focused and move all business decisions to Flow/Core layers.
+4. Keep bindings and subscriptions deterministic and disposable.
+5. View lifecycle must cleanly unsubscribe/dispose bindings.
 
 ## Standard View Script Structure
 
@@ -36,20 +34,11 @@ Use the following method order for consistency:
 6. `WireEvents()`
 7. `DisposeBindings()`
 
-## Style Attachment Pattern (Code-First)
-
-```csharp
-private void AttachStyles(VisualElement root)
-{
-   if (_styleSheet != null) root.styleSheets.Add(_styleSheet);
-}
-```
-
 ## Outputs
 
 When requested, generate:
 
 1. One or more View scripts under `Assets/_Game/Scripts/Features/[FeatureName]/View/`.
-2. An optional feature USS under `Assets/_Game/UI/[FeatureName]/`.
-3. Optional constants for element/class names to avoid magic strings.
-4. Brief user summary confirming created files and optional stylesheet hookup.
+2. Optional constants for element/class names to avoid magic strings.
+3. Brief user summary confirming created files and wiring points for commands/state.
+4. If a framework-specific View is requested (e.g., UI Toolkit), delegate to the matching specialized skill.
