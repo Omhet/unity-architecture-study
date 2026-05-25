@@ -18,13 +18,15 @@ All game specific code resides in `Assets/_Game/` to maintain clean separation f
 
 We use **Feature-First (Vertical Slicing) with Layer-First Compilation (`asmref`)**.
 
-- **Master Assemblies:** Stored in `Assets/_Game/Assemblies/` (`App.Core.asmdef`, `App.View.asmdef`, `App.Flow.asmdef`).
-- **Feature Folders:** `Assets/_Game/Features/[FeatureName]/`
+- **Master Assemblies:** Stored in `Assets/_Game/Scripts/Assemblies/` (`App.Core.asmdef`, `App.View.asmdef`, `App.Flow.asmdef`).
+- **Feature Folders:** `Assets/_Game/Scripts/Features/[FeatureName]/`
     - `/Core`: Domain logic (Uses `.asmref` pointing to `App.Core`).
     - `/View`: MonoBehaviours (Uses `.asmref` pointing to `App.View`).
     - `/Flow`: Handlers/Event Routing (Uses `.asmref` pointing to `App.Flow`).
 
-Always use standard block-scoped namespaces matching the directory structure (e.g. `namespace Economy.Core { }`). Never include the company name.
+- **UI Assets:** Stored in `Assets/_Game/UI/[FeatureName]/` (UXML, USS).
+
+Always use standard block-scoped namespaces matching the directory structure (e.g. `namespace App.Economy.Core { }`). Never include the company name.
 
 Core architectural layer definitions:
 

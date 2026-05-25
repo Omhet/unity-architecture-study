@@ -35,7 +35,7 @@ namespace App.Editor
                 return;
             }
 
-            string basePath = $"Assets/_Game/Features/{featureName}";
+            string basePath = $"Assets/_Game/Scripts/Features/{featureName}";
 
             // Map of subfolder to target asmdef reference
             var layerMap = new (string folder, string refName)[]
