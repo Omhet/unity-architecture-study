@@ -1,6 +1,6 @@
 using ObservableCollections;
 
-namespace App.Clicker.Core
+namespace App.Shop.Core
 {
     public class ShopModel
     {

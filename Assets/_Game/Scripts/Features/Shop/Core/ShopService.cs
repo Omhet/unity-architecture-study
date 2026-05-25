@@ -1,7 +1,8 @@
 using App.Economy.Core;
+using App.Inventory.Core;
 using System.Linq;
 
-namespace App.Clicker.Core
+namespace App.Shop.Core
 {
     public class ShopService
     {

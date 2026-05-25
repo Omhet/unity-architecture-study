@@ -1,4 +1,4 @@
-namespace App.Clicker.Core
+namespace App.Shop.Core
 {
     // Pure DTO for Addressables/JSON parsing
     [System.Serializable]
