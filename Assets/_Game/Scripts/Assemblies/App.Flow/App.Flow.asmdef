@@ -3,7 +3,10 @@
     "rootNamespace": "",
     "references": [
         "App.Core",
-        "App.View"
+        "App.View",
+        "VContainer",
+        "UniTask",
+        "R3.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

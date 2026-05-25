@@ -2,7 +2,12 @@
     "name": "App.View",
     "rootNamespace": "",
     "references": [
-        "App.Core"
+        "App.Core",
+        "VContainer",
+        "MessagePipe",
+        "MessagePipe.VContainer",
+        "UniTask",
+        "R3.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
