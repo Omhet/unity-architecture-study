@@ -14,7 +14,7 @@ namespace App.Boot
         {
             builder.RegisterComponent(_mainMenuView);
 
-            builder.RegisterEntryPoint<MenuController>();
+            builder.RegisterEntryPoint<MenuEntryPoint>();
         }
     }
 }
