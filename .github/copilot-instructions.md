@@ -18,11 +18,20 @@ All game specific code resides in `Assets/_Game/` to maintain clean separation f
 
 We use **Feature-First (Vertical Slicing) with Layer-First Compilation (`asmref`)**.
 
-- **Master Assemblies:** Stored in `Assets/_Game/Scripts/Assemblies/` (`App.Core.asmdef`, `App.View.asmdef`, `App.Flow.asmdef`).
+- **Master Assemblies:** Stored in `Assets/_Game/Scripts/Assemblies/` (one `asmdef` per folder):
+    - `App.Core`
+    - `App.View`
+    - `App.Flow`
+    - `App.Infra`
+    - `App.Boot`
 - **Feature Folders:** `Assets/_Game/Scripts/Features/[FeatureName]/`
     - `/Core`: Domain logic (Uses `.asmref` pointing to `App.Core`).
     - `/View`: MonoBehaviours (Uses `.asmref` pointing to `App.View`).
     - `/Flow`: Handlers/Event Routing (Uses `.asmref` pointing to `App.Flow`).
+
+- **Boot Folders:** `Assets/_Game/Scripts/Boot/` (DI composition, LifetimeScopes, startup wiring).
+- **Infra Folders:** `Assets/_Game/Scripts/Infra/` (engine/SDK/data adapters).
+- **Systems Folders:** `Assets/_Game/Scripts/Systems/` (cross-feature presentation modules like Audio/VFX/Notifications).
 
 - **UI Assets:** Stored in `Assets/_Game/UI/[FeatureName]/` (UXML, USS).
 
@@ -35,6 +44,25 @@ Core architectural layer definitions:
 - **`Infra`:** I/O wrapper systems (Saving, Asset Loading, raw Unity Input reading).
 - **`View`:** MonoBehaviours, UI Toolkit, Audio, VFX.
 - **`Flow`:** The Orchestration layer linking inputs, executing core logic, and handling domain events.
+
+### Concise Rules of Thumb
+
+1. Put gameplay rules/state in `Features/*/Core|Flow|View`.
+2. Put DI wiring and LifetimeScopes in `Boot` (never in feature slices).
+3. Put external SDKs, save/load, telemetry, platform services in `Infra`.
+4. Put reusable cross-feature visuals (audio/vfx/popups) in `Systems`.
+5. Use folder-aligned namespaces (`App.<Area>.<Layer>`), block-scoped only.
+6. Keep one `asmdef` per folder and one directional dependency graph.
+7. `App.Boot` is composition root only; no other assembly references it.
+8. If a class references Flow types, it must compile in `App.Flow` or `App.Boot`, not `App.View`.
+
+### Assembly Dependency Rules (Practical)
+
+- `App.Core` -> no project-layer dependencies.
+- `App.Infra` -> may depend on `App.Core`.
+- `App.View` -> may depend on `App.Core`.
+- `App.Flow` -> may depend on `App.Core`, `App.View`, `App.Infra`.
+- `App.Boot` -> may depend on `App.Core`, `App.View`, `App.Flow`, `App.Infra`.
 
 ## 3. Structural Components, Roles & Definitions
 
