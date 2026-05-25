@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:Style src="MainMenuStyles.uss" />
-    <ui:VisualElement class="menu-container">
-        <ui:Label text="CLICKER TOY" class="title-text" />
-        <ui:Button name="play-button" text="PLAY GAME" class="play-button" />
-    </ui:VisualElement>
-</ui:UXML>

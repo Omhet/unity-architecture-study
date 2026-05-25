@@ -8,6 +8,8 @@ namespace App.Infra.SceneManagement
     [RequireComponent(typeof(UIDocument))]
     public class SceneLoader : MonoBehaviour
     {
+        [SerializeField] private StyleSheet _loadingStyleSheet;
+
         private UIDocument _uiDocument;
 
         private void Awake()
@@ -19,7 +21,29 @@ namespace App.Infra.SceneManagement
 
             if (_uiDocument != null && _uiDocument.rootVisualElement != null)
             {
-                _uiDocument.rootVisualElement.style.display = DisplayStyle.None;
+                var root = _uiDocument.rootVisualElement;
+
+                // If no loading container exists (no UXML), construct it in code
+                var existing = root.Q("loading-container");
+                if (existing == null)
+                {
+                    root.Clear();
+                    if (_loadingStyleSheet != null)
+                    {
+                        root.styleSheets.Add(_loadingStyleSheet);
+                    }
+
+                    var loadingContainer = new VisualElement { name = "loading-container" };
+                    loadingContainer.AddToClassList("loading-container");
+
+                    var loadingLabel = new Label("LOADING...") { name = "loading-text" };
+                    loadingLabel.AddToClassList("loading-text");
+
+                    loadingContainer.Add(loadingLabel);
+                    root.Add(loadingContainer);
+                }
+
+                root.style.display = DisplayStyle.None;
             }
         }
 
