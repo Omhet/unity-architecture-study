@@ -12,9 +12,21 @@ This project follows a strict, highly decoupled Modern Unity Architecture stack.
 - **Data & Saving:** Addressables (Asset Loading), Newtonsoft.Json (Human-readable Saves Configs)
 - **Input:** Unity New Input System
 
-## 2. Project Structure & Namespaces (`Layer.Feature`)
+## 2. Project Structure & Namespaces (`App.Feature.Layer`)
 
-Always use file-scoped namespaces following the `Layer.Feature` convention. Never include the company or project name unless specifically requested.
+All game specific code resides in `Assets/_Game/` to maintain clean separation from third-party plugins.
+
+We use **Feature-First (Vertical Slicing) with Layer-First Compilation (`asmref`)**.
+
+- **Master Assemblies:** Stored in `Assets/_Game/Assemblies/` (`App.Core.asmdef`, `App.View.asmdef`, `App.Flow.asmdef`).
+- **Feature Folders:** `Assets/_Game/Features/[FeatureName]/`
+    - `/Core`: Domain logic (Uses `.asmref` pointing to `App.Core`).
+    - `/View`: MonoBehaviours (Uses `.asmref` pointing to `App.View`).
+    - `/Flow`: Handlers/Event Routing (Uses `.asmref` pointing to `App.Flow`).
+
+Always use standard block-scoped namespaces matching the directory structure (e.g. `namespace Economy.Core { }`). Never include the company name.
+
+Core architectural layer definitions:
 
 - **`Boot`:** Scene bootstrapping, VContainer scopes, handling game launch.
 - **`Core`:** Pure C# domain logic (POCOs) and Models. Zero Unity dependencies (no MonoBehaviours, no UnityEngine UI).
@@ -74,3 +86,7 @@ The "glue" that connects isolated systems together using VitalRouter.
 - Avoid `Debug.Log` loops, rely on proper logging or breakpoints.
 - Always use `UniTask` instead of Coroutines.
 - Models and logic must be unit-testable outside of Unity.
+
+## AI Tools & Skills
+
+- Feature Slice Creation: Use the provided `FeatureSliceGenerator.cs` (via Unity Editor Menu) or ask the agent to "Generate a Feature Slice for [FeatureName]" utilizing instructions mapped in workspace settings.
