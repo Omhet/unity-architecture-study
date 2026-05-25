@@ -22,8 +22,6 @@ namespace App.Boot
             {
                 builder.RegisterComponentInNewPrefab(_loadingScreenPrefab, Lifetime.Singleton);
             }
-
-            builder.RegisterEntryPoint<BootManager>();
         }
     }
 }
