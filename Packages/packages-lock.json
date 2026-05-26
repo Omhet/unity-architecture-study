@@ -1,15 +1,5 @@
 {
   "dependencies": {
-    "com.coplaydev.unity-mcp": {
-      "version": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.test-framework": "1.1.31"
-      },
-      "hash": "417cf351a152b483c91e6e2deaf7ae355fa8eff3"
-    },
     "com.cysharp.r3": {
       "version": "https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity",
       "depth": 0,
@@ -383,6 +373,13 @@
       "source": "git",
       "dependencies": {},
       "hash": "6e6972730ce316fab2408f20e7a160aec070e48b"
+    },
+    "jp.hadashikick.vitalrouter.unity": {
+      "version": "https://github.com/hadashiA/VitalRouter.git?path=/src/VitalRouter.Unity/Assets/VitalRouter#2.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2377ba96a1bdc020bfd92cc7201a1169fda148a5"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
