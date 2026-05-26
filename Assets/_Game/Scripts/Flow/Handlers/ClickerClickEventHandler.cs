@@ -1,7 +1,7 @@
-namespace App.Shared.Flow
+namespace App.Flow.Handlers
 {
     using App.Economy.Core;
-    using App.Menu.Core;
+    using App.Flow.Events;
     using VitalRouter;
 
     [Routes]

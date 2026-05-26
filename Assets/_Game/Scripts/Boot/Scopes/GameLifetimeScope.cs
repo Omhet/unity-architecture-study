@@ -3,7 +3,7 @@ namespace App.Boot
     using App.Clicker.View;
     using App.Economy.Core;
     using App.Economy.View;
-    using App.Shared.Flow;
+    using App.Flow.Handlers;
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;

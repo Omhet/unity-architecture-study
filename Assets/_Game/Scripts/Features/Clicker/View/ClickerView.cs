@@ -1,6 +1,6 @@
 namespace App.Clicker.View
 {
-    using App.Menu.Core;
+    using App.Flow.Events;
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;

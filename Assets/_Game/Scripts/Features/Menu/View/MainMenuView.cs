@@ -1,10 +1,10 @@
 namespace App.Menu.View
 {
+    using App.Flow.Events;
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;
     using VitalRouter;
-    using App.Menu.Core;
 
     [RequireComponent(typeof(UIDocument))]
     public class MainMenuView : MonoBehaviour
