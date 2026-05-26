@@ -21,6 +21,11 @@ namespace App.Menu.View
 
         private void Start()
         {
+            BuildView();
+        }
+
+        private void BuildView()
+        {
             if (_uiDocument == null || _uiDocument.rootVisualElement == null)
             {
                 return;
