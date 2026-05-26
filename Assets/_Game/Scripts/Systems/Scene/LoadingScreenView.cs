@@ -12,6 +12,8 @@ namespace App.Systems.Scene
 
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
+
             _uiDocument = GetComponent<UIDocument>();
         }
 
