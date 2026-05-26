@@ -13,7 +13,7 @@ namespace App.Boot
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterInstance(Router.Default);
+            builder.RegisterInstance(Router.Default).AsImplementedInterfaces();
 
             builder.Register<SaveService>(Lifetime.Singleton);
 

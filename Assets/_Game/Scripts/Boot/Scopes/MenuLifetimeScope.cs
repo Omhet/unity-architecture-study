@@ -5,6 +5,7 @@ namespace App.Boot
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;
+    using VitalRouter.VContainer;
 
     public class MenuLifetimeScope : LifetimeScope
     {
@@ -12,8 +13,14 @@ namespace App.Boot
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterEntryPoint<MainMenuPresenter>();
+
             builder.RegisterComponent(_mainMenuView);
-            builder.Register<MainMenuPresenter>(Lifetime.Scoped);
+
+            builder.RegisterVitalRouter(routing =>
+            {
+                routing.Map<PlayGameEventHandler>();
+            });
         }
     }
 }

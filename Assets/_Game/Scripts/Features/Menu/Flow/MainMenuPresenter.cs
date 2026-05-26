@@ -23,7 +23,7 @@ namespace App.Menu.Flow
 
         private void HandlePlayClicked()
         {
-            _publisher.PublishAsync(new PlayGameCommand());
+            _publisher.PublishAsync(new PlayGameEvent());
         }
 
         public void Dispose()

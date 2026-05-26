@@ -9,46 +9,48 @@ namespace App.Menu.View
     {
         [SerializeField] private StyleSheet _styleSheet;
 
-        private Button _playButton;
+        private UIDocument _uiDocument;
+        private VisualElement _root;
 
         public event Action OnPlayClicked;
 
-        private void OnEnable()
+        private void Awake()
         {
-            var uiDocument = GetComponent<UIDocument>();
-            if (uiDocument == null || uiDocument.rootVisualElement == null)
+            _uiDocument = GetComponent<UIDocument>();
+        }
+
+        private void Start()
+        {
+            if (_uiDocument == null || _uiDocument.rootVisualElement == null)
+            {
                 return;
+            }
 
-            var root = uiDocument.rootVisualElement;
+            _root = _uiDocument.rootVisualElement;
 
-            root.Clear();
+            _root.Clear();
+
             if (_styleSheet != null)
             {
-                root.styleSheets.Add(_styleSheet);
+                _root.styleSheets.Add(_styleSheet);
             }
 
             var container = new VisualElement();
             container.AddToClassList("menu-container");
 
-            var title = new Label("CLICKER TOY");
+            var title = new Label("Clicker Game");
             title.AddToClassList("title-text");
 
-            var playBtn = new Button(HandlePlayClicked)
+            var playButton = new Button(HandlePlayClicked)
             {
                 name = "play-button",
-                text = "PLAY GAME"
+                text = "Start Game"
             };
-            playBtn.AddToClassList("play-button");
+            playButton.AddToClassList("play-button");
 
             container.Add(title);
-            container.Add(playBtn);
-            root.Add(container);
-
-            _playButton = playBtn;
-
-            _playButton.clicked += HandlePlayClicked;
-
-            Debug.Log("MainMenuView initialized");
+            container.Add(playButton);
+            _root.Add(container);
         }
 
         private void HandlePlayClicked()
