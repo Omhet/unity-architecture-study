@@ -1,8 +1,10 @@
 namespace App.Menu.View
 {
-    using System;
     using UnityEngine;
     using UnityEngine.UIElements;
+    using VContainer;
+    using VitalRouter;
+    using App.Menu.Core;
 
     [RequireComponent(typeof(UIDocument))]
     public class MainMenuView : MonoBehaviour
@@ -11,8 +13,13 @@ namespace App.Menu.View
 
         private UIDocument _uiDocument;
         private VisualElement _root;
+        private ICommandPublisher _publisher;
 
-        public event Action OnPlayClicked;
+        [Inject]
+        public void Construct(ICommandPublisher publisher)
+        {
+            _publisher = publisher;
+        }
 
         private void Awake()
         {
@@ -60,7 +67,7 @@ namespace App.Menu.View
 
         private void HandlePlayClicked()
         {
-            OnPlayClicked?.Invoke();
+            _publisher.PublishAsync(new PlayGameEvent());
         }
     }
 }

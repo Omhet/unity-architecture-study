@@ -1,8 +1,9 @@
-namespace App.Menu.Flow
+namespace App.Shared.Flow
 {
     using App.Infra.SceneManagement;
     using Cysharp.Threading.Tasks;
     using VitalRouter;
+    using App.Menu.Core;
 
     [Routes]
     public partial class PlayGameEventHandler

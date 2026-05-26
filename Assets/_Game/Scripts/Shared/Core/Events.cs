@@ -1,6 +1,6 @@
 using VitalRouter;
 
-namespace App.Menu.Flow
+namespace App.Menu.Core
 {
     public readonly struct PlayGameEvent : ICommand
     {
