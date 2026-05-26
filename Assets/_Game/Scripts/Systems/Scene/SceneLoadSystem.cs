@@ -1,4 +1,4 @@
-namespace App.Infra.SceneManagement
+namespace App.Systems.Scene
 {
     using UnityEngine;
     using UnityEngine.SceneManagement;
@@ -6,7 +6,7 @@ namespace App.Infra.SceneManagement
     using Cysharp.Threading.Tasks;
 
     [RequireComponent(typeof(UIDocument))]
-    public class SceneLoader : MonoBehaviour
+    public class SceneLoadSystem : MonoBehaviour
     {
         [SerializeField] private StyleSheet _loadingStyleSheet;
 

@@ -1,15 +1,15 @@
-namespace App.Infra.Saving
+namespace App.Systems.Saving
 {
     using System.IO;
     using UnityEngine;
     using Cysharp.Threading.Tasks;
     using Newtonsoft.Json;
 
-    public class SaveService
+    public class SaveSystem
     {
         private readonly string _saveFilePath;
 
-        public SaveService()
+        public SaveSystem()
         {
             _saveFilePath = Path.Combine(Application.persistentDataPath, "GameState.json");
         }

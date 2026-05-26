@@ -1,6 +1,6 @@
 namespace App.Shared.Flow
 {
-    using App.Infra.SceneManagement;
+    using App.Systems.Scene;
     using Cysharp.Threading.Tasks;
     using VitalRouter;
     using App.Menu.Core;
@@ -8,9 +8,9 @@ namespace App.Shared.Flow
     [Routes]
     public partial class PlayGameEventHandler
     {
-        private readonly SceneLoader _sceneLoader;
+        private readonly SceneLoadSystem _sceneLoader;
 
-        public PlayGameEventHandler(SceneLoader sceneLoader)
+        public PlayGameEventHandler(SceneLoadSystem sceneLoader)
         {
             _sceneLoader = sceneLoader;
         }

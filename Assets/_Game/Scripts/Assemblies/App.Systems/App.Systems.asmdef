@@ -1,5 +1,5 @@
 {
-    "name": "App.Infra",
+    "name": "App.Systems",
     "rootNamespace": "",
     "references": [
         "App.Core",

@@ -5,7 +5,7 @@
         "App.Core",
         "App.View",
         "App.Flow",
-        "App.Infra",
+        "App.Systems",
         "VContainer",
         "UniTask",
         "VitalRouter.Unity"

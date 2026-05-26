@@ -1,7 +1,7 @@
 namespace App.Boot
 {
-    using App.Infra.Saving;
-    using App.Infra.SceneManagement;
+    using App.Systems.Saving;
+    using App.Systems.Scene;
     using App.Shared.Flow;
     using UnityEngine;
     using VContainer;
@@ -11,7 +11,7 @@ namespace App.Boot
 
     public class RootLifetimeScope : LifetimeScope
     {
-        [SerializeField] private SceneLoader _loadingScreenPrefab;
+        [SerializeField] private SceneLoadSystem _loadingScreenPrefab;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -22,7 +22,7 @@ namespace App.Boot
                 routing.Map<PlayGameEventHandler>();
             });
 
-            builder.Register<SaveService>(Lifetime.Singleton);
+            builder.Register<SaveSystem>(Lifetime.Singleton);
 
             if (_loadingScreenPrefab != null)
             {
