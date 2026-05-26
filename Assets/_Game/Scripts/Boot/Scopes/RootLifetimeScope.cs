@@ -11,7 +11,7 @@ namespace App.Boot
 
     public class RootLifetimeScope : LifetimeScope
     {
-        [SerializeField] private SceneLoadSystem _loadingScreenPrefab;
+        [SerializeField] private LoadingScreenView _loadingScreenViewPrefab;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -23,10 +23,11 @@ namespace App.Boot
             });
 
             builder.Register<SaveSystem>(Lifetime.Singleton);
+            builder.Register<SceneLoadSystem>(Lifetime.Singleton);
 
-            if (_loadingScreenPrefab != null)
+            if (_loadingScreenViewPrefab != null)
             {
-                builder.RegisterComponentInNewPrefab(_loadingScreenPrefab, Lifetime.Singleton);
+                builder.RegisterComponentInNewPrefab(_loadingScreenViewPrefab, Lifetime.Singleton);
             }
         }
     }

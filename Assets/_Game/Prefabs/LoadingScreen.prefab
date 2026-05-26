@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5194509393285498719}
-  - component: {fileID: 3667127970287621702}
   - component: {fileID: 5933758513051818054}
+  - component: {fileID: 2327321956887972785}
   m_Layer: 0
   m_Name: LoadingScreen
   m_TagString: Untagged
@@ -33,19 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3667127970287621702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7357385884992625954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e595a8687b214d73a790fcf6832dbf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Infra.SceneManagement.LoadingScreenController
-  _uiDocument: {fileID: 5933758513051818054}
 --- !u!114 &5933758513051818054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: 1a014b20bf5164acab001ebeefb89b23, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 48d2175095d384f5b8e3a0843ffafdad, type: 3}
+  sourceAsset: {fileID: 0}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
@@ -69,3 +56,16 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &2327321956887972785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7357385884992625954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd004f228337d459d98b1ad7ff51da80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: App.Systems::App.Systems.Scene.LoadingScreenView
+  _styleSheet: {fileID: 7433441132597879392, guid: 78d8c75e377344b32b3c2b2d120c0dec, type: 3}

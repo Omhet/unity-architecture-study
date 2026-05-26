@@ -12,7 +12,6 @@ namespace App.Menu.View
         [SerializeField] private StyleSheet _styleSheet;
 
         private UIDocument _uiDocument;
-        private VisualElement _root;
         private ICommandPublisher _publisher;
 
         [Inject]
@@ -38,7 +37,7 @@ namespace App.Menu.View
                 return;
             }
 
-            _root = _uiDocument.rootVisualElement;
+            var _root = _uiDocument.rootVisualElement;
 
             _root.Clear();
 
