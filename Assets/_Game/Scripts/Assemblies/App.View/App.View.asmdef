@@ -5,7 +5,8 @@
         "App.Core",
         "VContainer",
         "UniTask",
-        "R3.Unity"
+        "R3.Unity",
+        "VitalRouter.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

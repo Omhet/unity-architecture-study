@@ -13,8 +13,7 @@ namespace App.Boot
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(_mainMenuView);
-
-            builder.RegisterEntryPoint<MenuEntryPoint>();
+            builder.Register<MainMenuPresenter>(Lifetime.Scoped);
         }
     }
 }

@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 538439865}
   - component: {fileID: 538439864}
   m_Layer: 0
-  m_Name: MainMenuUI
+  m_Name: MainMenuView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2805c23e6574aa8904b87c1e01fdb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::View.Menu.MainMenuView
-  _styleSheet: {fileID: 0}
+  _styleSheet: {fileID: 7433441132597879392, guid: b90d25b82e4ba4799b02367dafd3c0a1, type: 3}
 --- !u!114 &538439865
 MonoBehaviour:
   m_ObjectHideFlags: 0

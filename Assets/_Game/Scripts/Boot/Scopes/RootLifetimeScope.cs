@@ -5,6 +5,7 @@ namespace App.Boot
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;
+    using VitalRouter;
 
     public class RootLifetimeScope : LifetimeScope
     {
@@ -12,6 +13,8 @@ namespace App.Boot
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterInstance(Router.Default);
+
             builder.Register<SaveService>(Lifetime.Singleton);
 
             if (_loadingScreenPrefab != null)
