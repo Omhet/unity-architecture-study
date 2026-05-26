@@ -1,0 +1,20 @@
+.economy-container {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 24px;
+    padding-left: 24px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.economy-balance {
+    color: rgb(255, 224, 102);
+    font-size: 42px;
+    -unity-font-style: bold;
+    background-color: rgba(20, 20, 20, 0.72);
+    border-radius: 12px;
+    padding-top: 10px;
+    padding-right: 18px;
+    padding-bottom: 10px;
+    padding-left: 18px;
+}
