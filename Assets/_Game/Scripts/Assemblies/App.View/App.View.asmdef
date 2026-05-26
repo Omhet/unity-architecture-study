@@ -4,8 +4,6 @@
     "references": [
         "App.Core",
         "VContainer",
-        "MessagePipe",
-        "MessagePipe.VContainer",
         "UniTask",
         "R3.Unity"
     ],

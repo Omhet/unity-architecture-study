@@ -7,8 +7,6 @@
         "App.Flow",
         "App.Infra",
         "VContainer",
-        "MessagePipe",
-        "MessagePipe.VContainer",
         "UniTask"
     ],
     "includePlatforms": [],
