@@ -1,7 +1,7 @@
 ﻿<Solution>
-  <Project Path="App.View.csproj" />
   <Project Path="App.Core.csproj" />
   <Project Path="App.Systems.csproj" />
+  <Project Path="App.View.csproj" />
   <Project Path="App.Flow.csproj" />
   <Project Path="App.Boot.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
