@@ -11,7 +11,6 @@ namespace App.Boot
     using App.Resources.Core;
     using App.Systems.Configuration;
     using App.Talents.Core;
-    using App.Unlocks.Core;
     using App.Systems.Saving;
     using App.Systems.Scene;
     using UnityEngine;
@@ -46,7 +45,6 @@ namespace App.Boot
             builder.Register<ProductInventoryModel>(Lifetime.Singleton);
             builder.Register<ProgressionModel>(Lifetime.Singleton);
             builder.Register<TalentModel>(Lifetime.Singleton);
-            builder.Register<UnlockModel>(Lifetime.Singleton);
             builder.Register<OrderModel>(Lifetime.Singleton);
             builder.Register<QuestModel>(Lifetime.Singleton);
 

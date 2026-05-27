@@ -10,7 +10,6 @@ namespace App.Systems.Configuration
     using App.Resources.Core;
     using App.Shop.Core;
     using App.Talents.Core;
-    using App.Unlocks.Core;
 
     public class GameConfigHydrator
     {
@@ -23,7 +22,6 @@ namespace App.Systems.Configuration
         private readonly OrderModel _orderModel;
         private readonly QuestModel _questModel;
         private readonly TalentModel _talentModel;
-        private readonly UnlockModel _unlockModel;
         private readonly ShopModel _shopModel;
 
         public GameConfigHydrator(
@@ -36,7 +34,6 @@ namespace App.Systems.Configuration
             OrderModel orderModel,
             QuestModel questModel,
             TalentModel talentModel,
-            UnlockModel unlockModel,
             ShopModel shopModel)
         {
             _economyModel = economyModel;
@@ -48,7 +45,6 @@ namespace App.Systems.Configuration
             _orderModel = orderModel;
             _questModel = questModel;
             _talentModel = talentModel;
-            _unlockModel = unlockModel;
             _shopModel = shopModel;
         }
 
@@ -131,7 +127,6 @@ namespace App.Systems.Configuration
                 });
             }
 
-            // Temporary default until unlock state is fully config-driven.
             if (_generatorModel.Generators.Count > 0)
             {
                 _playerGeneratorModel.OwnedGeneratorIds.Add(_generatorModel.Generators[0].Id);
@@ -158,7 +153,6 @@ namespace App.Systems.Configuration
         private void HydrateTalents()
         {
             _talentModel.UnlockedTalents.Clear();
-            _unlockModel.UnlockStates.Clear();
         }
 
         private void HydrateShop(ShopConfig config)
