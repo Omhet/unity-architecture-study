@@ -19,7 +19,7 @@ namespace App.Boot
 
             builder.RegisterVitalRouter(routing =>
             {
-                routing.Map<PlayGameEventHandler>();
+                routing.Map<SceneFlowHandler>();
             });
 
             builder.Register<SaveSystem>(Lifetime.Singleton);

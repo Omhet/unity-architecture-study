@@ -13,5 +13,16 @@ namespace App.Shop.Core
         public string ItemId;
         public string DisplayName;
         public int Cost;
+
+        public bool InitialVisibility;
+        public bool InitialBuyability;
+        public int RequiredLevel;
+        public string[] PrerequisiteUnlockIds;
+        public bool OneTimePurchase;
+        public string UnlockTargetType;
+        public string UnlockTargetId;
+
+        public bool IsVisible;
+        public bool IsBuyable;
     }
 }

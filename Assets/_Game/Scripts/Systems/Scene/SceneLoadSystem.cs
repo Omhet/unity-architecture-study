@@ -5,7 +5,7 @@ namespace App.Systems.Scene
 
     public class SceneLoadSystem
     {
-        private LoadingScreenView _loadingScreenView;
+        private readonly LoadingScreenView _loadingScreenView;
 
         public SceneLoadSystem(LoadingScreenView loadingScreenView)
         {
@@ -14,22 +14,28 @@ namespace App.Systems.Scene
 
         public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
         {
-            if (_loadingScreenView != null)
-            {
-                _loadingScreenView.Show();
-            }
-
             await SceneManager.LoadSceneAsync(sceneName, mode).ToUniTask();
-
-            if (_loadingScreenView != null)
-            {
-                _loadingScreenView.Hide();
-            }
         }
 
         public async UniTask UnloadSceneAsync(string sceneName)
         {
             await SceneManager.UnloadSceneAsync(sceneName).ToUniTask();
+        }
+
+        public void ShowLoading()
+        {
+            if (_loadingScreenView != null)
+            {
+                _loadingScreenView.Show();
+            }
+        }
+
+        public void HideLoading()
+        {
+            if (_loadingScreenView != null)
+            {
+                _loadingScreenView.Hide();
+            }
         }
     }
 }

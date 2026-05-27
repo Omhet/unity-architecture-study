@@ -2,7 +2,12 @@
     "name": "App.Systems",
     "rootNamespace": "",
     "references": [
-        "UniTask"
+        "App.Core",
+        "UniTask",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "Unity.ResourceManager",
+        "UniTask.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
