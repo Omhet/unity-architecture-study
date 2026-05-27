@@ -54,11 +54,7 @@
         "ProjectSettings/": true,
         "UserSettings/": true,
         "temp/": true,
-        "Temp/": true,
-        "**/*.asmref": true
-    },
-    "search.exclude": {
-        "**/*.asmref": true
+        "Temp/": true
     },
     "files.associations": {
         "*.asset": "yaml",
