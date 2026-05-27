@@ -2,6 +2,7 @@ namespace App.Hud.View
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using App.View;
     using UnityEngine;
     using UnityEngine.UIElements;
@@ -9,7 +10,7 @@ namespace App.Hud.View
     [RequireComponent(typeof(UIDocument))]
     public class HudShellView : GameplayViewBase
     {
-        private readonly Dictionary<string, VisualElement> _sections = new Dictionary<string, VisualElement>();
+        private readonly Dictionary<string, IGameplaySectionView> _sections = new Dictionary<string, IGameplaySectionView>();
         private readonly List<Button> _tabButtons = new List<Button>();
         private readonly Dictionary<Button, string> _tabIds = new Dictionary<Button, string>();
 
@@ -36,12 +37,30 @@ namespace App.Hud.View
             shell.Add(content);
             root.Add(shell);
 
-            AddSection(tabs, content, "generators", "Generators", "Generator controls will appear here.");
-            AddSection(tabs, content, "crafting", "Crafting", "Crafting recipes will appear here.");
-            AddSection(tabs, content, "orders", "Orders", "Customer orders will appear here.");
-            AddSection(tabs, content, "shop", "Shop", "Shop catalog will appear here.");
-            AddSection(tabs, content, "quests", "Quests", "Quest progress will appear here.");
-            AddSection(tabs, content, "talents", "Talents", "Talent upgrades will appear here.");
+            var registry = BuildRegistry();
+            foreach (var definition in registry.Definitions.OrderBy(x => x.TabOrder))
+            {
+                if (!registry.TryCreate(definition.Id, out IGameplaySectionView sectionView))
+                {
+                    continue;
+                }
+
+                sectionView.BuildOnce();
+                content.Add(sectionView.Root);
+                _sections[definition.Id] = sectionView;
+
+                var tabButton = new Button
+                {
+                    text = definition.TabTitle
+                };
+                tabButton.AddToClassList("hud-tab-button");
+                tabButton.userData = (Action)(() => SetActiveSection(definition.Id));
+                tabButton.clicked += (Action)tabButton.userData;
+
+                tabs.Add(tabButton);
+                _tabButtons.Add(tabButton);
+                _tabIds[tabButton] = definition.Id;
+            }
 
             SetActiveSection("generators");
         }
@@ -55,35 +74,50 @@ namespace App.Hud.View
 
             _tabButtons.Clear();
             _tabIds.Clear();
+
+            foreach (var section in _sections.Values)
+            {
+                section.Dispose();
+            }
+
             _sections.Clear();
         }
 
-        private void AddSection(VisualElement tabs, VisualElement content, string id, string title, string placeholder)
+        private HudSectionRegistry BuildRegistry()
         {
-            var section = new VisualElement();
-            section.AddToClassList("hud-section");
-            section.AddToClassList("is-hidden");
+            var registry = new HudSectionRegistry();
+            registry.Register(
+                new GameplaySectionDefinition("generators", "Generators", 0),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("generators", "Generators", 0),
+                    "Generator controls will appear here."));
+            registry.Register(
+                new GameplaySectionDefinition("crafting", "Crafting", 1),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("crafting", "Crafting", 1),
+                    "Crafting recipes will appear here."));
+            registry.Register(
+                new GameplaySectionDefinition("orders", "Orders", 2),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("orders", "Orders", 2),
+                    "Customer orders will appear here."));
+            registry.Register(
+                new GameplaySectionDefinition("shop", "Shop", 3),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("shop", "Shop", 3),
+                    "Shop catalog will appear here."));
+            registry.Register(
+                new GameplaySectionDefinition("quests", "Quests", 4),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("quests", "Quests", 4),
+                    "Quest progress will appear here."));
+            registry.Register(
+                new GameplaySectionDefinition("talents", "Talents", 5),
+                () => new PlaceholderSectionView(
+                    new GameplaySectionDefinition("talents", "Talents", 5),
+                    "Talent upgrades will appear here."));
 
-            var sectionTitle = new Label(title);
-            sectionTitle.AddToClassList("hud-section-title");
-
-            var sectionBody = new Label(placeholder);
-            sectionBody.AddToClassList("hud-section-placeholder");
-
-            section.Add(sectionTitle);
-            section.Add(sectionBody);
-            content.Add(section);
-            _sections[id] = section;
-
-            var tabButton = new Button();
-            tabButton.text = title;
-            tabButton.AddToClassList("hud-tab-button");
-            tabButton.userData = (Action)(() => SetActiveSection(id));
-            tabButton.clicked += (Action)tabButton.userData;
-
-            tabs.Add(tabButton);
-            _tabButtons.Add(tabButton);
-            _tabIds[tabButton] = id;
+            return registry;
         }
 
         private void SetActiveSection(string id)
@@ -99,13 +133,11 @@ namespace App.Hud.View
             {
                 if (pair.Key == _activeSection)
                 {
-                    pair.Value.RemoveFromClassList("is-hidden");
-                    pair.Value.AddToClassList("is-visible");
+                    pair.Value.Mount();
                 }
                 else
                 {
-                    pair.Value.RemoveFromClassList("is-visible");
-                    pair.Value.AddToClassList("is-hidden");
+                    pair.Value.Unmount();
                 }
             }
 
