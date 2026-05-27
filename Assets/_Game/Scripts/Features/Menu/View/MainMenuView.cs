@@ -1,17 +1,15 @@
 namespace App.Menu.View
 {
     using App.Flow.Events;
+    using App.View;
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;
     using VitalRouter;
 
     [RequireComponent(typeof(UIDocument))]
-    public class MainMenuView : MonoBehaviour
+    public class MainMenuView : GameplayViewBase
     {
-        [SerializeField] private StyleSheet _styleSheet;
-
-        private UIDocument _uiDocument;
         private ICommandPublisher _publisher;
 
         [Inject]
@@ -20,30 +18,12 @@ namespace App.Menu.View
             _publisher = publisher;
         }
 
-        private void Awake()
+        protected override void BuildView()
         {
-            _uiDocument = GetComponent<UIDocument>();
-        }
-
-        private void Start()
-        {
-            BuildView();
-        }
-
-        private void BuildView()
-        {
-            if (_uiDocument == null || _uiDocument.rootVisualElement == null)
+            var root = PrepareRoot();
+            if (root == null)
             {
                 return;
-            }
-
-            var _root = _uiDocument.rootVisualElement;
-
-            _root.Clear();
-
-            if (_styleSheet != null)
-            {
-                _root.styleSheets.Add(_styleSheet);
             }
 
             var container = new VisualElement();
@@ -61,7 +41,7 @@ namespace App.Menu.View
 
             container.Add(title);
             container.Add(playButton);
-            _root.Add(container);
+            root.Add(container);
         }
 
         private void HandlePlayClicked()

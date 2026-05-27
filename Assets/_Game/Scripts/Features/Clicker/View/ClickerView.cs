@@ -1,17 +1,15 @@
 namespace App.Clicker.View
 {
     using App.Flow.Events;
+    using App.View;
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;
     using VitalRouter;
 
     [RequireComponent(typeof(UIDocument))]
-    public class ClickerView : MonoBehaviour
+    public class ClickerView : GameplayViewBase
     {
-        [SerializeField] private StyleSheet _styleSheet;
-
-        private UIDocument _uiDocument;
         private ICommandPublisher _publisher;
 
         [Inject]
@@ -20,29 +18,12 @@ namespace App.Clicker.View
             _publisher = publisher;
         }
 
-        private void Awake()
+        protected override void BuildView()
         {
-            _uiDocument = GetComponent<UIDocument>();
-        }
-
-        private void Start()
-        {
-            BuildView();
-        }
-
-        private void BuildView()
-        {
-            if (_uiDocument == null || _uiDocument.rootVisualElement == null)
+            var root = PrepareRoot();
+            if (root == null)
             {
                 return;
-            }
-
-            var root = _uiDocument.rootVisualElement;
-            root.Clear();
-
-            if (_styleSheet != null)
-            {
-                root.styleSheets.Add(_styleSheet);
             }
 
             var container = new VisualElement();

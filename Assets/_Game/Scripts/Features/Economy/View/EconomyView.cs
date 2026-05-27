@@ -2,17 +2,15 @@ namespace App.Economy.View
 {
     using System;
     using App.Economy.Core;
+    using App.View;
     using R3;
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;
 
     [RequireComponent(typeof(UIDocument))]
-    public class EconomyView : MonoBehaviour
+    public class EconomyView : GameplayViewBase
     {
-        [SerializeField] private StyleSheet _styleSheet;
-
-        private UIDocument _uiDocument;
         private EconomyModel _economyModel;
         private Label _balanceLabel;
         private IDisposable _balanceSubscription;
@@ -23,36 +21,18 @@ namespace App.Economy.View
             _economyModel = economyModel;
         }
 
-        private void Awake()
-        {
-            _uiDocument = GetComponent<UIDocument>();
-        }
-
-        private void Start()
-        {
-            BuildView();
-            BindModel();
-        }
-
-        private void OnDestroy()
+        protected override void UnbindView()
         {
             _balanceSubscription?.Dispose();
             _balanceSubscription = null;
         }
 
-        private void BuildView()
+        protected override void BuildView()
         {
-            if (_uiDocument == null || _uiDocument.rootVisualElement == null)
+            var root = PrepareRoot();
+            if (root == null)
             {
                 return;
-            }
-
-            var root = _uiDocument.rootVisualElement;
-            root.Clear();
-
-            if (_styleSheet != null)
-            {
-                root.styleSheets.Add(_styleSheet);
             }
 
             var container = new VisualElement();
@@ -68,7 +48,7 @@ namespace App.Economy.View
             root.Add(container);
         }
 
-        private void BindModel()
+        protected override void BindView()
         {
             if (_economyModel == null || _balanceLabel == null)
             {
