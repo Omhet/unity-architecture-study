@@ -29,7 +29,7 @@ namespace App.Menu.View
             var container = new VisualElement();
             container.AddToClassList("menu-container");
 
-            var title = new Label("Clicker Game");
+            var title = new Label("Workshop Game");
             title.AddToClassList("title-text");
 
             var playButton = new Button(HandlePlayClicked)

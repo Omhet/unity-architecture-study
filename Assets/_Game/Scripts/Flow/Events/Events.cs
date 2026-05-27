@@ -5,8 +5,4 @@ namespace App.Flow.Events
     public readonly struct PlayGameEvent : ICommand
     {
     }
-
-    public readonly struct ClickerClickEvent : ICommand
-    {
-    }
 }
