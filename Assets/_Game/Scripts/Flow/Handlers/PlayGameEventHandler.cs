@@ -15,7 +15,7 @@ namespace App.Flow.Handlers
             _sceneLoader = sceneLoader;
         }
 
-        [Route]
+        [Route(CommandOrdering.Drop)]
         async UniTask On(PlayGameEvent _)
         {
             await _sceneLoader.LoadSceneAsync("Game");
