@@ -1,22 +1,28 @@
 namespace App.Boot
 {
-    using App.Economy.View;
+    using App.Flow.Handlers;
     using App.Hud.View;
+    using App.View;
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;
+    using VitalRouter.VContainer;
 
     public class GameLifetimeScope : LifetimeScope
     {
-        [SerializeField] private EconomyView _economyView;
         [SerializeField] private HudShellView _hudShellView;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            if (_economyView != null)
+            builder.RegisterVitalRouter(routing =>
             {
-                builder.RegisterComponent(_economyView);
-            }
+                routing.Map<GeneratorFlowHandler>();
+            });
+
+            builder.Register<HudSectionFactory>(Lifetime.Scoped);
+            builder.RegisterFactory<GameplaySectionDefinition, IGameplaySectionView>(
+                container => container.Resolve<HudSectionFactory>().Create,
+                Lifetime.Scoped);
 
             if (_hudShellView != null)
             {

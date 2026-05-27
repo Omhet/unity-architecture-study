@@ -2,6 +2,7 @@ namespace App.Boot
 {
     using App.Economy.Core;
     using App.Flow.Handlers;
+    using App.Generators.Core;
     using App.Shop.Core;
     using App.Orders.Core;
     using App.Products.Core;
@@ -37,6 +38,8 @@ namespace App.Boot
 
             builder.Register<EconomyModel>(Lifetime.Singleton);
             builder.Register<EconomyService>(Lifetime.Singleton);
+            builder.Register<GeneratorModel>(Lifetime.Singleton);
+            builder.Register<GeneratorService>(Lifetime.Singleton);
             builder.Register<ShopModel>(Lifetime.Singleton);
             builder.Register<ResourceModel>(Lifetime.Singleton);
             builder.Register<ProductInventoryModel>(Lifetime.Singleton);

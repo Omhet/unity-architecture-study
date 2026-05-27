@@ -3,9 +3,14 @@ namespace App.Hud.View
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using App.Economy.Core;
+    using App.Resources.Core;
     using App.View;
+    using ObservableCollections;
+    using R3;
     using UnityEngine;
     using UnityEngine.UIElements;
+    using VContainer;
 
     [RequireComponent(typeof(UIDocument))]
     public class HudShellView : GameplayViewBase
@@ -13,8 +18,27 @@ namespace App.Hud.View
         private readonly Dictionary<string, IGameplaySectionView> _sections = new Dictionary<string, IGameplaySectionView>();
         private readonly List<Button> _tabButtons = new List<Button>();
         private readonly Dictionary<Button, string> _tabIds = new Dictionary<Button, string>();
+        private readonly Dictionary<string, Label> _resourceLabels = new Dictionary<string, Label>();
 
+        private EconomyModel _economyModel;
+        private ResourceModel _resourceModel;
+        private Func<GameplaySectionDefinition, IGameplaySectionView> _sectionFactory;
         private string _activeSection;
+        private Label _moneyValue;
+        private VisualElement _resourcesRow;
+        private IDisposable _moneySubscription;
+        private IDisposable _resourceSubscription;
+
+        [Inject]
+        public void Construct(
+            EconomyModel economyModel,
+            ResourceModel resourceModel,
+            Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory)
+        {
+            _economyModel = economyModel;
+            _resourceModel = resourceModel;
+            _sectionFactory = sectionFactory;
+        }
 
         protected override void BuildView()
         {
@@ -27,12 +51,15 @@ namespace App.Hud.View
             var shell = new VisualElement();
             shell.AddToClassList("hud-shell");
 
+            var statusBar = BuildStatusBar();
+
             var tabs = new VisualElement();
             tabs.AddToClassList("hud-tabs");
 
             var content = new VisualElement();
             content.AddToClassList("hud-content");
 
+            shell.Add(statusBar);
             shell.Add(tabs);
             shell.Add(content);
             root.Add(shell);
@@ -67,6 +94,8 @@ namespace App.Hud.View
 
         protected override void DisposeView()
         {
+            UnbindView();
+
             foreach (var button in _tabButtons)
             {
                 button.clicked -= button.userData as Action;
@@ -81,6 +110,43 @@ namespace App.Hud.View
             }
 
             _sections.Clear();
+            _resourceLabels.Clear();
+            _moneyValue = null;
+            _resourcesRow = null;
+        }
+
+        protected override void BindView()
+        {
+            _moneySubscription?.Dispose();
+            _resourceSubscription?.Dispose();
+
+            if (_economyModel != null)
+            {
+                _moneySubscription = _economyModel.Balance.Subscribe(UpdateMoney);
+            }
+
+            if (_resourceModel != null)
+            {
+                var updates = Observable.Merge(
+                    _resourceModel.Balances.ObserveAdd().Select(_ => Unit.Default),
+                    _resourceModel.Balances.ObserveRemove().Select(_ => Unit.Default),
+                    _resourceModel.Balances.ObserveReplace().Select(_ => Unit.Default),
+                    _resourceModel.Balances.ObserveReset().Select(_ => Unit.Default));
+
+                _resourceSubscription = Observable.Return(Unit.Default)
+                    .Concat(updates)
+                    .Subscribe(_ => RefreshResources());
+            }
+
+            UpdateMoney(_economyModel != null ? _economyModel.Balance.Value : 0);
+        }
+
+        protected override void UnbindView()
+        {
+            _moneySubscription?.Dispose();
+            _resourceSubscription?.Dispose();
+            _moneySubscription = null;
+            _resourceSubscription = null;
         }
 
         private HudSectionRegistry BuildRegistry()
@@ -88,36 +154,99 @@ namespace App.Hud.View
             var registry = new HudSectionRegistry();
             registry.Register(
                 new GameplaySectionDefinition("generators", "Generators", 0),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("generators", "Generators", 0),
-                    "Generator controls will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("generators", "Generators", 0)));
             registry.Register(
                 new GameplaySectionDefinition("crafting", "Crafting", 1),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("crafting", "Crafting", 1),
-                    "Crafting recipes will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("crafting", "Crafting", 1)));
             registry.Register(
                 new GameplaySectionDefinition("orders", "Orders", 2),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("orders", "Orders", 2),
-                    "Customer orders will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("orders", "Orders", 2)));
             registry.Register(
                 new GameplaySectionDefinition("shop", "Shop", 3),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("shop", "Shop", 3),
-                    "Shop catalog will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("shop", "Shop", 3)));
             registry.Register(
                 new GameplaySectionDefinition("quests", "Quests", 4),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("quests", "Quests", 4),
-                    "Quest progress will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("quests", "Quests", 4)));
             registry.Register(
                 new GameplaySectionDefinition("talents", "Talents", 5),
-                () => new PlaceholderSectionView(
-                    new GameplaySectionDefinition("talents", "Talents", 5),
-                    "Talent upgrades will appear here."));
+                () => CreateFromFactory(new GameplaySectionDefinition("talents", "Talents", 5)));
 
             return registry;
+        }
+
+        private IGameplaySectionView CreateFromFactory(GameplaySectionDefinition definition)
+        {
+            if (_sectionFactory != null)
+            {
+                var sectionView = _sectionFactory(definition);
+                if (sectionView != null)
+                {
+                    return sectionView;
+                }
+            }
+
+            return new PlaceholderSectionView(definition, definition.TabTitle + " section is not available.");
+        }
+
+        private VisualElement BuildStatusBar()
+        {
+            var statusBar = new VisualElement();
+            statusBar.AddToClassList("hud-status-bar");
+
+            var moneyBlock = new VisualElement();
+            moneyBlock.AddToClassList("hud-money-block");
+
+            var moneyTitle = new Label("Money");
+            moneyTitle.AddToClassList("hud-money-title");
+            _moneyValue = new Label("$0");
+            _moneyValue.AddToClassList("hud-money-value");
+
+            moneyBlock.Add(moneyTitle);
+            moneyBlock.Add(_moneyValue);
+
+            var resourcesBlock = new VisualElement();
+            resourcesBlock.AddToClassList("hud-resources-block");
+
+            var resourcesTitle = new Label("Resources");
+            resourcesTitle.AddToClassList("hud-resources-title");
+
+            _resourcesRow = new VisualElement();
+            _resourcesRow.AddToClassList("hud-resources-row");
+
+            resourcesBlock.Add(resourcesTitle);
+            resourcesBlock.Add(_resourcesRow);
+
+            statusBar.Add(moneyBlock);
+            statusBar.Add(resourcesBlock);
+
+            return statusBar;
+        }
+
+        private void UpdateMoney(int value)
+        {
+            if (_moneyValue != null)
+            {
+                _moneyValue.text = "$" + value;
+            }
+        }
+
+        private void RefreshResources()
+        {
+            if (_resourcesRow == null || _resourceModel == null)
+            {
+                return;
+            }
+
+            _resourcesRow.Clear();
+            _resourceLabels.Clear();
+
+            foreach (var pair in _resourceModel.EnumerateBalances().OrderBy(x => x.Key))
+            {
+                var chip = new Label(pair.Key + ": " + pair.Value);
+                chip.AddToClassList("hud-resource-chip");
+                _resourcesRow.Add(chip);
+                _resourceLabels[pair.Key] = chip;
+            }
         }
 
         private void SetActiveSection(string id)

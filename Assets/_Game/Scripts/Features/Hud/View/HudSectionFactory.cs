@@ -1,0 +1,39 @@
+namespace App.Hud.View
+{
+    using App.Generators.Core;
+    using App.View;
+    using VitalRouter;
+
+    public class HudSectionFactory
+    {
+        private readonly GeneratorModel _generatorModel;
+        private readonly ICommandPublisher _publisher;
+
+        public HudSectionFactory(GeneratorModel generatorModel, ICommandPublisher publisher)
+        {
+            _generatorModel = generatorModel;
+            _publisher = publisher;
+        }
+
+        public IGameplaySectionView Create(GameplaySectionDefinition definition)
+        {
+            switch (definition.Id)
+            {
+                case "generators":
+                    return new GeneratorsSectionView(_generatorModel, _publisher);
+                case "crafting":
+                    return new PlaceholderSectionView(definition, "Crafting recipes will appear here.");
+                case "orders":
+                    return new PlaceholderSectionView(definition, "Customer orders will appear here.");
+                case "shop":
+                    return new PlaceholderSectionView(definition, "Shop catalog will appear here.");
+                case "quests":
+                    return new PlaceholderSectionView(definition, "Quest progress will appear here.");
+                case "talents":
+                    return new PlaceholderSectionView(definition, "Talent upgrades will appear here.");
+                default:
+                    return new PlaceholderSectionView(definition, definition.TabTitle + " section is not available.");
+            }
+        }
+    }
+}
