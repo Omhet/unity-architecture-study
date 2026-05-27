@@ -137,6 +137,12 @@ namespace App.GameConfig.Core
     }
 
     [Serializable]
+    public class EconomyCatalogConfig
+    {
+        public int StartingMoney;
+    }
+
+    [Serializable]
     public class LevelDefinition
     {
         public int Level;
@@ -171,6 +177,7 @@ namespace App.GameConfig.Core
         public App.Shop.Core.ShopConfig Shop;
         public QuestCatalogConfig Quests;
         public ProgressionCatalogConfig Progression;
+        public EconomyCatalogConfig Economy;
         public TalentCatalogConfig Talents;
     }
 }

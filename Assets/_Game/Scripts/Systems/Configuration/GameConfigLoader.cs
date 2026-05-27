@@ -85,6 +85,9 @@ namespace App.Systems.Configuration
                 case "progression":
                     bundle.Progression = JsonConvert.DeserializeObject<ProgressionCatalogConfig>(json);
                     return;
+                case "economy":
+                    bundle.Economy = JsonConvert.DeserializeObject<EconomyCatalogConfig>(json);
+                    return;
                 case "talents":
                     bundle.Talents = JsonConvert.DeserializeObject<TalentCatalogConfig>(json);
                     return;

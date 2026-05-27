@@ -23,6 +23,7 @@ namespace App.Systems.Configuration
             ValidateRecipeCatalog(bundle.Recipes, bundle.Resources, bundle.Products, errors);
             ValidateOrderCatalog(bundle.Orders, bundle.Products, errors);
             ValidateProgressionCatalog(bundle.Progression, errors);
+            ValidateEconomyCatalog(bundle.Economy, errors);
             ValidateTalentCatalog(bundle.Talents, errors);
             ValidateShopCatalog(bundle.Shop, errors);
 
@@ -169,6 +170,21 @@ namespace App.Systems.Configuration
                 return;
             }
 
+            if (config.StartingLevel < 1)
+            {
+                errors.Add("StartingLevel must be >= 1.");
+            }
+
+            if (config.StartingExperience < 0)
+            {
+                errors.Add("StartingExperience must be >= 0.");
+            }
+
+            if (config.StartingTalentPoints < 0)
+            {
+                errors.Add("StartingTalentPoints must be >= 0.");
+            }
+
             ValidateUniqueIds(config.Levels, x => x == null ? string.Empty : x.Level.ToString(), "level", errors);
         }
 
@@ -181,6 +197,20 @@ namespace App.Systems.Configuration
             }
 
             ValidateUniqueIds(config.Talents, x => x?.Id, "talent", errors);
+        }
+
+        private static void ValidateEconomyCatalog(EconomyCatalogConfig config, List<string> errors)
+        {
+            if (config == null)
+            {
+                errors.Add("Missing economy catalog.");
+                return;
+            }
+
+            if (config.StartingMoney < 0)
+            {
+                errors.Add("StartingMoney must be >= 0.");
+            }
         }
 
         private static void ValidateShopCatalog(App.Shop.Core.ShopConfig config, List<string> errors)

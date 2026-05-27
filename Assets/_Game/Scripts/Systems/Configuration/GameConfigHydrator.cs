@@ -48,6 +48,7 @@ namespace App.Systems.Configuration
         public void Hydrate(GameCatalogBundle bundle)
         {
             HydrateProgression(bundle.Progression);
+            HydrateEconomy(bundle.Economy);
             HydrateResources(bundle.Resources);
             HydrateProducts();
             HydrateOrders();
@@ -66,9 +67,16 @@ namespace App.Systems.Configuration
             _progressionModel.Level.Value = config.StartingLevel;
             _progressionModel.Experience.Value = config.StartingExperience;
             _progressionModel.TalentPoints.Value = config.StartingTalentPoints;
+        }
 
-            // Keep existing clicker money state until progression/economy config becomes explicit.
-            _economyModel.Balance.Value = 0;
+        private void HydrateEconomy(EconomyCatalogConfig config)
+        {
+            if (config == null)
+            {
+                return;
+            }
+
+            _economyModel.Balance.Value = config.StartingMoney;
         }
 
         private void HydrateResources(ResourceCatalogConfig config)

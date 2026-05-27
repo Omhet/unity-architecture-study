@@ -9,6 +9,7 @@
         { "key": "shop", "address": "config/shop_catalog", "schemaVersion": 1 },
         { "key": "quests", "address": "config/quests_catalog", "schemaVersion": 1 },
         { "key": "progression", "address": "config/progression_catalog", "schemaVersion": 1 },
+        { "key": "economy", "address": "config/economy_catalog", "schemaVersion": 1 },
         { "key": "talents", "address": "config/talents_catalog", "schemaVersion": 1 }
     ]
 }
