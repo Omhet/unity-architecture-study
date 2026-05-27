@@ -5,16 +5,26 @@ namespace App.Generators.Core
     public class GeneratorService
     {
         private readonly GeneratorModel _generatorModel;
+        private readonly PlayerGeneratorModel _playerGeneratorModel;
         private readonly ResourceModel _resourceModel;
 
-        public GeneratorService(GeneratorModel generatorModel, ResourceModel resourceModel)
+        public GeneratorService(
+            GeneratorModel generatorModel,
+            PlayerGeneratorModel playerGeneratorModel,
+            ResourceModel resourceModel)
         {
             _generatorModel = generatorModel;
+            _playerGeneratorModel = playerGeneratorModel;
             _resourceModel = resourceModel;
         }
 
         public bool TryGenerate(string generatorId)
         {
+            if (!_playerGeneratorModel.IsOwned(generatorId))
+            {
+                return false;
+            }
+
             if (!_generatorModel.TryGetById(generatorId, out var generator) || generator == null)
             {
                 return false;

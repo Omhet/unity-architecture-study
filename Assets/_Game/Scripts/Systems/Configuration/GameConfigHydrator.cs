@@ -1,6 +1,5 @@
 namespace App.Systems.Configuration
 {
-    using System;
     using App.Economy.Core;
     using App.GameConfig.Core;
     using App.Generators.Core;
@@ -17,6 +16,7 @@ namespace App.Systems.Configuration
     {
         private readonly EconomyModel _economyModel;
         private readonly GeneratorModel _generatorModel;
+        private readonly PlayerGeneratorModel _playerGeneratorModel;
         private readonly ResourceModel _resourceModel;
         private readonly ProductInventoryModel _productInventoryModel;
         private readonly ProgressionModel _progressionModel;
@@ -29,6 +29,7 @@ namespace App.Systems.Configuration
         public GameConfigHydrator(
             EconomyModel economyModel,
             GeneratorModel generatorModel,
+            PlayerGeneratorModel playerGeneratorModel,
             ResourceModel resourceModel,
             ProductInventoryModel productInventoryModel,
             ProgressionModel progressionModel,
@@ -40,6 +41,7 @@ namespace App.Systems.Configuration
         {
             _economyModel = economyModel;
             _generatorModel = generatorModel;
+            _playerGeneratorModel = playerGeneratorModel;
             _resourceModel = resourceModel;
             _productInventoryModel = productInventoryModel;
             _progressionModel = progressionModel;
@@ -107,6 +109,7 @@ namespace App.Systems.Configuration
         private void HydrateGenerators(GeneratorCatalogConfig config)
         {
             _generatorModel.Generators.Clear();
+            _playerGeneratorModel.OwnedGeneratorIds.Clear();
             if (config?.Generators == null)
             {
                 return;
@@ -126,6 +129,12 @@ namespace App.Systems.Configuration
                     ResourceId = generator.ResourceId,
                     AmountPerClick = generator.AmountPerClick
                 });
+            }
+
+            // Temporary default until unlock state is fully config-driven.
+            if (_generatorModel.Generators.Count > 0)
+            {
+                _playerGeneratorModel.OwnedGeneratorIds.Add(_generatorModel.Generators[0].Id);
             }
 
         }
