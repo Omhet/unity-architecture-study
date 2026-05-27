@@ -1,0 +1,71 @@
+.hud-shell {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    padding: 16px;
+    row-gap: 10px;
+    background-color: rgba(10, 15, 26, 0.35);
+}
+
+.hud-tabs {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 8px;
+}
+
+.hud-tab-button {
+    min-width: 120px;
+    min-height: 34px;
+    border-radius: 8px;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    color: rgb(220, 230, 244);
+    background-color: rgba(34, 45, 70, 0.9);
+}
+
+.hud-tab-button:hover {
+    background-color: rgba(48, 62, 95, 0.95);
+}
+
+.hud-tab-button.is-active {
+    background-color: rgb(198, 143, 50);
+    color: rgb(24, 20, 14);
+    -unity-font-style: bold;
+}
+
+.hud-content {
+    flex-grow: 1;
+    min-height: 220px;
+    border-radius: 12px;
+    background-color: rgba(8, 11, 18, 0.65);
+    padding: 16px;
+}
+
+.hud-section {
+    width: 100%;
+    height: 100%;
+}
+
+.hud-section-title {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(244, 246, 251);
+    margin-bottom: 8px;
+}
+
+.hud-section-placeholder {
+    font-size: 14px;
+    color: rgb(184, 194, 212);
+}
+
+.is-hidden {
+    display: none;
+}
+
+.is-visible {
+    display: flex;
+}
