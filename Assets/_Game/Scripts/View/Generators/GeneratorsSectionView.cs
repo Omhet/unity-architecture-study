@@ -68,7 +68,11 @@ namespace App.Hud.View
         private VisualElement BuildGeneratorRow(string generatorId)
         {
             var row = new VisualElement();
-            row.AddToClassList("generator-row");
+            row.AddToClassList("generator-card");
+
+            var title = new Label(generatorId);
+            title.AddToClassList("generator-title");
+            row.Add(title);
 
             var generateButton = new Button(() => HandleGenerateClicked(generatorId))
             {

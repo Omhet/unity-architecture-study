@@ -4,14 +4,16 @@
 
 .generators-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
-.generator-row {
+.generator-card {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-top-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 1px;
@@ -25,10 +27,19 @@
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
     background-color: rgba(255, 255, 255, 0.03);
-    padding-top: 10px;
+    padding-top: 12px;
     padding-right: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 12px;
     padding-left: 12px;
+    margin-bottom: 8px;
+    max-width: 200px;
+}
+
+.generator-title {
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+    color: #e0e0e0;
 }
 
 .generator-button {
@@ -38,12 +49,16 @@
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
-    padding-top: 5px;
-    padding-right: 10px;
-    padding-bottom: 5px;
-    padding-left: 10px;
+    padding-top: 6px;
+    padding-right: 12px;
+    padding-bottom: 6px;
+    padding-left: 12px;
 }
 
 .generator-button:hover {
     background-color: #39a77f;
+}
+
+.generator-button:active {
+    background-color: #2f8f6c;
 }

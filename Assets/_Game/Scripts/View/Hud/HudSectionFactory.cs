@@ -25,7 +25,7 @@ namespace App.Hud.View
             switch (definition.Id)
             {
                 case "generators":
-                    return new GeneratorsSectionView(_generatorRegistry, _generatorState, _publisher);
+                    return new GeneratorsSectionView(_generatorState, _publisher);
                 case "crafting":
                     return new PlaceholderSectionView(definition, "Crafting recipes will appear here.");
                 case "orders":
