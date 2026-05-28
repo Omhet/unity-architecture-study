@@ -64,32 +64,8 @@ namespace App.Systems.Configuration
                 case "resources":
                     bundle.Resources = JsonConvert.DeserializeObject<ResourceCatalogConfig>(json);
                     return;
-                case "products":
-                    bundle.Products = JsonConvert.DeserializeObject<ProductCatalogConfig>(json);
-                    return;
                 case "generators":
                     bundle.Generators = JsonConvert.DeserializeObject<GeneratorCatalogConfig>(json);
-                    return;
-                case "recipes":
-                    bundle.Recipes = JsonConvert.DeserializeObject<RecipeCatalogConfig>(json);
-                    return;
-                case "orders":
-                    bundle.Orders = JsonConvert.DeserializeObject<OrderCatalogConfig>(json);
-                    return;
-                case "shop":
-                    bundle.Shop = JsonConvert.DeserializeObject<App.Shop.Core.ShopConfig>(json);
-                    return;
-                case "quests":
-                    bundle.Quests = JsonConvert.DeserializeObject<QuestCatalogConfig>(json);
-                    return;
-                case "progression":
-                    bundle.Progression = JsonConvert.DeserializeObject<ProgressionCatalogConfig>(json);
-                    return;
-                case "economy":
-                    bundle.Economy = JsonConvert.DeserializeObject<EconomyCatalogConfig>(json);
-                    return;
-                case "talents":
-                    bundle.Talents = JsonConvert.DeserializeObject<TalentCatalogConfig>(json);
                     return;
                 default:
                     Debug.LogWarning("Unknown catalog key in manifest: " + catalogKey);

@@ -30,12 +30,14 @@ namespace App.Generators.Core
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(generator.ResourceId) || generator.AmountPerClick <= 0)
+            if (string.IsNullOrWhiteSpace(generator.ResourceId))
             {
                 return false;
             }
 
-            _resourceModel.AddAmount(generator.ResourceId, generator.AmountPerClick);
+            // TODO: Hardcode to 1 for now, but eventually this should be based on generator level or something similar like player progression
+            _resourceModel.AddAmount(generator.ResourceId, 1);
+
             return true;
         }
     }

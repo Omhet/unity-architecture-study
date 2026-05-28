@@ -1,6 +1,0 @@
-{
-    "products": [
-        { "id": "wood_hammer", "displayName": "Wood Hammer" },
-        { "id": "stone_hammer", "displayName": "Stone Hammer" }
-    ]
-}

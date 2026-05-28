@@ -74,25 +74,12 @@ namespace App.Hud.View
             var row = new VisualElement();
             row.AddToClassList("generator-row");
 
-            var metaColumn = new VisualElement();
-            metaColumn.AddToClassList("generator-meta");
-
-            var title = new Label(generator.DisplayName);
-            title.AddToClassList("generator-title");
-
-            var details = new Label("+" + generator.AmountPerClick + " " + generator.ResourceId + " per click");
-            details.AddToClassList("generator-details");
-
-            metaColumn.Add(title);
-            metaColumn.Add(details);
-
             var generateButton = new Button(() => HandleGenerateClicked(generator.Id))
             {
                 text = "Generate"
             };
             generateButton.AddToClassList("generator-button");
 
-            row.Add(metaColumn);
             row.Add(generateButton);
             return row;
         }

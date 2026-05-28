@@ -1,6 +1,3 @@
 {
-    "resources": [
-        { "id": "wood", "displayName": "Wood", "startingAmount": 0 },
-        { "id": "stone", "displayName": "Stone", "startingAmount": 0 }
-    ]
+    "resources": [{ "id": "wood" }, { "id": "stone" }]
 }

@@ -3,14 +3,8 @@ namespace App.Boot
     using App.Economy.Core;
     using App.Flow.Handlers;
     using App.Generators.Core;
-    using App.Shop.Core;
-    using App.Orders.Core;
-    using App.Products.Core;
-    using App.Progression.Core;
-    using App.Quests.Core;
     using App.Resources.Core;
     using App.Systems.Configuration;
-    using App.Talents.Core;
     using App.Systems.Saving;
     using App.Systems.Scene;
     using UnityEngine;
@@ -22,6 +16,8 @@ namespace App.Boot
     public class RootLifetimeScope : LifetimeScope
     {
         [SerializeField] private LoadingScreenView _loadingScreenViewPrefab;
+
+        private readonly string _manifestAddress = "config/game_manifest";
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -40,20 +36,12 @@ namespace App.Boot
             builder.Register<GeneratorRegistry>(Lifetime.Singleton);
             builder.Register<PlayerGeneratorModel>(Lifetime.Singleton);
             builder.Register<GeneratorService>(Lifetime.Singleton);
-            builder.Register<ShopRegistry>(Lifetime.Singleton);
-            builder.Register<ShopModel>(Lifetime.Singleton);
-            builder.Register<ShopService>(Lifetime.Singleton);
             builder.Register<ResourceModel>(Lifetime.Singleton);
-            builder.Register<ProductInventoryModel>(Lifetime.Singleton);
-            builder.Register<ProgressionModel>(Lifetime.Singleton);
-            builder.Register<TalentModel>(Lifetime.Singleton);
-            builder.Register<OrderModel>(Lifetime.Singleton);
-            builder.Register<QuestModel>(Lifetime.Singleton);
 
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
-                ManifestAddress = "config/game_manifest"
+                ManifestAddress = _manifestAddress
             });
 
             builder.Register<GameConfigLoader>(Lifetime.Singleton);

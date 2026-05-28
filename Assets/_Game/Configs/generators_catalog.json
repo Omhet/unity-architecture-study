@@ -1,6 +1,6 @@
 {
     "generators": [
-        { "id": "wood_generator", "displayName": "Wood Generator", "resourceId": "wood", "amountPerClick": 1 },
-        { "id": "stone_generator", "displayName": "Stone Generator", "resourceId": "stone", "amountPerClick": 1 }
+        { "id": "wood_generator", "resourceId": "wood" },
+        { "id": "stone_generator", "resourceId": "stone" }
     ]
 }
