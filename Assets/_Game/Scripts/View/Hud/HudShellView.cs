@@ -21,7 +21,7 @@ namespace App.Hud.View
         private readonly Dictionary<string, Label> _resourceLabels = new Dictionary<string, Label>();
 
         private EconomyModel _economyModel;
-        private ResourceModel _resourceModel;
+        private ResourceState _resourceState;
         private Func<GameplaySectionDefinition, IGameplaySectionView> _sectionFactory;
         private string _activeSection;
         private Label _moneyValue;
@@ -32,11 +32,11 @@ namespace App.Hud.View
         [Inject]
         public void Construct(
             EconomyModel economyModel,
-            ResourceModel resourceModel,
+            ResourceState resourceState,
             Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory)
         {
             _economyModel = economyModel;
-            _resourceModel = resourceModel;
+            _resourceState = resourceState;
             _sectionFactory = sectionFactory;
         }
 
@@ -125,13 +125,13 @@ namespace App.Hud.View
                 _moneySubscription = _economyModel.Balance.Subscribe(UpdateMoney);
             }
 
-            if (_resourceModel != null)
+            if (_resourceState != null)
             {
                 var updates = Observable.Merge(
-                    _resourceModel.Balances.ObserveAdd().Select(_ => Unit.Default),
-                    _resourceModel.Balances.ObserveRemove().Select(_ => Unit.Default),
-                    _resourceModel.Balances.ObserveReplace().Select(_ => Unit.Default),
-                    _resourceModel.Balances.ObserveReset().Select(_ => Unit.Default));
+                    _resourceState.Balances.ObserveAdd().Select(_ => Unit.Default),
+                    _resourceState.Balances.ObserveRemove().Select(_ => Unit.Default),
+                    _resourceState.Balances.ObserveReplace().Select(_ => Unit.Default),
+                    _resourceState.Balances.ObserveReset().Select(_ => Unit.Default));
 
                 _resourceSubscription = Observable.Return(Unit.Default)
                     .Concat(updates)
@@ -232,7 +232,7 @@ namespace App.Hud.View
 
         private void RefreshResources()
         {
-            if (_resourcesRow == null || _resourceModel == null)
+            if (_resourcesRow == null || _resourceState == null)
             {
                 return;
             }
@@ -240,7 +240,7 @@ namespace App.Hud.View
             _resourcesRow.Clear();
             _resourceLabels.Clear();
 
-            foreach (var pair in _resourceModel.EnumerateBalances().OrderBy(x => x.Key))
+            foreach (var pair in _resourceState.EnumerateBalances())
             {
                 var chip = new Label(pair.Key + ": " + pair.Value);
                 chip.AddToClassList("hud-resource-chip");

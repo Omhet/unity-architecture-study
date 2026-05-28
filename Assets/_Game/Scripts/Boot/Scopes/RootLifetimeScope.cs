@@ -33,10 +33,13 @@ namespace App.Boot
 
             builder.Register<EconomyModel>(Lifetime.Singleton);
             builder.Register<EconomyService>(Lifetime.Singleton);
+
             builder.Register<GeneratorRegistry>(Lifetime.Singleton);
             builder.Register<PlayerGeneratorModel>(Lifetime.Singleton);
             builder.Register<GeneratorService>(Lifetime.Singleton);
-            builder.Register<ResourceModel>(Lifetime.Singleton);
+
+            builder.Register<ResourceRegistry>(Lifetime.Singleton);
+            builder.Register<ResourceState>(Lifetime.Singleton);
 
 
             builder.RegisterInstance(new GameConfigBootstrapOptions

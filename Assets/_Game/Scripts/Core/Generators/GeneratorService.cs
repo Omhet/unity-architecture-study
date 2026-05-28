@@ -6,16 +6,16 @@ namespace App.Generators.Core
     {
         private readonly GeneratorRegistry _generatorRegistry;
         private readonly PlayerGeneratorModel _playerGeneratorModel;
-        private readonly ResourceModel _resourceModel;
+        private readonly ResourceState _resourceState;
 
         public GeneratorService(
             GeneratorRegistry generatorRegistry,
             PlayerGeneratorModel playerGeneratorModel,
-            ResourceModel resourceModel)
+            ResourceState resourceState)
         {
             _generatorRegistry = generatorRegistry;
             _playerGeneratorModel = playerGeneratorModel;
-            _resourceModel = resourceModel;
+            _resourceState = resourceState;
         }
 
         public bool TryGenerate(string generatorId)
@@ -36,7 +36,7 @@ namespace App.Generators.Core
             }
 
             // TODO: Hardcode to 1 for now, but eventually this should be based on generator level or something similar like player progression
-            _resourceModel.AddAmount(generator.ResourceId, 1);
+            _resourceState.AddAmount(generator.ResourceId, 1);
 
             return true;
         }

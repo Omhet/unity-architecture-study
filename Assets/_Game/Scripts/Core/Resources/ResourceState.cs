@@ -3,7 +3,7 @@ namespace App.Resources.Core
     using System.Collections.Generic;
     using ObservableCollections;
 
-    public class ResourceModel
+    public class ResourceState
     {
         public ObservableDictionary<string, int> Balances { get; } = new ObservableDictionary<string, int>();
 
