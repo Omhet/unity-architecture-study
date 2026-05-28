@@ -37,10 +37,12 @@ namespace App.Boot
 
             builder.Register<EconomyModel>(Lifetime.Singleton);
             builder.Register<EconomyService>(Lifetime.Singleton);
-            builder.Register<GeneratorModel>(Lifetime.Singleton);
+            builder.Register<GeneratorRegistry>(Lifetime.Singleton);
             builder.Register<PlayerGeneratorModel>(Lifetime.Singleton);
             builder.Register<GeneratorService>(Lifetime.Singleton);
+            builder.Register<ShopRegistry>(Lifetime.Singleton);
             builder.Register<ShopModel>(Lifetime.Singleton);
+            builder.Register<ShopService>(Lifetime.Singleton);
             builder.Register<ResourceModel>(Lifetime.Singleton);
             builder.Register<ProductInventoryModel>(Lifetime.Singleton);
             builder.Register<ProgressionModel>(Lifetime.Singleton);

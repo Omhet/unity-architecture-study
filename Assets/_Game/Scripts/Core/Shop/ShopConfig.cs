@@ -1,14 +1,13 @@
 namespace App.Shop.Core
 {
-    // Pure DTO for Addressables/JSON parsing
     [System.Serializable]
     public class ShopConfig
     {
-        public ShopItem[] AvailableItems;
+        public ShopDefinition[] AvailableItems;
     }
 
     [System.Serializable]
-    public class ShopItem
+    public class ShopDefinition
     {
         public string ItemId;
         public string DisplayName;
@@ -21,8 +20,15 @@ namespace App.Shop.Core
         public bool OneTimePurchase;
         public string UnlockTargetType;
         public string UnlockTargetId;
+    }
+
+    [System.Serializable]
+    public class ShopItemState
+    {
+        public string ItemId;
 
         public bool IsVisible;
         public bool IsBuyable;
+        public bool IsPurchased;
     }
 }

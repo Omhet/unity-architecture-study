@@ -4,16 +4,16 @@ namespace App.Generators.Core
 
     public class GeneratorService
     {
-        private readonly GeneratorModel _generatorModel;
+        private readonly GeneratorRegistry _generatorRegistry;
         private readonly PlayerGeneratorModel _playerGeneratorModel;
         private readonly ResourceModel _resourceModel;
 
         public GeneratorService(
-            GeneratorModel generatorModel,
+            GeneratorRegistry generatorRegistry,
             PlayerGeneratorModel playerGeneratorModel,
             ResourceModel resourceModel)
         {
-            _generatorModel = generatorModel;
+            _generatorRegistry = generatorRegistry;
             _playerGeneratorModel = playerGeneratorModel;
             _resourceModel = resourceModel;
         }
@@ -25,7 +25,7 @@ namespace App.Generators.Core
                 return false;
             }
 
-            if (!_generatorModel.TryGetById(generatorId, out var generator) || generator == null)
+            if (!_generatorRegistry.TryGetById(generatorId, out var generator) || generator == null)
             {
                 return false;
             }

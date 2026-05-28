@@ -1,6 +1,7 @@
 namespace App.Hud.View
 {
     using ObservableCollections;
+    using App.GameConfig.Core;
     using App.Flow.Events;
     using App.Generators.Core;
     using App.View;
@@ -11,19 +12,19 @@ namespace App.Hud.View
 
     public class GeneratorsSectionView : GameplaySectionViewBase
     {
-        private readonly GeneratorModel _generatorModel;
+        private readonly GeneratorRegistry _generatorRegistry;
         private readonly PlayerGeneratorModel _playerGeneratorModel;
         private readonly ICommandPublisher _publisher;
         private VisualElement _list;
         private IDisposable _ownedGeneratorsSubscription;
 
         public GeneratorsSectionView(
-            GeneratorModel generatorModel,
+            GeneratorRegistry generatorRegistry,
             PlayerGeneratorModel playerGeneratorModel,
             ICommandPublisher publisher)
             : base(new GameplaySectionDefinition("generators", "Generators", 0))
         {
-            _generatorModel = generatorModel;
+            _generatorRegistry = generatorRegistry;
             _playerGeneratorModel = playerGeneratorModel;
             _publisher = publisher;
         }
@@ -68,7 +69,7 @@ namespace App.Hud.View
             _ownedGeneratorsSubscription = null;
         }
 
-        private VisualElement BuildGeneratorRow(GeneratorModel.GeneratorState generator)
+        private VisualElement BuildGeneratorRow(GeneratorDefinition generator)
         {
             var row = new VisualElement();
             row.AddToClassList("generator-row");
@@ -113,7 +114,7 @@ namespace App.Hud.View
             for (int i = 0; i < _playerGeneratorModel.OwnedGeneratorIds.Count; i++)
             {
                 var generatorId = _playerGeneratorModel.OwnedGeneratorIds[i];
-                if (!_generatorModel.TryGetById(generatorId, out var generator) || generator == null)
+                if (!_generatorRegistry.TryGetById(generatorId, out var generator) || generator == null)
                 {
                     continue;
                 }

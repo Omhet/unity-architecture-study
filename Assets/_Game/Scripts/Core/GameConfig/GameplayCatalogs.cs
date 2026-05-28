@@ -174,7 +174,7 @@ namespace App.GameConfig.Core
         public GeneratorCatalogConfig Generators;
         public RecipeCatalogConfig Recipes;
         public OrderCatalogConfig Orders;
-        public App.Shop.Core.ShopConfig Shop;
+        public Shop.Core.ShopConfig Shop;
         public QuestCatalogConfig Quests;
         public ProgressionCatalogConfig Progression;
         public EconomyCatalogConfig Economy;

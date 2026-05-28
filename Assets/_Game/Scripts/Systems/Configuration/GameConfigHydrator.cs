@@ -14,7 +14,7 @@ namespace App.Systems.Configuration
     public class GameConfigHydrator
     {
         private readonly EconomyModel _economyModel;
-        private readonly GeneratorModel _generatorModel;
+        private readonly GeneratorRegistry _generatorRegistry;
         private readonly PlayerGeneratorModel _playerGeneratorModel;
         private readonly ResourceModel _resourceModel;
         private readonly ProductInventoryModel _productInventoryModel;
@@ -22,11 +22,11 @@ namespace App.Systems.Configuration
         private readonly OrderModel _orderModel;
         private readonly QuestModel _questModel;
         private readonly TalentModel _talentModel;
-        private readonly ShopModel _shopModel;
+        private readonly ShopService _shopService;
 
         public GameConfigHydrator(
             EconomyModel economyModel,
-            GeneratorModel generatorModel,
+            GeneratorRegistry generatorRegistry,
             PlayerGeneratorModel playerGeneratorModel,
             ResourceModel resourceModel,
             ProductInventoryModel productInventoryModel,
@@ -34,10 +34,10 @@ namespace App.Systems.Configuration
             OrderModel orderModel,
             QuestModel questModel,
             TalentModel talentModel,
-            ShopModel shopModel)
+            ShopService shopService)
         {
             _economyModel = economyModel;
-            _generatorModel = generatorModel;
+            _generatorRegistry = generatorRegistry;
             _playerGeneratorModel = playerGeneratorModel;
             _resourceModel = resourceModel;
             _productInventoryModel = productInventoryModel;
@@ -45,7 +45,7 @@ namespace App.Systems.Configuration
             _orderModel = orderModel;
             _questModel = questModel;
             _talentModel = talentModel;
-            _shopModel = shopModel;
+            _shopService = shopService;
         }
 
         public void Hydrate(GameCatalogBundle bundle)
@@ -104,34 +104,8 @@ namespace App.Systems.Configuration
 
         private void HydrateGenerators(GeneratorCatalogConfig config)
         {
-            _generatorModel.Generators.Clear();
+            _generatorRegistry.Load(config);
             _playerGeneratorModel.OwnedGeneratorIds.Clear();
-            if (config?.Generators == null)
-            {
-                return;
-            }
-
-            foreach (var generator in config.Generators)
-            {
-                if (generator == null || string.IsNullOrWhiteSpace(generator.Id))
-                {
-                    continue;
-                }
-
-                _generatorModel.Generators.Add(new GeneratorModel.GeneratorState
-                {
-                    Id = generator.Id,
-                    DisplayName = generator.DisplayName,
-                    ResourceId = generator.ResourceId,
-                    AmountPerClick = generator.AmountPerClick
-                });
-            }
-
-            if (_generatorModel.Generators.Count > 0)
-            {
-                _playerGeneratorModel.OwnedGeneratorIds.Add(_generatorModel.Generators[0].Id);
-            }
-
         }
 
         private void HydrateProducts()
@@ -157,23 +131,7 @@ namespace App.Systems.Configuration
 
         private void HydrateShop(ShopConfig config)
         {
-            _shopModel.Items.Clear();
-            if (config?.AvailableItems == null)
-            {
-                return;
-            }
-
-            foreach (var entry in config.AvailableItems)
-            {
-                if (entry == null || string.IsNullOrWhiteSpace(entry.ItemId))
-                {
-                    continue;
-                }
-
-                entry.IsVisible = entry.InitialVisibility;
-                entry.IsBuyable = entry.InitialBuyability;
-                _shopModel.Items.Add(entry);
-            }
+            _shopService.LoadCatalog(config);
         }
     }
 }
