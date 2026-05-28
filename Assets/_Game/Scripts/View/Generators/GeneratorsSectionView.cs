@@ -1,7 +1,6 @@
 namespace App.Hud.View
 {
     using ObservableCollections;
-    using App.GameConfig.Core;
     using App.Flow.Events;
     using App.Generators.Core;
     using App.View;
@@ -12,19 +11,16 @@ namespace App.Hud.View
 
     public class GeneratorsSectionView : GameplaySectionViewBase
     {
-        private readonly GeneratorRegistry _generatorRegistry;
         private readonly GeneratorState _generatorState;
         private readonly ICommandPublisher _publisher;
         private VisualElement _list;
         private IDisposable _ownedGeneratorsSubscription;
 
         public GeneratorsSectionView(
-            GeneratorRegistry generatorRegistry,
             GeneratorState generatorState,
             ICommandPublisher publisher)
             : base(new GameplaySectionDefinition("generators", "Generators", 0))
         {
-            _generatorRegistry = generatorRegistry;
             _generatorState = generatorState;
             _publisher = publisher;
         }
@@ -69,18 +65,19 @@ namespace App.Hud.View
             _ownedGeneratorsSubscription = null;
         }
 
-        private VisualElement BuildGeneratorRow(GeneratorDefinition generator)
+        private VisualElement BuildGeneratorRow(string generatorId)
         {
             var row = new VisualElement();
             row.AddToClassList("generator-row");
 
-            var generateButton = new Button(() => HandleGenerateClicked(generator.Id))
+            var generateButton = new Button(() => HandleGenerateClicked(generatorId))
             {
                 text = "Generate"
             };
             generateButton.AddToClassList("generator-button");
 
             row.Add(generateButton);
+
             return row;
         }
 
@@ -101,12 +98,8 @@ namespace App.Hud.View
             for (int i = 0; i < _generatorState.OwnedGeneratorIds.Count; i++)
             {
                 var generatorId = _generatorState.OwnedGeneratorIds[i];
-                if (!_generatorRegistry.TryGetById(generatorId, out var generator) || generator == null)
-                {
-                    continue;
-                }
 
-                _list.Add(BuildGeneratorRow(generator));
+                _list.Add(BuildGeneratorRow(generatorId));
             }
         }
     }
