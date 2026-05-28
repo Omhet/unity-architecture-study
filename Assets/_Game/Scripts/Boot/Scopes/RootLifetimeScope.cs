@@ -31,7 +31,7 @@ namespace App.Boot
             builder.Register<SaveSystem>(Lifetime.Singleton);
             builder.Register<SceneLoadSystem>(Lifetime.Singleton);
 
-            builder.Register<EconomyModel>(Lifetime.Singleton);
+            builder.Register<EconomyState>(Lifetime.Singleton);
             builder.Register<EconomyService>(Lifetime.Singleton);
 
             builder.Register<GeneratorRegistry>(Lifetime.Singleton);

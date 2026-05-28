@@ -2,26 +2,26 @@ namespace App.Economy.Core
 {
     public class EconomyService
     {
-        private readonly EconomyModel _model;
+        private readonly EconomyState _state;
 
-        public EconomyService(EconomyModel model)
+        public EconomyService(EconomyState state)
         {
-            _model = model;
+            _state = state;
         }
 
         public void Add(int amount)
         {
             if (amount <= 0) return;
-            _model.Balance.Value += amount;
+            _state.Balance.Value += amount;
         }
 
         public bool TrySpend(int amount)
         {
             if (amount <= 0) return false;
 
-            if (_model.Balance.Value >= amount)
+            if (_state.Balance.Value >= amount)
             {
-                _model.Balance.Value -= amount;
+                _state.Balance.Value -= amount;
                 return true;
             }
             return false;

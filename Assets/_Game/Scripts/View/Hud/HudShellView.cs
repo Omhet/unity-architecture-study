@@ -20,7 +20,7 @@ namespace App.Hud.View
         private readonly Dictionary<Button, string> _tabIds = new Dictionary<Button, string>();
         private readonly Dictionary<string, Label> _resourceLabels = new Dictionary<string, Label>();
 
-        private EconomyModel _economyModel;
+        private EconomyState _economyState;
         private ResourceState _resourceState;
         private Func<GameplaySectionDefinition, IGameplaySectionView> _sectionFactory;
         private string _activeSection;
@@ -31,11 +31,11 @@ namespace App.Hud.View
 
         [Inject]
         public void Construct(
-            EconomyModel economyModel,
+            EconomyState economyState,
             ResourceState resourceState,
             Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory)
         {
-            _economyModel = economyModel;
+            _economyState = economyState;
             _resourceState = resourceState;
             _sectionFactory = sectionFactory;
         }
@@ -120,9 +120,9 @@ namespace App.Hud.View
             _moneySubscription?.Dispose();
             _resourceSubscription?.Dispose();
 
-            if (_economyModel != null)
+            if (_economyState != null)
             {
-                _moneySubscription = _economyModel.Balance.Subscribe(UpdateMoney);
+                _moneySubscription = _economyState.Balance.Subscribe(UpdateMoney);
             }
 
             if (_resourceState != null)
@@ -138,7 +138,7 @@ namespace App.Hud.View
                     .Subscribe(_ => RefreshResources());
             }
 
-            UpdateMoney(_economyModel != null ? _economyModel.Balance.Value : 0);
+            UpdateMoney(_economyState != null ? _economyState.Balance.Value : 0);
         }
 
         protected override void UnbindView()
