@@ -14,11 +14,21 @@ namespace App.Systems.Scene
 
         public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
         {
+            if (SceneManager.GetActiveScene().name == sceneName)
+            {
+                return;
+            }
+
             await SceneManager.LoadSceneAsync(sceneName, mode).ToUniTask();
         }
 
         public async UniTask UnloadSceneAsync(string sceneName)
         {
+            if (!SceneManager.GetSceneByName(sceneName).isLoaded)
+            {
+                return;
+            }
+
             await SceneManager.UnloadSceneAsync(sceneName).ToUniTask();
         }
 
