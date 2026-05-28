@@ -7,16 +7,16 @@ namespace App.Hud.View
     public class HudSectionFactory
     {
         private readonly GeneratorRegistry _generatorRegistry;
-        private readonly PlayerGeneratorModel _playerGeneratorModel;
+        private readonly GeneratorState _generatorState;
         private readonly ICommandPublisher _publisher;
 
         public HudSectionFactory(
             GeneratorRegistry generatorRegistry,
-            PlayerGeneratorModel playerGeneratorModel,
+            GeneratorState generatorState,
             ICommandPublisher publisher)
         {
             _generatorRegistry = generatorRegistry;
-            _playerGeneratorModel = playerGeneratorModel;
+            _generatorState = generatorState;
             _publisher = publisher;
         }
 
@@ -25,7 +25,7 @@ namespace App.Hud.View
             switch (definition.Id)
             {
                 case "generators":
-                    return new GeneratorsSectionView(_generatorRegistry, _playerGeneratorModel, _publisher);
+                    return new GeneratorsSectionView(_generatorRegistry, _generatorState, _publisher);
                 case "crafting":
                     return new PlaceholderSectionView(definition, "Crafting recipes will appear here.");
                 case "orders":

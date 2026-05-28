@@ -35,7 +35,7 @@ namespace App.Boot
             builder.Register<EconomyService>(Lifetime.Singleton);
 
             builder.Register<GeneratorRegistry>(Lifetime.Singleton);
-            builder.Register<PlayerGeneratorModel>(Lifetime.Singleton);
+            builder.Register<GeneratorState>(Lifetime.Singleton);
             builder.Register<GeneratorService>(Lifetime.Singleton);
 
             builder.Register<ResourceRegistry>(Lifetime.Singleton);

@@ -13,19 +13,19 @@ namespace App.Hud.View
     public class GeneratorsSectionView : GameplaySectionViewBase
     {
         private readonly GeneratorRegistry _generatorRegistry;
-        private readonly PlayerGeneratorModel _playerGeneratorModel;
+        private readonly GeneratorState _generatorState;
         private readonly ICommandPublisher _publisher;
         private VisualElement _list;
         private IDisposable _ownedGeneratorsSubscription;
 
         public GeneratorsSectionView(
             GeneratorRegistry generatorRegistry,
-            PlayerGeneratorModel playerGeneratorModel,
+            GeneratorState generatorState,
             ICommandPublisher publisher)
             : base(new GameplaySectionDefinition("generators", "Generators", 0))
         {
             _generatorRegistry = generatorRegistry;
-            _playerGeneratorModel = playerGeneratorModel;
+            _generatorState = generatorState;
             _publisher = publisher;
         }
 
@@ -47,16 +47,16 @@ namespace App.Hud.View
         {
             _ownedGeneratorsSubscription?.Dispose();
 
-            if (_playerGeneratorModel == null)
+            if (_generatorState == null)
             {
                 return;
             }
 
             var updates = Observable.Merge(
-                _playerGeneratorModel.OwnedGeneratorIds.ObserveAdd().Select(_ => Unit.Default),
-                _playerGeneratorModel.OwnedGeneratorIds.ObserveRemove().Select(_ => Unit.Default),
-                _playerGeneratorModel.OwnedGeneratorIds.ObserveReplace().Select(_ => Unit.Default),
-                _playerGeneratorModel.OwnedGeneratorIds.ObserveReset().Select(_ => Unit.Default));
+                _generatorState.OwnedGeneratorIds.ObserveAdd().Select(_ => Unit.Default),
+                _generatorState.OwnedGeneratorIds.ObserveRemove().Select(_ => Unit.Default),
+                _generatorState.OwnedGeneratorIds.ObserveReplace().Select(_ => Unit.Default),
+                _generatorState.OwnedGeneratorIds.ObserveReset().Select(_ => Unit.Default));
 
             _ownedGeneratorsSubscription = Observable.Return(Unit.Default)
                 .Concat(updates)
@@ -91,16 +91,16 @@ namespace App.Hud.View
 
         private void RebuildRows()
         {
-            if (_list == null || _playerGeneratorModel == null)
+            if (_list == null || _generatorState == null)
             {
                 return;
             }
 
             _list.Clear();
 
-            for (int i = 0; i < _playerGeneratorModel.OwnedGeneratorIds.Count; i++)
+            for (int i = 0; i < _generatorState.OwnedGeneratorIds.Count; i++)
             {
-                var generatorId = _playerGeneratorModel.OwnedGeneratorIds[i];
+                var generatorId = _generatorState.OwnedGeneratorIds[i];
                 if (!_generatorRegistry.TryGetById(generatorId, out var generator) || generator == null)
                 {
                     continue;

@@ -2,7 +2,7 @@ namespace App.Generators.Core
 {
     using ObservableCollections;
 
-    public class PlayerGeneratorModel
+    public class GeneratorState
     {
         public ObservableList<string> OwnedGeneratorIds { get; } = new ObservableList<string>();
 
