@@ -7,16 +7,19 @@ namespace App.Systems.Configuration
     public class GameConfigHydrator
     {
         private readonly GeneratorRegistry _generatorRegistry;
+        private readonly GeneratorState _generatorState;
         private readonly ResourceRegistry _resourceRegistry;
         private readonly ResourceState _resourceState;
 
         public GameConfigHydrator(
             GeneratorRegistry generatorRegistry,
+            GeneratorState generatorState,
             ResourceRegistry resourceRegistry,
             ResourceState resourceState
             )
         {
             _generatorRegistry = generatorRegistry;
+            _generatorState = generatorState;
             _resourceRegistry = resourceRegistry;
             _resourceState = resourceState;
         }
@@ -49,6 +52,18 @@ namespace App.Systems.Configuration
         private void HydrateGenerators(GeneratorCatalogConfig config)
         {
             _generatorRegistry.Load(config);
+
+            // TODO: For now initialize generator state with the first generator from config, 
+            // but we need to refine requirements for this, maybe it should happen after onboarding or something similar, 
+            // but for now we can just give player access to the first generator in the list
+            if (config?.Generators != null && config.Generators.Length > 0)
+            {
+                var firstGenerator = config.Generators[0];
+                if (firstGenerator != null && !string.IsNullOrWhiteSpace(firstGenerator.Id))
+                {
+                    _generatorState.OwnedGeneratorIds.Add(firstGenerator.Id);
+                }
+            }
         }
     }
 }
