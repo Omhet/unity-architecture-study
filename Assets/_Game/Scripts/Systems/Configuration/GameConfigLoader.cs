@@ -70,6 +70,9 @@ namespace App.Systems.Configuration
                 case "products":
                     bundle.Products = JsonConvert.DeserializeObject<ProductCatalogConfig>(json);
                     return;
+                case "recipes":
+                    bundle.Recipes = JsonConvert.DeserializeObject<RecipeCatalogConfig>(json);
+                    return;
                 default:
                     Debug.LogWarning("Unknown catalog key in manifest: " + catalogKey);
                     return;

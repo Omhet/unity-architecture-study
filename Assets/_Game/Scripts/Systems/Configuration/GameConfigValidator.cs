@@ -20,6 +20,7 @@ namespace App.Systems.Configuration
             ValidateResourceCatalog(bundle.Resources, errors);
             ValidateGeneratorCatalog(bundle.Generators, bundle.Resources, errors);
             ValidateProductCatalog(bundle.Products, errors);
+            ValidateRecipeCatalog(bundle.Recipes, bundle.Resources, bundle.Products, errors);
 
             ThrowIfInvalid(errors);
         }
@@ -69,6 +70,43 @@ namespace App.Systems.Configuration
 
             ValidateUniqueIds(config.Products, x => x?.Id, "product", errors);
         }
+
+        private void ValidateRecipeCatalog(RecipeCatalogConfig recipes, ResourceCatalogConfig resources, ProductCatalogConfig products, List<string> errors)
+        {
+            if (recipes?.Recipes == null)
+            {
+                errors.Add("Missing recipes catalog.");
+                return;
+            }
+
+            ValidateUniqueIds(recipes.Recipes, x => x?.Id, "recipe", errors);
+            var resourceIds = BuildIdSet(resources?.Resources, x => x?.Id);
+            var productIds = BuildIdSet(products?.Products, x => x?.Id);
+            foreach (var recipe in recipes.Recipes)
+            {
+                if (recipe == null)
+                {
+                    continue;
+                }
+
+                if (!productIds.Contains(recipe.OutputProductId))
+                {
+                    errors.Add("Recipe references unknown output product: " + recipe.OutputProductId + " (recipe: " + recipe.Id + ")");
+                }
+
+                if (recipe.InputResourceIds != null)
+                {
+                    foreach (var inputResourceId in recipe.InputResourceIds.Keys)
+                    {
+                        if (!resourceIds.Contains(inputResourceId))
+                        {
+                            errors.Add("Recipe references unknown input resource: " + inputResourceId + " (recipe: " + recipe.Id + ")");
+                        }
+                    }
+                }
+            }
+        }
+
 
         private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)
         {

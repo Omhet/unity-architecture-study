@@ -1,0 +1,9 @@
+{
+  "recipes": [
+    {
+      "id": "wooden_hammer_recipe",
+      "inputResourceIds": { "wood": 3 },
+      "outputProductId": "wooden_hammer"
+    }
+  ]
+}

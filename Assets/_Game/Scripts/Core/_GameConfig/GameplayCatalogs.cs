@@ -1,6 +1,7 @@
 namespace App.GameConfig.Core
 {
     using System;
+    using System.Collections.Generic;
 
     [Serializable]
     public class GameConfigManifest
@@ -54,11 +55,26 @@ namespace App.GameConfig.Core
         public ProductDefinition[] Products;
     }
 
+    [Serializable]
+    public class RecipeDefinition
+    {
+        public string Id;
+        public Dictionary<string, int> InputResourceIds;
+        public string OutputProductId;
+    }
+
+    [Serializable]
+    public class RecipeCatalogConfig
+    {
+        public RecipeDefinition[] Recipes;
+    }
+
     public class GameCatalogBundle
     {
         public GameConfigManifest Manifest;
         public ResourceCatalogConfig Resources;
         public GeneratorCatalogConfig Generators;
         public ProductCatalogConfig Products;
+        public RecipeCatalogConfig Recipes;
     }
 }

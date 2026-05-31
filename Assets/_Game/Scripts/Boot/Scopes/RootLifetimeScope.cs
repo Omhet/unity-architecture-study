@@ -4,6 +4,7 @@ namespace App.Boot
     using App.Flow.Handlers;
     using App.Generators.Core;
     using App.Products.Core;
+    using App.Recipes.Core;
     using App.Resources.Core;
     using App.Systems.Configuration;
     using App.Systems.Saving;
@@ -44,6 +45,8 @@ namespace App.Boot
 
             builder.Register<ProductRegistry>(Lifetime.Singleton);
             builder.Register<ProductState>(Lifetime.Singleton);
+
+            builder.Register<RecipeRegistry>(Lifetime.Singleton);
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {

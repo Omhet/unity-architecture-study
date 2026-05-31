@@ -4,21 +4,24 @@ namespace App.Systems.Configuration
     using App.Resources.Core;
     using App.Generators.Core;
     using App.Products.Core;
+    using App.Recipes.Core;
 
     public class GameConfigHydrator
     {
         private readonly GeneratorRegistry _generatorRegistry;
         private readonly GeneratorState _generatorState;
         private readonly ResourceRegistry _resourceRegistry;
-        private readonly ProductRegistry _productRegistry;
         private readonly ResourceState _resourceState;
+        private readonly ProductRegistry _productRegistry;
+        private readonly RecipeRegistry _recipeRegistry;
 
         public GameConfigHydrator(
             GeneratorRegistry generatorRegistry,
             GeneratorState generatorState,
             ResourceRegistry resourceRegistry,
             ResourceState resourceState,
-            ProductRegistry productRegistry
+            ProductRegistry productRegistry,
+            RecipeRegistry recipeRegistry
             )
         {
             _generatorRegistry = generatorRegistry;
@@ -26,6 +29,7 @@ namespace App.Systems.Configuration
             _resourceRegistry = resourceRegistry;
             _resourceState = resourceState;
             _productRegistry = productRegistry;
+            _recipeRegistry = recipeRegistry;
         }
 
         public void Hydrate(GameCatalogBundle bundle)
@@ -33,6 +37,7 @@ namespace App.Systems.Configuration
             HydrateGenerators(bundle.Generators);
             HydrateResources(bundle.Resources);
             HydrateProducts(bundle.Products);
+            HydrateRecipes(bundle.Recipes);
         }
 
         private void HydrateResources(ResourceCatalogConfig config)
@@ -77,6 +82,14 @@ namespace App.Systems.Configuration
 
             // For now we don't have any state to initialize for products, 
             // but we can add it here in the future if we decide to have some initial products available to the player
+        }
+
+        private void HydrateRecipes(RecipeCatalogConfig config)
+        {
+            _recipeRegistry.Load(config);
+
+            // For now we don't have any state to initialize for recipes,
+            // but we can add it here in the future if we decide to have some initial recipes available to the player
         }
     }
 }

@@ -15,6 +15,11 @@
       "key": "products",
       "address": "config/products_catalog",
       "schemaVersion": 1
+    },
+    {
+      "key": "recipes",
+      "address": "config/recipes_catalog",
+      "schemaVersion": 1
     }
   ]
 }
