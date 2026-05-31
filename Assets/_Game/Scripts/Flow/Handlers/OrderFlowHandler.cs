@@ -10,11 +10,13 @@ namespace App.Flow.Handlers
     [Routes]
     public partial class OrderFlowHandler
     {
+        private readonly OrderState _orderState;
         private readonly OrderService _orderService;
         private CancellationTokenSource _orderGenerationCts;
 
-        public OrderFlowHandler(OrderService orderService)
+        public OrderFlowHandler(OrderState orderState, OrderService orderService)
         {
+            _orderState = orderState;
             _orderService = orderService;
         }
 
@@ -38,6 +40,7 @@ namespace App.Flow.Handlers
                     {
                         await UniTask.Delay(interval, cancellationToken: token);
                         if (token.IsCancellationRequested) break;
+                        if (_orderState.ActiveOrders.Count >= 6) continue; // limit max active orders
                         _orderService.CreateNewOrder();
                     }
                 }

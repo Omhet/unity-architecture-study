@@ -74,7 +74,9 @@ namespace App.Orders.Core
             }
 
             var randomProduct = allProductAmounts.OrderBy(_ => Guid.NewGuid()).First();
-            var randomRequirementQuantity = Math.Min(randomProduct.Value, 5); // Require up to 5 of the product
+
+            Random rnd = new Random();
+            var randomRequirementQuantity = rnd.Next(1, 6); // TODO: Hardocde max quantity for now, can be based on product type or player progress later
 
             var newOrder = new Order
             (
