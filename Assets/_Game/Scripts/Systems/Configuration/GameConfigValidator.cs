@@ -94,15 +94,24 @@ namespace App.Systems.Configuration
                     errors.Add("Recipe references unknown output product: " + recipe.OutputProductId + " (recipe: " + recipe.Id + ")");
                 }
 
-                if (recipe.InputResourceIds != null)
+                if (recipe.InputResources != null)
                 {
-                    foreach (var inputResourceId in recipe.InputResourceIds.Keys)
+                    foreach (var inputResourceId in recipe.InputResources.Keys)
                     {
                         if (!resourceIds.Contains(inputResourceId))
                         {
                             errors.Add("Recipe references unknown input resource: " + inputResourceId + " (recipe: " + recipe.Id + ")");
                         }
+                        else if (recipe.InputResources[inputResourceId] <= 0)
+                        {
+                            errors.Add("Recipe has non-positive amount for input resource: " + inputResourceId + " (recipe: " + recipe.Id + ")");
+                        }
+
                     }
+                }
+                else
+                {
+                    errors.Add("Recipe is missing input resources: " + recipe.Id);
                 }
             }
         }

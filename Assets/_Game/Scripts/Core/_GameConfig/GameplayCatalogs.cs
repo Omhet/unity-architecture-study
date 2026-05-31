@@ -59,7 +59,7 @@ namespace App.GameConfig.Core
     public class RecipeDefinition
     {
         public string Id;
-        public Dictionary<string, int> InputResourceIds;
+        public Dictionary<string, int> InputResources;
         public string OutputProductId;
     }
 

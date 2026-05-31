@@ -1,5 +1,6 @@
 namespace App.Boot
 {
+    using App.Craft.Core;
     using App.Economy.Core;
     using App.Flow.Handlers;
     using App.Generators.Core;
@@ -48,6 +49,8 @@ namespace App.Boot
 
             builder.Register<RecipeRegistry>(Lifetime.Singleton);
             builder.Register<RecipeState>(Lifetime.Singleton);
+
+            builder.Register<CraftService>(Lifetime.Singleton);
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
