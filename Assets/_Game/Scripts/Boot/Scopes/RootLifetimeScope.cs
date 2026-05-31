@@ -54,6 +54,7 @@ namespace App.Boot
             builder.Register<CraftService>(Lifetime.Singleton);
 
             builder.Register<OrderState>(Lifetime.Singleton);
+            builder.Register<OrderService>(Lifetime.Singleton);
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {

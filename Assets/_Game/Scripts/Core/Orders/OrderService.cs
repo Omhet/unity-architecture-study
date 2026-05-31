@@ -1,8 +1,7 @@
-namespace App.Generators.Core
+namespace App.Orders.Core
 {
     using System.Linq;
     using App.Economy.Core;
-    using App.Orders.Core;
     using App.Products.Core;
 
     public class OrderService

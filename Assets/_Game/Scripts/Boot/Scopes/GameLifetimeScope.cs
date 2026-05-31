@@ -18,6 +18,7 @@ namespace App.Boot
             {
                 routing.Map<GeneratorFlowHandler>();
                 routing.Map<CraftFlowHandler>();
+                routing.Map<OrderFlowHandler>();
             });
 
             builder.Register<HudSectionFactory>(Lifetime.Scoped);
