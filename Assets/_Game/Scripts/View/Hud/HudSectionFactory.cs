@@ -1,6 +1,7 @@
 namespace App.Hud.View
 {
     using App.Generators.Core;
+    using App.Products.Core;
     using App.Recipes.Core;
     using App.View;
     using VitalRouter;
@@ -9,15 +10,21 @@ namespace App.Hud.View
     {
         private readonly GeneratorState _generatorState;
         private readonly RecipeState _recipeState;
+        private readonly RecipeRegistry _recipeRegistry;
+        private readonly ProductState _productState;
         private readonly ICommandPublisher _publisher;
 
         public HudSectionFactory(
             GeneratorState generatorState,
             RecipeState recipeState,
+            RecipeRegistry recipeRegistry,
+            ProductState productState,
             ICommandPublisher publisher)
         {
             _generatorState = generatorState;
             _recipeState = recipeState;
+            _recipeRegistry = recipeRegistry;
+            _productState = productState;
             _publisher = publisher;
         }
 
@@ -28,7 +35,7 @@ namespace App.Hud.View
                 case "generators":
                     return new GeneratorsSectionView(_publisher, _generatorState);
                 case "crafting":
-                    return new CraftSectionView(_publisher, _recipeState);
+                    return new CraftSectionView(_publisher, _recipeState, _recipeRegistry, _productState);
                 case "orders":
                     return new PlaceholderSectionView(definition, "Customer orders will appear here.");
                 case "shop":

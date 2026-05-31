@@ -2,11 +2,36 @@
     padding-top: 8px;
 }
 
-.craft-list {
+.craft-section-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.products-list {
+    display: flex;
+    flex-direction: column;
+    background-color: #cccccc;
+    padding: 16px;
+    flex: 1;
+}
+
+.product-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 24px;
+    color: #262626;
+}
+
+.recipes-list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
+    align-items: flex-start;
+    flex: 1;
 }
 
 .recipe-card {
@@ -40,6 +65,19 @@
     -unity-font-style: bold;
     margin-bottom: 8px;
     color: #e0e0e0;
+}
+
+.ingredients-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.ingredient-label {
+    font-size: 12px;
+    color: #c0c0c0;
 }
 
 .craft-button {
