@@ -67,6 +67,9 @@ namespace App.Systems.Configuration
                 case "generators":
                     bundle.Generators = JsonConvert.DeserializeObject<GeneratorCatalogConfig>(json);
                     return;
+                case "products":
+                    bundle.Products = JsonConvert.DeserializeObject<ProductCatalogConfig>(json);
+                    return;
                 default:
                     Debug.LogWarning("Unknown catalog key in manifest: " + catalogKey);
                     return;

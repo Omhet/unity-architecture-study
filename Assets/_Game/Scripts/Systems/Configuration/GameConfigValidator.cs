@@ -19,6 +19,7 @@ namespace App.Systems.Configuration
 
             ValidateResourceCatalog(bundle.Resources, errors);
             ValidateGeneratorCatalog(bundle.Generators, bundle.Resources, errors);
+            ValidateProductCatalog(bundle.Products, errors);
 
             ThrowIfInvalid(errors);
         }
@@ -56,6 +57,17 @@ namespace App.Systems.Configuration
                     errors.Add("Generator references unknown resource: " + generator.ResourceId + " (generator: " + generator.Id + ")");
                 }
             }
+        }
+
+        private static void ValidateProductCatalog(ProductCatalogConfig config, List<string> errors)
+        {
+            if (config?.Products == null)
+            {
+                errors.Add("Missing products catalog.");
+                return;
+            }
+
+            ValidateUniqueIds(config.Products, x => x?.Id, "product", errors);
         }
 
         private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)

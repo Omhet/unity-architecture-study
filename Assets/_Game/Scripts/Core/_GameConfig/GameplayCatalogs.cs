@@ -18,21 +18,15 @@ namespace App.GameConfig.Core
     }
 
     [Serializable]
-    public class ResourceCatalogConfig
-    {
-        public ResourceDefinition[] Resources;
-    }
-
-    [Serializable]
     public class ResourceDefinition
     {
         public string Id;
     }
 
     [Serializable]
-    public class GeneratorCatalogConfig
+    public class ResourceCatalogConfig
     {
-        public GeneratorDefinition[] Generators;
+        public ResourceDefinition[] Resources;
     }
 
     [Serializable]
@@ -42,10 +36,29 @@ namespace App.GameConfig.Core
         public string ResourceId;
     }
 
+    [Serializable]
+    public class GeneratorCatalogConfig
+    {
+        public GeneratorDefinition[] Generators;
+    }
+
+    [Serializable]
+    public class ProductDefinition
+    {
+        public string Id;
+    }
+
+    [Serializable]
+    public class ProductCatalogConfig
+    {
+        public ProductDefinition[] Products;
+    }
+
     public class GameCatalogBundle
     {
         public GameConfigManifest Manifest;
         public ResourceCatalogConfig Resources;
         public GeneratorCatalogConfig Generators;
+        public ProductCatalogConfig Products;
     }
 }

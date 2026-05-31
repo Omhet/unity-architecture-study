@@ -9,25 +9,29 @@ namespace App.Systems.Configuration
         private readonly GeneratorRegistry _generatorRegistry;
         private readonly GeneratorState _generatorState;
         private readonly ResourceRegistry _resourceRegistry;
+        private readonly ProductRegistry _productRegistry;
         private readonly ResourceState _resourceState;
 
         public GameConfigHydrator(
             GeneratorRegistry generatorRegistry,
             GeneratorState generatorState,
             ResourceRegistry resourceRegistry,
-            ResourceState resourceState
+            ResourceState resourceState,
+            ProductRegistry productRegistry
             )
         {
             _generatorRegistry = generatorRegistry;
             _generatorState = generatorState;
             _resourceRegistry = resourceRegistry;
             _resourceState = resourceState;
+            _productRegistry = productRegistry;
         }
 
         public void Hydrate(GameCatalogBundle bundle)
         {
             HydrateGenerators(bundle.Generators);
             HydrateResources(bundle.Resources);
+            HydrateProducts(bundle.Products);
         }
 
         private void HydrateResources(ResourceCatalogConfig config)
@@ -64,6 +68,14 @@ namespace App.Systems.Configuration
                     _generatorState.PlayerOwnedGeneratorIds.Add(firstGenerator.Id);
                 }
             }
+        }
+
+        private void HydrateProducts(ProductCatalogConfig config)
+        {
+            _productRegistry.Load(config);
+
+            // For now we don't have any state to initialize for products, 
+            // but we can add it here in the future if we decide to have some initial products available to the player
         }
     }
 }

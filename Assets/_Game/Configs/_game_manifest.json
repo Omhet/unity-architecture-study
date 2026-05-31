@@ -1,7 +1,20 @@
 {
-    "schemaVersion": 1,
-    "catalogs": [
-        { "key": "resources", "address": "config/resources_catalog", "schemaVersion": 1 },
-        { "key": "generators", "address": "config/generators_catalog", "schemaVersion": 1 }
-    ]
+  "schemaVersion": 1,
+  "catalogs": [
+    {
+      "key": "resources",
+      "address": "config/resources_catalog",
+      "schemaVersion": 1
+    },
+    {
+      "key": "generators",
+      "address": "config/generators_catalog",
+      "schemaVersion": 1
+    },
+    {
+      "key": "products",
+      "address": "config/products_catalog",
+      "schemaVersion": 1
+    }
+  ]
 }

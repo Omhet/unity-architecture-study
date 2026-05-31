@@ -41,6 +41,7 @@ namespace App.Boot
             builder.Register<ResourceRegistry>(Lifetime.Singleton);
             builder.Register<ResourceState>(Lifetime.Singleton);
 
+            builder.Register<ProductRegistry>(Lifetime.Singleton);
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
