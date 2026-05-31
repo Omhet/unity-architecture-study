@@ -74,6 +74,7 @@ namespace App.Orders.Core
                 return;
             }
 
+            // TODO: Get actually random product, for now just take the first one
             var randomProduct = allProductAmounts.OrderBy(_ => Guid.NewGuid()).First();
 
             Random rnd = new Random();
