@@ -25,4 +25,14 @@ namespace App.Flow.Events
             RecipeId = recipeId;
         }
     }
+
+    public readonly struct CompleteOrderEvent : ICommand
+    {
+        public readonly string OrderId;
+
+        public CompleteOrderEvent(string orderId)
+        {
+            OrderId = orderId;
+        }
+    }
 }

@@ -2,57 +2,55 @@ namespace App.Hud.View
 {
     using ObservableCollections;
     using App.Flow.Events;
-    using App.Recipes.Core;
     using App.View;
     using R3;
     using System;
     using UnityEngine.UIElements;
     using VitalRouter;
     using App.Products.Core;
+    using App.Orders.Core;
+    using System.Linq;
 
-    public class CraftSectionView : GameplaySectionViewBase
+    public class OrdersSectionView : GameplaySectionViewBase
     {
-        private readonly RecipeState _recipeState;
-        private readonly RecipeRegistry _recipeRegistry;
+        private readonly OrderState _orderState;
         private readonly ProductState _productState;
         private readonly ICommandPublisher _publisher;
-        private VisualElement _recipesList;
+        private VisualElement _ordersList;
         private VisualElement _productsList;
-        private IDisposable _ownedRecipesSubscription;
+        private IDisposable _ownedOrdersSubscription;
         private IDisposable _ownedProductsSubscription;
 
-        public CraftSectionView(
+        public OrdersSectionView(
             ICommandPublisher publisher,
-            RecipeState recipeState,
-            RecipeRegistry recipeRegistry,
+            OrderState orderState,
             ProductState productState
             )
-            : base(new GameplaySectionDefinition("craft", "Craft", 0))
+            : base(new GameplaySectionDefinition("orders", "Orders", 0))
         {
-            _recipeState = recipeState;
-            _recipeRegistry = recipeRegistry;
+            _orderState = orderState;
             _productState = productState;
             _publisher = publisher;
         }
 
         protected override void BuildContent(VisualElement root)
         {
-            root.AddToClassList("craft-section");
+            root.AddToClassList("orders-section");
 
             var sectionTitle = new Label(Definition.TabTitle);
             sectionTitle.AddToClassList("hud-section-title");
             root.Add(sectionTitle);
 
             var content = new VisualElement();
-            content.AddToClassList("craft-section-content");
+            content.AddToClassList("orders-section-content");
 
-            _recipesList = new VisualElement();
-            _recipesList.AddToClassList("recipes-list");
+            _ordersList = new VisualElement();
+            _ordersList.AddToClassList("orders-list");
 
             _productsList = new VisualElement();
             _productsList.AddToClassList("products-list");
 
-            content.Add(_recipesList);
+            content.Add(_ordersList);
             content.Add(_productsList);
 
             root.Add(content);
@@ -60,23 +58,23 @@ namespace App.Hud.View
 
         protected override void Bind()
         {
-            _ownedRecipesSubscription?.Dispose();
+            _ownedOrdersSubscription?.Dispose();
             _ownedProductsSubscription?.Dispose();
 
-            if (_recipeState == null || _productState == null)
+            if (_orderState == null || _productState == null)
             {
                 return;
             }
 
-            var recipesUpdates = Observable.Merge(
-                _recipeState.PlayerOwnedRecipeIds.ObserveAdd().Select(_ => Unit.Default),
-                _recipeState.PlayerOwnedRecipeIds.ObserveRemove().Select(_ => Unit.Default),
-                _recipeState.PlayerOwnedRecipeIds.ObserveReplace().Select(_ => Unit.Default),
-                _recipeState.PlayerOwnedRecipeIds.ObserveReset().Select(_ => Unit.Default));
+            var ordersUpdates = Observable.Merge(
+                _orderState.ActiveOrders.ObserveAdd().Select(_ => Unit.Default),
+                _orderState.ActiveOrders.ObserveRemove().Select(_ => Unit.Default),
+                _orderState.ActiveOrders.ObserveReplace().Select(_ => Unit.Default),
+                _orderState.ActiveOrders.ObserveReset().Select(_ => Unit.Default));
 
-            _ownedRecipesSubscription = Observable.Return(Unit.Default)
-                .Concat(recipesUpdates)
-                .Subscribe(_ => RebuildRecipeRows());
+            _ownedOrdersSubscription = Observable.Return(Unit.Default)
+                .Concat(ordersUpdates)
+                .Subscribe(_ => RebuildOrderRows());
 
             var productsUpdates = Observable.Merge(
                 _productState.PlayerOwnedProductAmounts.ObserveAdd().Select(_ => Unit.Default),
@@ -91,53 +89,48 @@ namespace App.Hud.View
 
         protected override void Unbind()
         {
-            _ownedRecipesSubscription?.Dispose();
-            _ownedRecipesSubscription = null;
+            _ownedOrdersSubscription?.Dispose();
+            _ownedOrdersSubscription = null;
 
             _ownedProductsSubscription?.Dispose();
             _ownedProductsSubscription = null;
         }
 
-        private VisualElement BuildRecipeRow(string recipeId)
+        private VisualElement BuildOrderRow(string orderId)
         {
             var row = new VisualElement();
-            row.AddToClassList("recipe-card");
+            row.AddToClassList("order-card");
 
-            var title = new Label(recipeId);
-            title.AddToClassList("recipe-title");
+            var title = new Label(orderId);
+            title.AddToClassList("order-title");
             row.Add(title);
 
-            // Show ingredients list
-            _recipeRegistry.TryGetById(recipeId, out var recipe);
-            if (recipe != null)
+            // Show requirements list
+            var order = _orderState.ActiveOrders.FirstOrDefault(o => o.Id == orderId);
+            var requirements = order.Requirements;
+            var requirementsLabel = new Label($"Requires: {requirements.Quantity} x {requirements.ProductId}");
+            requirementsLabel.AddToClassList("order-requirements");
+            row.Add(requirementsLabel);
+
+            // Show reward
+            var rewardLabel = new Label($"Reward: {order.Reward}");
+            rewardLabel.AddToClassList("order-reward");
+            row.Add(rewardLabel);
+
+            var completeButton = new Button(() => HandleCompleteClicked(orderId))
             {
-                var ingredientsList = new VisualElement();
-                ingredientsList.AddToClassList("ingredients-list");
-
-                foreach (var ingredient in recipe.InputResources)
-                {
-                    var ingredientLabel = new Label($"{ingredient.Key}: {ingredient.Value}");
-                    ingredientLabel.AddToClassList("ingredient-label");
-                    ingredientsList.Add(ingredientLabel);
-                }
-
-                row.Add(ingredientsList);
-            }
-
-            var craftButton = new Button(() => HandleCraftClicked(recipeId))
-            {
-                text = "Craft"
+                text = "Complete"
             };
-            craftButton.AddToClassList("craft-button");
+            completeButton.AddToClassList("complete-button");
 
-            row.Add(craftButton);
+            row.Add(completeButton);
 
             return row;
         }
 
-        private void HandleCraftClicked(string recipeId)
+        private void HandleCompleteClicked(string orderId)
         {
-            _publisher.PublishAsync(new CraftRecipeEvent(recipeId));
+            _publisher.PublishAsync(new CompleteOrderEvent(orderId));
         }
 
         private void BuildProductRow(string productId, int productAmount)
@@ -152,20 +145,19 @@ namespace App.Hud.View
             _productsList.Add(row);
         }
 
-        private void RebuildRecipeRows()
+        private void RebuildOrderRows()
         {
-            if (_recipesList == null || _recipeState == null)
+            if (_ordersList == null || _orderState == null)
             {
                 return;
             }
 
-            _recipesList.Clear();
+            _ordersList.Clear();
 
-            for (int i = 0; i < _recipeState.PlayerOwnedRecipeIds.Count; i++)
+            foreach (var order in _orderState.ActiveOrders)
             {
-                var recipeId = _recipeState.PlayerOwnedRecipeIds[i];
-
-                _recipesList.Add(BuildRecipeRow(recipeId));
+                var row = BuildOrderRow(order.Id);
+                _ordersList.Add(row);
             }
         }
 

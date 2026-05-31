@@ -55,5 +55,16 @@ namespace App.Generators.Core
 
             return true;
         }
+
+        public void CreateNewOrder()
+        {
+            // Create a random order for demonstration purposes. In a real game, this would likely be more complex and based on game design.
+            var newOrder = new Order(
+                id: System.Guid.NewGuid().ToString(),
+                requirements: new OrderRequirements(productId: "wooden_hammer", quantity: 1),
+                reward: 10);
+
+            _orderState.ActiveOrders.Add(newOrder);
+        }
     }
 }
