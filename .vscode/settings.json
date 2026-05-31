@@ -67,7 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-
-    "dotnet.defaultSolution": "Architecture Test.slnx",
+    "dotnet.defaultSolution": "unity-architecture-study.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
