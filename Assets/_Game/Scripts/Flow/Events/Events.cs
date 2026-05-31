@@ -6,6 +6,10 @@ namespace App.Flow.Events
     {
     }
 
+    public readonly struct StartGameEvent : ICommand
+    {
+    }
+
     public readonly struct GenerateFromGeneratorEvent : ICommand
     {
         public readonly string GeneratorId;

@@ -15,9 +15,21 @@ namespace App.Flow.Handlers
         }
 
         [Route]
+        void On(StartGameEvent _)
+        {
+            // TODO: This is just for testing, remove this when we have a proper order generation flow
+            _orderService.CreateNewOrder();
+        }
+
+        [Route]
         void On(CompleteOrderEvent command)
         {
-            _orderService.TryCompleteOrder(command.OrderId);
+            bool isCompleted = _orderService.TryCompleteOrder(command.OrderId);
+
+            if (isCompleted)
+            {
+                _orderService.CreateNewOrder();
+            }
         }
     }
 }
