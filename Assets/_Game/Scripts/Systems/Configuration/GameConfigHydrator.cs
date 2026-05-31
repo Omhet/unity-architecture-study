@@ -3,6 +3,7 @@ namespace App.Systems.Configuration
     using App.GameConfig.Core;
     using App.Resources.Core;
     using App.Generators.Core;
+    using App.Products.Core;
 
     public class GameConfigHydrator
     {

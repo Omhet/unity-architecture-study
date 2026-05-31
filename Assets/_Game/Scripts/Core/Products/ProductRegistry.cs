@@ -1,4 +1,4 @@
-namespace App.Generators.Core
+namespace App.Products.Core
 {
     using System.Collections.Generic;
     using App.GameConfig.Core;

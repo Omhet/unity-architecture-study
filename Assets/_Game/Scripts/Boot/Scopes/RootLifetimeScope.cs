@@ -3,6 +3,7 @@ namespace App.Boot
     using App.Economy.Core;
     using App.Flow.Handlers;
     using App.Generators.Core;
+    using App.Products.Core;
     using App.Resources.Core;
     using App.Systems.Configuration;
     using App.Systems.Saving;
@@ -42,6 +43,7 @@ namespace App.Boot
             builder.Register<ResourceState>(Lifetime.Singleton);
 
             builder.Register<ProductRegistry>(Lifetime.Singleton);
+            builder.Register<ProductState>(Lifetime.Singleton);
 
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
