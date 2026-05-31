@@ -1,4 +1,5 @@
-@import url("GeneratorsSection.uss");
+@import url("./GeneratorsSection.uss");
+@import url("./CraftSection.uss");
 
 .hud-shell {
     width: 100%;

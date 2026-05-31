@@ -17,8 +17,9 @@ namespace App.Hud.View
         private IDisposable _ownedGeneratorsSubscription;
 
         public GeneratorsSectionView(
-            GeneratorState generatorState,
-            ICommandPublisher publisher)
+            ICommandPublisher publisher,
+            GeneratorState generatorState
+            )
             : base(new GameplaySectionDefinition("generators", "Generators", 0))
         {
             _generatorState = generatorState;

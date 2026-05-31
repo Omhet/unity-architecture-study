@@ -14,6 +14,7 @@ namespace App.Systems.Configuration
         private readonly ResourceState _resourceState;
         private readonly ProductRegistry _productRegistry;
         private readonly RecipeRegistry _recipeRegistry;
+        private readonly RecipeState _recipeState;
 
         public GameConfigHydrator(
             GeneratorRegistry generatorRegistry,
@@ -21,7 +22,8 @@ namespace App.Systems.Configuration
             ResourceRegistry resourceRegistry,
             ResourceState resourceState,
             ProductRegistry productRegistry,
-            RecipeRegistry recipeRegistry
+            RecipeRegistry recipeRegistry,
+            RecipeState recipeState
             )
         {
             _generatorRegistry = generatorRegistry;
@@ -30,6 +32,7 @@ namespace App.Systems.Configuration
             _resourceState = resourceState;
             _productRegistry = productRegistry;
             _recipeRegistry = recipeRegistry;
+            _recipeState = recipeState;
         }
 
         public void Hydrate(GameCatalogBundle bundle)
@@ -88,8 +91,16 @@ namespace App.Systems.Configuration
         {
             _recipeRegistry.Load(config);
 
-            // For now we don't have any state to initialize for recipes,
-            // but we can add it here in the future if we decide to have some initial recipes available to the player
+            // For now initalize state with first recipe from config, but we need to refine requirements for this, maybe it should happen after onboarding or something similar,
+            // but for now we can just give player access to the first recipe in the list
+            if (config?.Recipes != null && config.Recipes.Length > 0)
+            {
+                var firstRecipe = config.Recipes[0];
+                if (firstRecipe != null && !string.IsNullOrWhiteSpace(firstRecipe.Id))
+                {
+                    _recipeState.PlayerOwnedRecipeIds.Add(firstRecipe.Id);
+                }
+            }
         }
     }
 }

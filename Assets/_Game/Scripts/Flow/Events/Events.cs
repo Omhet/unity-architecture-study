@@ -15,4 +15,14 @@ namespace App.Flow.Events
             GeneratorId = generatorId;
         }
     }
+
+    public readonly struct CraftRecipeEvent : ICommand
+    {
+        public readonly string RecipeId;
+
+        public CraftRecipeEvent(string recipeId)
+        {
+            RecipeId = recipeId;
+        }
+    }
 }
