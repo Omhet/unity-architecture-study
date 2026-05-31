@@ -1,0 +1,17 @@
+.products-list {
+    display: flex;
+    flex-direction: column;
+    background-color: #cccccc;
+    padding: 16px;
+    flex: 1;
+}
+
+.product-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 24px;
+    color: #262626;
+}

@@ -113,7 +113,7 @@ namespace App.Hud.View
             row.Add(requirementsLabel);
 
             // Show reward
-            var rewardLabel = new Label($"Reward: {order.Reward}");
+            var rewardLabel = new Label($"Reward: {order.Reward}$");
             rewardLabel.AddToClassList("order-reward");
             row.Add(rewardLabel);
 
