@@ -63,6 +63,7 @@ namespace App.Orders.Core
             if (!allProductAmounts.Any())
             {
                 // If player has no products, create a default order for a basic product
+                // TODO: Hardcode a basic product for now, can be based on player progress or product registry later
                 var basicOrder = new Order(
                 id: Guid.NewGuid().ToString(),
                 requirements: new OrderRequirements(productId: "wooden_hammer", quantity: 1),
