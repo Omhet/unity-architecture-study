@@ -1,27 +1,55 @@
 namespace App.Products.Core
 {
+    using System.Collections.Generic;
     using ObservableCollections;
 
     public class ProductState
     {
-        public ObservableList<string> PlayerOwnedProductIds { get; } = new ObservableList<string>();
+        public ObservableDictionary<string, int> PlayerOwnedProductAmounts { get; } = new ObservableDictionary<string, int>();
 
-        public bool IsPlayerOwned(string productId)
+        public int GetAmount(string resourceId)
         {
-            if (string.IsNullOrWhiteSpace(productId))
+            if (string.IsNullOrWhiteSpace(resourceId))
             {
-                return false;
+                return 0;
             }
 
-            for (int i = 0; i < PlayerOwnedProductIds.Count; i++)
+            return PlayerOwnedProductAmounts.TryGetValue(resourceId, out int amount) ? amount : 0;
+        }
+
+        public bool HasEnough(string resourceId, int amount)
+        {
+            return amount > 0 && GetAmount(resourceId) >= amount;
+        }
+
+        public IEnumerable<KeyValuePair<string, int>> EnumerateAmounts()
+        {
+            return PlayerOwnedProductAmounts;
+        }
+
+        public void Clear()
+        {
+            PlayerOwnedProductAmounts.Clear();
+        }
+
+        public void SetAmount(string resourceId, int amount)
+        {
+            if (string.IsNullOrWhiteSpace(resourceId))
             {
-                if (PlayerOwnedProductIds[i] == productId)
-                {
-                    return true;
-                }
+                return;
             }
 
-            return false;
+            PlayerOwnedProductAmounts[resourceId] = amount;
+        }
+
+        public void AddAmount(string resourceId, int delta)
+        {
+            if (string.IsNullOrWhiteSpace(resourceId) || delta == 0)
+            {
+                return;
+            }
+
+            PlayerOwnedProductAmounts[resourceId] = GetAmount(resourceId) + delta;
         }
     }
 }

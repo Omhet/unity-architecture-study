@@ -56,7 +56,8 @@ namespace App.Craft.Core
             }
 
             // Add output product
-            _productState.PlayerOwnedProductIds.Add(recipe.OutputProductId);
+            // TODO: Hardcode quantity to 1 for now, but this can be extended in the future if needed.
+            _productState.AddAmount(recipe.OutputProductId, 1);
         }
     }
 }

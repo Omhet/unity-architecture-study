@@ -79,10 +79,10 @@ namespace App.Hud.View
                 .Subscribe(_ => RebuildRecipeRows());
 
             var productsUpdates = Observable.Merge(
-                _productState.PlayerOwnedProductIds.ObserveAdd().Select(_ => Unit.Default),
-                _productState.PlayerOwnedProductIds.ObserveRemove().Select(_ => Unit.Default),
-                _productState.PlayerOwnedProductIds.ObserveReplace().Select(_ => Unit.Default),
-                _productState.PlayerOwnedProductIds.ObserveReset().Select(_ => Unit.Default));
+                _productState.PlayerOwnedProductAmounts.ObserveAdd().Select(_ => Unit.Default),
+                _productState.PlayerOwnedProductAmounts.ObserveRemove().Select(_ => Unit.Default),
+                _productState.PlayerOwnedProductAmounts.ObserveReplace().Select(_ => Unit.Default),
+                _productState.PlayerOwnedProductAmounts.ObserveReset().Select(_ => Unit.Default));
 
             _ownedProductsSubscription = Observable.Return(Unit.Default)
                 .Concat(productsUpdates)
@@ -166,14 +166,15 @@ namespace App.Hud.View
 
             _productsList.Clear();
 
-            for (int i = 0; i < _productState.PlayerOwnedProductIds.Count; i++)
+            foreach (var pair in _productState.EnumerateAmounts())
             {
-                var productId = _productState.PlayerOwnedProductIds[i];
+                var productId = pair.Key;
+                var productAmount = pair.Value;
 
                 var row = new VisualElement();
                 row.AddToClassList("product-list-item");
 
-                var title = new Label(productId);
+                var title = new Label($"{productId}: {productAmount}");
                 title.AddToClassList("product-title");
                 row.Add(title);
 
