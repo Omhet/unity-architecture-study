@@ -1,5 +1,6 @@
 namespace App.Orders.Core
 {
+    using System;
     using System.Linq;
     using App.Economy.Core;
     using App.Products.Core;
@@ -57,11 +58,33 @@ namespace App.Orders.Core
 
         public void CreateNewOrder()
         {
-            // Create a random order for demonstration purposes. In a real game, this would likely be more complex and based on game design.
-            var newOrder = new Order(
-                id: System.Guid.NewGuid().ToString(),
+            // Check what products the player has and create an order based on that
+            var allProductAmounts = _productState.GetProductAmounts();
+            if (!allProductAmounts.Any())
+            {
+                // If player has no products, create a default order for a basic product
+                var basicOrder = new Order(
+                id: Guid.NewGuid().ToString(),
                 requirements: new OrderRequirements(productId: "wooden_hammer", quantity: 1),
-                reward: 10);
+                reward: 1);
+
+                _orderState.ActiveOrders.Add(basicOrder);
+
+                return;
+            }
+
+            var randomProduct = allProductAmounts.OrderBy(_ => Guid.NewGuid()).First();
+            var randomRequirementQuantity = Math.Min(randomProduct.Value, 5); // Require up to 5 of the product
+
+            var newOrder = new Order
+            (
+                id: Guid.NewGuid().ToString(),
+                requirements: new OrderRequirements(
+                    productId: randomProduct.Key,
+                    quantity: randomRequirementQuantity
+                ),
+                reward: 1 * randomRequirementQuantity // TODO: Hardcode reward multiplier for now
+            );
 
             _orderState.ActiveOrders.Add(newOrder);
         }

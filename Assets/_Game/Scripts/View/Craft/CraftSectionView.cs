@@ -178,7 +178,7 @@ namespace App.Hud.View
 
             _productsList.Clear();
 
-            foreach (var pair in _productState.EnumerateAmounts())
+            foreach (var pair in _productState.GetProductAmounts())
             {
                 var productId = pair.Key;
                 var productAmount = pair.Value;

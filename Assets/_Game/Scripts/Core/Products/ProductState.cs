@@ -1,6 +1,7 @@
 namespace App.Products.Core
 {
     using System.Collections.Generic;
+    using System.Linq;
     using ObservableCollections;
 
     public class ProductState
@@ -22,7 +23,7 @@ namespace App.Products.Core
             return amount > 0 && GetAmount(resourceId) >= amount;
         }
 
-        public IEnumerable<KeyValuePair<string, int>> EnumerateAmounts()
+        public IEnumerable<KeyValuePair<string, int>> GetProductAmounts()
         {
             return PlayerOwnedProductAmounts;
         }
