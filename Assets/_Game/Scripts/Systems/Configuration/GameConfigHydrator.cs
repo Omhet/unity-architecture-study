@@ -61,7 +61,7 @@ namespace App.Systems.Configuration
                 var firstGenerator = config.Generators[0];
                 if (firstGenerator != null && !string.IsNullOrWhiteSpace(firstGenerator.Id))
                 {
-                    _generatorState.OwnedGeneratorIds.Add(firstGenerator.Id);
+                    _generatorState.PlayerOwnedGeneratorIds.Add(firstGenerator.Id);
                 }
             }
         }

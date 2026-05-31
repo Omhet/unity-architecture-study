@@ -4,18 +4,18 @@ namespace App.Generators.Core
 
     public class GeneratorState
     {
-        public ObservableList<string> OwnedGeneratorIds { get; } = new ObservableList<string>();
+        public ObservableList<string> PlayerOwnedGeneratorIds { get; } = new ObservableList<string>();
 
-        public bool IsOwned(string generatorId)
+        public bool IsPlayerOwned(string generatorId)
         {
             if (string.IsNullOrWhiteSpace(generatorId))
             {
                 return false;
             }
 
-            for (int i = 0; i < OwnedGeneratorIds.Count; i++)
+            for (int i = 0; i < PlayerOwnedGeneratorIds.Count; i++)
             {
-                if (OwnedGeneratorIds[i] == generatorId)
+                if (PlayerOwnedGeneratorIds[i] == generatorId)
                 {
                     return true;
                 }

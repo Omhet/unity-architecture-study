@@ -20,7 +20,7 @@ namespace App.Generators.Core
 
         public bool TryGenerate(string generatorId)
         {
-            if (!_generatorState.IsOwned(generatorId))
+            if (!_generatorState.IsPlayerOwned(generatorId))
             {
                 return false;
             }

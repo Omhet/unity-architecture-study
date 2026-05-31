@@ -49,10 +49,10 @@ namespace App.Hud.View
             }
 
             var updates = Observable.Merge(
-                _generatorState.OwnedGeneratorIds.ObserveAdd().Select(_ => Unit.Default),
-                _generatorState.OwnedGeneratorIds.ObserveRemove().Select(_ => Unit.Default),
-                _generatorState.OwnedGeneratorIds.ObserveReplace().Select(_ => Unit.Default),
-                _generatorState.OwnedGeneratorIds.ObserveReset().Select(_ => Unit.Default));
+                _generatorState.PlayerOwnedGeneratorIds.ObserveAdd().Select(_ => Unit.Default),
+                _generatorState.PlayerOwnedGeneratorIds.ObserveRemove().Select(_ => Unit.Default),
+                _generatorState.PlayerOwnedGeneratorIds.ObserveReplace().Select(_ => Unit.Default),
+                _generatorState.PlayerOwnedGeneratorIds.ObserveReset().Select(_ => Unit.Default));
 
             _ownedGeneratorsSubscription = Observable.Return(Unit.Default)
                 .Concat(updates)
@@ -99,9 +99,9 @@ namespace App.Hud.View
 
             _list.Clear();
 
-            for (int i = 0; i < _generatorState.OwnedGeneratorIds.Count; i++)
+            for (int i = 0; i < _generatorState.PlayerOwnedGeneratorIds.Count; i++)
             {
-                var generatorId = _generatorState.OwnedGeneratorIds[i];
+                var generatorId = _generatorState.PlayerOwnedGeneratorIds[i];
 
                 _list.Add(BuildGeneratorRow(generatorId));
             }
