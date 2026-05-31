@@ -20,11 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1b3a4a1b4e20b44edad05a97b7b6c10f
-    m_Address: config/shop_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1bab89fcd0569b945a982b06bc8bdb8c
     m_Address: config/products_catalog
     m_ReadOnly: 0
@@ -35,43 +30,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5614ed554497a43faa89dff32dbd5914
-    m_Address: config/products_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 56e5a18ef7bb440a3ae8c07f56eaa1aa
-    m_Address: config/recipes_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5e7bec42edc9644c49778a10c1f42bd0
-    m_Address: config/economy_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9ae14c7dc9b6f493085cef8e18efa484
     m_Address: config/resources_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9b1e172f3cfa2459bb3c07659acc4753
-    m_Address: config/orders_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d528f0f8a9b984c35b41f0b4e2e6e9a1
-    m_Address: config/quests_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ea0c56ab80415470f84f59fb025bc767
-    m_Address: config/talents_catalog
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ee0324c18a5a64966a6ae4fc953afe34
-    m_Address: config/progression_catalog
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

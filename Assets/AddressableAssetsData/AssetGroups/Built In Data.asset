@@ -13,20 +13,8 @@ MonoBehaviour:
   m_Name: Built In Data
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Built In Data
-  m_Data:
-    m_SerializedData: []
   m_GUID: f102303970af5458cb1a5afc7fd37ac9
-  m_SerializeEntries:
-  - m_GUID: Resources
-    m_Address: Resources
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: EditorSceneList
-    m_Address: EditorSceneList
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 48891989e5fb94a1b89aed8f703ec2fc, type: 2}
   m_SchemaSet:
