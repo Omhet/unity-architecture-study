@@ -1,6 +1,7 @@
 namespace App.Systems.Configuration
 {
     using System;
+    using System.Collections.Generic;
     using App.GameConfig.Core;
     using Cysharp.Threading.Tasks;
     using Newtonsoft.Json;
@@ -9,6 +10,13 @@ namespace App.Systems.Configuration
 
     public class GameConfigLoader
     {
+        private readonly IEnumerable<IConfigModule> _modules;
+
+        public GameConfigLoader(IEnumerable<IConfigModule> modules)
+        {
+            _modules = modules;
+        }
+
         public async UniTask<GameCatalogBundle> LoadAsync(string manifestAddress)
         {
             if (string.IsNullOrWhiteSpace(manifestAddress))
@@ -51,32 +59,24 @@ namespace App.Systems.Configuration
                     throw new InvalidOperationException("Failed to load catalog: " + catalog.Key + " at address: " + catalog.Address);
                 }
 
-                LoadCatalogIntoBundle(bundle, catalog.Key, catalogAsset.text);
+                DeserializeCatalog(catalog.Key, catalogAsset.text, bundle);
             }
 
             return bundle;
         }
 
-        private static void LoadCatalogIntoBundle(GameCatalogBundle bundle, string catalogKey, string json)
+        private void DeserializeCatalog(string catalogKey, string json, GameCatalogBundle bundle)
         {
-            switch (catalogKey)
+            foreach (var module in _modules)
             {
-                case "resources":
-                    bundle.Resources = JsonConvert.DeserializeObject<ResourceCatalogConfig>(json);
+                if (module.Key == catalogKey)
+                {
+                    module.Deserialize(json, bundle);
                     return;
-                case "generators":
-                    bundle.Generators = JsonConvert.DeserializeObject<GeneratorCatalogConfig>(json);
-                    return;
-                case "products":
-                    bundle.Products = JsonConvert.DeserializeObject<ProductCatalogConfig>(json);
-                    return;
-                case "recipes":
-                    bundle.Recipes = JsonConvert.DeserializeObject<RecipeCatalogConfig>(json);
-                    return;
-                default:
-                    Debug.LogWarning("Unknown catalog key in manifest: " + catalogKey);
-                    return;
+                }
             }
+
+            Debug.LogWarning("Unknown catalog key in manifest: " + catalogKey);
         }
     }
 }

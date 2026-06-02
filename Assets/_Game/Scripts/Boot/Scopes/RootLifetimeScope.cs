@@ -1,5 +1,6 @@
 namespace App.Boot
 {
+    using App.Boot.ConfigModules;
     using App.Craft.Core;
     using App.Economy.Core;
     using App.Flow.Handlers;
@@ -61,6 +62,13 @@ namespace App.Boot
                 ManifestAddress = _manifestAddress
             });
 
+            // Register config modules as IConfigModule
+            builder.Register<ResourceConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+            builder.Register<GeneratorConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+            builder.Register<ProductConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+            builder.Register<RecipeConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+
+            // Register orchestrators - they receive IEnumerable<IConfigModule> from the container
             builder.Register<GameConfigLoader>(Lifetime.Singleton);
             builder.Register<GameConfigValidator>(Lifetime.Singleton);
             builder.Register<GameConfigHydrator>(Lifetime.Singleton);

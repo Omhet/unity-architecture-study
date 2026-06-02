@@ -1,7 +1,6 @@
 namespace App.Products.Core
 {
     using System.Collections.Generic;
-    using App.GameConfig.Core;
 
     public class ProductRegistry
     {

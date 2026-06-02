@@ -1,7 +1,6 @@
 namespace App.Recipes.Core
 {
     using System.Collections.Generic;
-    using App.GameConfig.Core;
 
     public class RecipeRegistry
     {

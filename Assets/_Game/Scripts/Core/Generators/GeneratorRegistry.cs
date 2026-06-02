@@ -1,7 +1,6 @@
 namespace App.Generators.Core
 {
     using System.Collections.Generic;
-    using App.GameConfig.Core;
 
     public class GeneratorRegistry
     {
