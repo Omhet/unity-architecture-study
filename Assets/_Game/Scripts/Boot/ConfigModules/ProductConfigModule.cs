@@ -1,7 +1,7 @@
 namespace App.Boot.ConfigModules
 {
-    using System;
     using System.Collections.Generic;
+    using App.Boot.Utility;
     using App.Products.Core;
     using App.Systems.Configuration;
     using Newtonsoft.Json;
@@ -32,32 +32,13 @@ namespace App.Boot.ConfigModules
                 return;
             }
 
-            ValidateUniqueIds(config.Products, x => x?.Id, "product", errors);
+            ConfigValidationHelper.ValidateUniqueIds(config.Products, x => x?.Id, "product", errors);
         }
 
         public void Hydrate(GameCatalogBundle bundle)
         {
             var config = bundle.GetConfig<ProductCatalogConfig>(Key);
             _productRegistry.Load(config);
-        }
-
-        private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    errors.Add("Found " + itemType + " with missing id.");
-                    continue;
-                }
-
-                if (!ids.Add(id))
-                {
-                    errors.Add("Duplicate " + itemType + " id: " + id);
-                }
-            }
         }
     }
 }

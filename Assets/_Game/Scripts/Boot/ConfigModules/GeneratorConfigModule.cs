@@ -1,7 +1,7 @@
 namespace App.Boot.ConfigModules
 {
-    using System;
     using System.Collections.Generic;
+    using App.Boot.Utility;
     using App.Generators.Core;
     using App.Resources.Core;
     using App.Systems.Configuration;
@@ -35,10 +35,10 @@ namespace App.Boot.ConfigModules
                 return;
             }
 
-            ValidateUniqueIds(generators.Generators, x => x?.Id, "generator", errors);
+            ConfigValidationHelper.ValidateUniqueIds(generators.Generators, x => x?.Id, "generator", errors);
 
             var resources = bundle.GetConfig<ResourceCatalogConfig>("resources");
-            var resourceIds = BuildIdSet(resources?.Resources, x => x?.Id);
+            var resourceIds = ConfigValidationHelper.BuildIdSet(resources?.Resources, x => x?.Id);
 
             foreach (var generator in generators.Generators)
             {
@@ -67,45 +67,6 @@ namespace App.Boot.ConfigModules
                     _generatorState.PlayerOwnedGeneratorIds.Add(firstGenerator.Id);
                 }
             }
-        }
-
-        private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    errors.Add("Found " + itemType + " with missing id.");
-                    continue;
-                }
-
-                if (!ids.Add(id))
-                {
-                    errors.Add("Duplicate " + itemType + " id: " + id);
-                }
-            }
-        }
-
-        private static HashSet<string> BuildIdSet<T>(IEnumerable<T> items, Func<T, string> selector)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (items == null)
-            {
-                return ids;
-            }
-
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (!string.IsNullOrWhiteSpace(id))
-                {
-                    ids.Add(id);
-                }
-            }
-
-            return ids;
         }
     }
 }

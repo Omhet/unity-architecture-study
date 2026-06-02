@@ -1,7 +1,7 @@
 namespace App.Boot.ConfigModules
 {
-    using System;
     using System.Collections.Generic;
+    using App.Boot.Utility;
     using App.Products.Core;
     using App.Recipes.Core;
     using App.Resources.Core;
@@ -36,12 +36,12 @@ namespace App.Boot.ConfigModules
                 return;
             }
 
-            ValidateUniqueIds(recipes.Recipes, x => x?.Id, "recipe", errors);
+            ConfigValidationHelper.ValidateUniqueIds(recipes.Recipes, x => x?.Id, "recipe", errors);
 
             var resources = bundle.GetConfig<ResourceCatalogConfig>("resources");
             var products = bundle.GetConfig<ProductCatalogConfig>("products");
-            var resourceIds = BuildIdSet(resources?.Resources, x => x?.Id);
-            var productIds = BuildIdSet(products?.Products, x => x?.Id);
+            var resourceIds = ConfigValidationHelper.BuildIdSet(resources?.Resources, x => x?.Id);
+            var productIds = ConfigValidationHelper.BuildIdSet(products?.Products, x => x?.Id);
 
             foreach (var recipe in recipes.Recipes)
             {
@@ -89,45 +89,6 @@ namespace App.Boot.ConfigModules
                     _recipeState.PlayerOwnedRecipeIds.Add(firstRecipe.Id);
                 }
             }
-        }
-
-        private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    errors.Add("Found " + itemType + " with missing id.");
-                    continue;
-                }
-
-                if (!ids.Add(id))
-                {
-                    errors.Add("Duplicate " + itemType + " id: " + id);
-                }
-            }
-        }
-
-        private static HashSet<string> BuildIdSet<T>(IEnumerable<T> items, Func<T, string> selector)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (items == null)
-            {
-                return ids;
-            }
-
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (!string.IsNullOrWhiteSpace(id))
-                {
-                    ids.Add(id);
-                }
-            }
-
-            return ids;
         }
     }
 }

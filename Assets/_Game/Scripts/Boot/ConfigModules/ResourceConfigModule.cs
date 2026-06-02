@@ -1,7 +1,7 @@
 namespace App.Boot.ConfigModules
 {
-    using System;
     using System.Collections.Generic;
+    using App.Boot.Utility;
     using App.Resources.Core;
     using App.Systems.Configuration;
     using Newtonsoft.Json;
@@ -34,7 +34,7 @@ namespace App.Boot.ConfigModules
                 return;
             }
 
-            ValidateUniqueIds(config.Resources, x => x?.Id, "resource", errors);
+            ConfigValidationHelper.ValidateUniqueIds(config.Resources, x => x?.Id, "resource", errors);
         }
 
         public void Hydrate(GameCatalogBundle bundle)
@@ -51,25 +51,6 @@ namespace App.Boot.ConfigModules
                     {
                         _resourceState.Balances[resource.Id] = 0;
                     }
-                }
-            }
-        }
-
-        private static void ValidateUniqueIds<T>(IEnumerable<T> items, Func<T, string> selector, string itemType, List<string> errors)
-        {
-            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var item in items)
-            {
-                string id = selector(item);
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    errors.Add("Found " + itemType + " with missing id.");
-                    continue;
-                }
-
-                if (!ids.Add(id))
-                {
-                    errors.Add("Duplicate " + itemType + " id: " + id);
                 }
             }
         }
