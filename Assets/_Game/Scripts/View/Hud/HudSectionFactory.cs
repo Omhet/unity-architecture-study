@@ -4,6 +4,7 @@ namespace App.Hud.View
     using App.Orders.Core;
     using App.Products.Core;
     using App.Recipes.Core;
+    using App.Shop.Core;
     using App.View;
     using VitalRouter;
 
@@ -14,6 +15,8 @@ namespace App.Hud.View
         private readonly RecipeRegistry _recipeRegistry;
         private readonly ProductState _productState;
         private readonly OrderState _orderState;
+        private readonly ShopState _shopState;
+        private readonly ShopRegistry _shopRegistry;
         private readonly ICommandPublisher _publisher;
 
         public HudSectionFactory(
@@ -22,6 +25,8 @@ namespace App.Hud.View
             RecipeRegistry recipeRegistry,
             ProductState productState,
             OrderState orderState,
+            ShopState shopState,
+            ShopRegistry shopRegistry,
             ICommandPublisher publisher
             )
         {
@@ -30,6 +35,8 @@ namespace App.Hud.View
             _recipeRegistry = recipeRegistry;
             _productState = productState;
             _orderState = orderState;
+            _shopState = shopState;
+            _shopRegistry = shopRegistry;
             _publisher = publisher;
         }
 
@@ -44,7 +51,7 @@ namespace App.Hud.View
                 case "orders":
                     return new OrdersSectionView(_publisher, _orderState, _productState);
                 case "shop":
-                    return new PlaceholderSectionView(definition, "Shop catalog will appear here.");
+                    return new ShopSectionView(_publisher, _shopState, _shopRegistry);
                 case "quests":
                     return new PlaceholderSectionView(definition, "Quest progress will appear here.");
                 case "talents":

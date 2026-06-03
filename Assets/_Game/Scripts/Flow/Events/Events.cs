@@ -39,4 +39,14 @@ namespace App.Flow.Events
             OrderId = orderId;
         }
     }
+
+    public readonly struct BuyShopItemEvent : ICommand
+    {
+        public readonly string ShopItemId;
+
+        public BuyShopItemEvent(string shopItemId)
+        {
+            ShopItemId = shopItemId;
+        }
+    }
 }

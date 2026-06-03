@@ -9,6 +9,7 @@ namespace App.Boot
     using App.Products.Core;
     using App.Recipes.Core;
     using App.Resources.Core;
+    using App.Shop.Core;
     using App.Systems.Configuration;
     using App.Systems.Saving;
     using App.Systems.Scene;
@@ -57,6 +58,11 @@ namespace App.Boot
             builder.Register<OrderState>(Lifetime.Singleton);
             builder.Register<OrderService>(Lifetime.Singleton);
 
+            builder.Register<ShopRegistry>(Lifetime.Singleton);
+            builder.Register<ShopProgressionRegistry>(Lifetime.Singleton);
+            builder.Register<ShopState>(Lifetime.Singleton);
+            builder.Register<ShopService>(Lifetime.Singleton);
+
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
                 ManifestAddress = _manifestAddress
@@ -67,6 +73,7 @@ namespace App.Boot
             builder.Register<GeneratorConfigModule>(Lifetime.Singleton).As<IConfigModule>();
             builder.Register<ProductConfigModule>(Lifetime.Singleton).As<IConfigModule>();
             builder.Register<RecipeConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+            builder.Register<ShopConfigModule>(Lifetime.Singleton).As<IConfigModule>();
 
             // Register orchestrators - they receive IEnumerable<IConfigModule> from the container
             builder.Register<GameConfigLoader>(Lifetime.Singleton);

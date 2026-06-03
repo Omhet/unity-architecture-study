@@ -20,6 +20,11 @@
       "key": "recipes",
       "address": "config/recipes_catalog",
       "schemaVersion": 1
+    },
+    {
+      "key": "shop",
+      "address": "config/shop_catalog",
+      "schemaVersion": 1
     }
   ]
 }

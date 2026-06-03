@@ -2,6 +2,7 @@
 @import url("./CraftSection.uss");
 @import url("./OrdersSection.uss");
 @import url("./Products.uss");
+@import url("./Shop.uss");
 
 .hud-shell {
     width: 100%;
