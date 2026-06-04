@@ -1,5 +1,4 @@
 ﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="App.Core.csproj" />
   <Project Path="App.Systems.csproj" />
   <Project Path="App.Boot.csproj" />

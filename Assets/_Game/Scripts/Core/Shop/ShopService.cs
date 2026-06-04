@@ -37,7 +37,11 @@ namespace App.Shop.Core
 
             for (int i = 0; i < unlockedIds.Count; i++)
             {
-                _shopState.AvailableShopItemIds.Add(unlockedIds[i]);
+                // Check if shopr already contains this item (in case multiple progression entries unlock the same item)
+                if (!_shopState.AvailableShopItemIds.Contains(unlockedIds[i]))
+                {
+                    _shopState.AvailableShopItemIds.Add(unlockedIds[i]);
+                }
             }
         }
 

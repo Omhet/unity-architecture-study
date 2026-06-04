@@ -25,6 +25,11 @@
       "key": "shop",
       "address": "config/shop_catalog",
       "schemaVersion": 1
+    },
+    {
+      "key": "progression",
+      "address": "config/progression_catalog",
+      "schemaVersion": 1
     }
   ]
 }

@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21f4cdc5eea320c49be48ba033995d17
+    m_Address: config/progression_catalog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 29fa2d1543ace9d4d8cddc08e820b415
     m_Address: config/recipes_catalog
     m_ReadOnly: 0

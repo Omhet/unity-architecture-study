@@ -1,0 +1,7 @@
+{
+  "levels": [
+    { "level": 1, "nextLevelXp": 100 },
+    { "level": 2, "nextLevelXp": 200 },
+    { "level": 3, "nextLevelXp": 400 }
+  ]
+}

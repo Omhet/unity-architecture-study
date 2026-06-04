@@ -5,6 +5,7 @@ namespace App.Hud.View
     using System.Linq;
     using App.Economy.Core;
     using App.Resources.Core;
+    using App.Progression.Core;
     using App.View;
     using ObservableCollections;
     using R3;
@@ -22,31 +23,36 @@ namespace App.Hud.View
 
         private EconomyState _economyState;
         private ResourceState _resourceState;
+        private ProgressionState _progressionState;
         private Func<GameplaySectionDefinition, IGameplaySectionView> _sectionFactory;
         private string _activeSection;
         private Label _moneyValue;
         private VisualElement _resourcesRow;
+        private Label _levelLabel;
+        private Label _xpLabel;
         private IDisposable _moneySubscription;
         private IDisposable _resourceSubscription;
+        private IDisposable _levelSubscription;
+        private IDisposable _xpSubscription;
+        private IDisposable _nextLevelSubscription;
 
         [Inject]
         public void Construct(
             EconomyState economyState,
             ResourceState resourceState,
+            ProgressionState progressionState,
             Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory)
         {
             _economyState = economyState;
             _resourceState = resourceState;
+            _progressionState = progressionState;
             _sectionFactory = sectionFactory;
         }
 
         protected override void BuildView()
         {
             var root = PrepareRoot();
-            if (root == null)
-            {
-                return;
-            }
+            if (root == null) return;
 
             var shell = new VisualElement();
             shell.AddToClassList("hud-shell");
@@ -113,12 +119,17 @@ namespace App.Hud.View
             _resourceLabels.Clear();
             _moneyValue = null;
             _resourcesRow = null;
+            _levelLabel = null;
+            _xpLabel = null;
         }
 
         protected override void BindView()
         {
             _moneySubscription?.Dispose();
             _resourceSubscription?.Dispose();
+            _levelSubscription?.Dispose();
+            _xpSubscription?.Dispose();
+            _nextLevelSubscription?.Dispose();
 
             if (_economyState != null)
             {
@@ -138,7 +149,16 @@ namespace App.Hud.View
                     .Subscribe(_ => RefreshResources());
             }
 
+            if (_progressionState != null)
+            {
+                _levelSubscription = _progressionState.Level.Subscribe(UpdateLevel);
+                _xpSubscription = _progressionState.Xp.Subscribe(x => UpdateXp(x, _progressionState.NextLevelXp.Value));
+                _nextLevelSubscription = _progressionState.NextLevelXp.Subscribe(n => UpdateXp(_progressionState.Xp.Value, n));
+            }
+
             UpdateMoney(_economyState != null ? _economyState.Balance.Value : 0);
+            UpdateLevel(_progressionState != null ? _progressionState.Level.Value : 1);
+            UpdateXp(_progressionState != null ? _progressionState.Xp.Value : 0, _progressionState != null ? _progressionState.NextLevelXp.Value : 0);
         }
 
         protected override void UnbindView()
@@ -147,6 +167,12 @@ namespace App.Hud.View
             _resourceSubscription?.Dispose();
             _moneySubscription = null;
             _resourceSubscription = null;
+            _levelSubscription?.Dispose();
+            _xpSubscription?.Dispose();
+            _nextLevelSubscription?.Dispose();
+            _levelSubscription = null;
+            _xpSubscription = null;
+            _nextLevelSubscription = null;
         }
 
         private HudSectionRegistry BuildRegistry()
@@ -216,8 +242,25 @@ namespace App.Hud.View
             resourcesBlock.Add(resourcesTitle);
             resourcesBlock.Add(_resourcesRow);
 
+            var progressionBlock = new VisualElement();
+            progressionBlock.AddToClassList("hud-progression-block");
+
+            var progressionTitle = new Label("Level");
+            progressionTitle.AddToClassList("hud-progression-title");
+
+            _levelLabel = new Label("Lv 1");
+            _levelLabel.AddToClassList("hud-progression-level");
+
+            _xpLabel = new Label("0/0");
+            _xpLabel.AddToClassList("hud-progression-xp");
+
+            progressionBlock.Add(progressionTitle);
+            progressionBlock.Add(_levelLabel);
+            progressionBlock.Add(_xpLabel);
+
             statusBar.Add(moneyBlock);
             statusBar.Add(resourcesBlock);
+            statusBar.Add(progressionBlock);
 
             return statusBar;
         }
@@ -227,6 +270,29 @@ namespace App.Hud.View
             if (_moneyValue != null)
             {
                 _moneyValue.text = "$" + value;
+            }
+        }
+
+        private void UpdateLevel(int level)
+        {
+            if (_levelLabel != null)
+            {
+                _levelLabel.text = "Lv " + level;
+            }
+        }
+
+        private void UpdateXp(int xp, int next)
+        {
+            if (_xpLabel != null)
+            {
+                if (next > 0)
+                {
+                    _xpLabel.text = xp + "/" + next;
+                }
+                else
+                {
+                    _xpLabel.text = xp + "/-";
+                }
             }
         }
 
