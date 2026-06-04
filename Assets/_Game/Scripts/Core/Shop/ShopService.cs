@@ -43,11 +43,30 @@ namespace App.Shop.Core
 
         public bool TryToBuy(string shopItemId)
         {
+            // First check if the item is actually available for purchase in the game
             if (!_shopRegistry.TryGetAny(shopItemId, out var itemType, out var definition))
             {
                 return false;
             }
 
+            // Check if player already owns the item
+            switch (itemType)
+            {
+                case ShopItemType.Recipe:
+                    if (_recipeState.PlayerOwnedRecipeIds.Contains(definition.ItemId))
+                    {
+                        return false;
+                    }
+                    break;
+                case ShopItemType.Generator:
+                    if (_generatorState.PlayerOwnedGeneratorIds.Contains(definition.ItemId))
+                    {
+                        return false;
+                    }
+                    break;
+            }
+
+            // Then check if the player has enough currency to buy the item
             if (!_economyService.TrySpend(definition.Price))
             {
                 return false;
