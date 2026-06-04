@@ -1,10 +1,10 @@
-namespace App.Debug
+namespace App.Systems.Debug
 {
     using App.Progression.Core;
     using UnityEngine;
     using VContainer;
 
-    class DebugHelper : MonoBehaviour
+    public class DebugHelper : MonoBehaviour
     {
         [Inject]
         public ProgressionService _progressionService;

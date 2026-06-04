@@ -1,6 +1,6 @@
 namespace App.Boot
 {
-    using App.Debug;
+    using App.Systems.Debug;
     using App.Flow.Handlers;
     using App.Hud.View;
     using App.View;
