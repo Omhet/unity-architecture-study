@@ -1,5 +1,6 @@
 namespace App.Boot
 {
+    using App.Debug;
     using App.Flow.Handlers;
     using App.Hud.View;
     using App.View;
@@ -11,6 +12,7 @@ namespace App.Boot
     public class GameLifetimeScope : LifetimeScope
     {
         [SerializeField] private HudShellView _hudShellView;
+        [SerializeField] private DebugHelper _debugHelper;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -39,6 +41,11 @@ namespace App.Boot
             if (_hudShellView != null)
             {
                 builder.RegisterComponent(_hudShellView);
+            }
+
+            if (_debugHelper != null)
+            {
+                builder.RegisterComponent(_debugHelper);
             }
         }
     }
