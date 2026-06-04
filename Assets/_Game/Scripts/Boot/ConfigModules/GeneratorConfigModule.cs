@@ -10,14 +10,12 @@ namespace App.Boot.ConfigModules
     public class GeneratorConfigModule : IConfigModule
     {
         private readonly GeneratorRegistry _generatorRegistry;
-        private readonly GeneratorState _generatorState;
 
         public string Key => "generators";
 
-        public GeneratorConfigModule(GeneratorRegistry generatorRegistry, GeneratorState generatorState)
+        public GeneratorConfigModule(GeneratorRegistry generatorRegistry)
         {
             _generatorRegistry = generatorRegistry;
-            _generatorState = generatorState;
         }
 
         public void Deserialize(string json, GameCatalogBundle bundle)
@@ -58,15 +56,6 @@ namespace App.Boot.ConfigModules
         {
             var config = bundle.GetConfig<GeneratorCatalogConfig>(Key);
             _generatorRegistry.Load(config);
-
-            if (config?.Generators != null && config.Generators.Length > 0)
-            {
-                var firstGenerator = config.Generators[0];
-                if (firstGenerator != null && !string.IsNullOrWhiteSpace(firstGenerator.Id))
-                {
-                    _generatorState.PlayerOwnedGeneratorIds.Add(firstGenerator.Id);
-                }
-            }
         }
     }
 }

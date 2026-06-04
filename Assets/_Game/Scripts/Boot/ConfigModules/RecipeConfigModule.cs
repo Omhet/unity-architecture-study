@@ -11,14 +11,12 @@ namespace App.Boot.ConfigModules
     public class RecipeConfigModule : IConfigModule
     {
         private readonly RecipeRegistry _recipeRegistry;
-        private readonly RecipeState _recipeState;
 
         public string Key => "recipes";
 
-        public RecipeConfigModule(RecipeRegistry recipeRegistry, RecipeState recipeState)
+        public RecipeConfigModule(RecipeRegistry recipeRegistry)
         {
             _recipeRegistry = recipeRegistry;
-            _recipeState = recipeState;
         }
 
         public void Deserialize(string json, GameCatalogBundle bundle)
@@ -80,15 +78,6 @@ namespace App.Boot.ConfigModules
         {
             var config = bundle.GetConfig<RecipeCatalogConfig>(Key);
             _recipeRegistry.Load(config);
-
-            if (config?.Recipes != null && config.Recipes.Length > 0)
-            {
-                var firstRecipe = config.Recipes[0];
-                if (firstRecipe != null && !string.IsNullOrWhiteSpace(firstRecipe.Id))
-                {
-                    _recipeState.PlayerOwnedRecipeIds.Add(firstRecipe.Id);
-                }
-            }
         }
     }
 }

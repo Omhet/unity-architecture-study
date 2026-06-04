@@ -20,6 +20,7 @@ namespace App.Boot
                 routing.Map<CraftFlowHandler>();
                 routing.Map<OrderFlowHandler>();
                 routing.Map<ShopFlowHandler>();
+                routing.Map<StartGameFlowHandler>();
             });
 
             builder.Register<HudSectionFactory>(Lifetime.Scoped);
