@@ -1,13 +1,14 @@
 namespace App.Flow.Handlers
 {
     using System;
+    using App.Flow.Events;
     using App.Progression.Core;
     using App.Shop.Core;
     using R3;
-    using VContainer.Unity;
     using VitalRouter;
 
-    public partial class LevelUpFlowHandler : IInitializable, IDisposable
+    [Routes]
+    public partial class LevelUpFlowHandler : IDisposable
     {
         private readonly ProgressionState _progressionState;
         private readonly ShopService _shopService;
@@ -19,10 +20,20 @@ namespace App.Flow.Handlers
             _shopService = shopService;
         }
 
-        public void Initialize()
+        [Route]
+        void On(StartGameEvent _)
         {
-            // subscribe to level changes and refresh shop availability
-            _subscription = _progressionState.Level.Subscribe(level => _shopService.RefreshAvailability(level));
+            _subscription = _progressionState.Level.Pairwise().Subscribe(HandleLevelChange);
+        }
+
+        private void HandleLevelChange((int previousLevel, int currentLevel) pair)
+        {
+            if (pair.previousLevel == pair.currentLevel)
+            {
+                return;
+            }
+
+            _shopService.RefreshAvailability(pair.currentLevel);
         }
 
         public void Dispose()

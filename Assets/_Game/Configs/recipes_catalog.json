@@ -4,6 +4,11 @@
       "id": "wooden_hammer_recipe",
       "inputResources": { "wood": 3 },
       "outputProductId": "wooden_hammer"
+    },
+    {
+      "id": "stone_hammer_recipe",
+      "inputResources": { "stone": 3 },
+      "outputProductId": "stone_hammer"
     }
   ]
 }

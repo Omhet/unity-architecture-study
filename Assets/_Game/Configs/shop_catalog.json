@@ -5,6 +5,11 @@
         "id": "shop_wooden_hammer_recipe",
         "itemId": "wooden_hammer_recipe",
         "price": 5
+      },
+      {
+        "id": "shop_stone_hammer_recipe",
+        "itemId": "stone_hammer_recipe",
+        "price": 10
       }
     ],
     "generators": [
@@ -12,6 +17,11 @@
         "id": "shop_wood_generator",
         "itemId": "wood_generator",
         "price": 5
+      },
+      {
+        "id": "shop_stone_generator",
+        "itemId": "stone_generator",
+        "price": 10
       }
     ]
   },
@@ -19,6 +29,10 @@
     {
       "level": 1,
       "shopItemIds": ["shop_wood_generator", "shop_wooden_hammer_recipe"]
+    },
+    {
+      "level": 2,
+      "shopItemIds": ["shop_stone_generator", "shop_stone_hammer_recipe"]
     }
   ]
 }
