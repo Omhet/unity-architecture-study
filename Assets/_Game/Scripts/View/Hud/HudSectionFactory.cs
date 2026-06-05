@@ -3,6 +3,7 @@ namespace App.Hud.View
     using App.Generators.Core;
     using App.Orders.Core;
     using App.Products.Core;
+    using App.Quests.Core;
     using App.Recipes.Core;
     using App.Shop.Core;
     using App.View;
@@ -17,6 +18,8 @@ namespace App.Hud.View
         private readonly OrderState _orderState;
         private readonly ShopState _shopState;
         private readonly ShopRegistry _shopRegistry;
+        private readonly QuestState _questState;
+        private readonly QuestRegistry _questRegistry;
         private readonly ICommandPublisher _publisher;
 
         public HudSectionFactory(
@@ -27,6 +30,8 @@ namespace App.Hud.View
             OrderState orderState,
             ShopState shopState,
             ShopRegistry shopRegistry,
+            QuestState questState,
+            QuestRegistry questRegistry,
             ICommandPublisher publisher
             )
         {
@@ -37,6 +42,8 @@ namespace App.Hud.View
             _orderState = orderState;
             _shopState = shopState;
             _shopRegistry = shopRegistry;
+            _questState = questState;
+            _questRegistry = questRegistry;
             _publisher = publisher;
         }
 
@@ -53,7 +60,7 @@ namespace App.Hud.View
                 case "shop":
                     return new ShopSectionView(_publisher, _shopState, _shopRegistry);
                 case "quests":
-                    return new PlaceholderSectionView(definition, "Quest progress will appear here.");
+                    return new QuestSectionView(_publisher, _questState, _questRegistry);
                 case "talents":
                     return new PlaceholderSectionView(definition, "Talent upgrades will appear here.");
                 default:

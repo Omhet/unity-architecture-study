@@ -49,4 +49,14 @@ namespace App.Flow.Events
             ShopItemId = shopItemId;
         }
     }
+
+    public readonly struct ClaimQuestEvent : ICommand
+    {
+        public readonly string QuestId;
+
+        public ClaimQuestEvent(string questId)
+        {
+            QuestId = questId;
+        }
+    }
 }

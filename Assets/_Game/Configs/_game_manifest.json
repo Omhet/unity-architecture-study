@@ -30,6 +30,11 @@
       "key": "progression",
       "address": "config/progression_catalog",
       "schemaVersion": 1
+    },
+    {
+      "key": "quests",
+      "address": "config/quests_catalog",
+      "schemaVersion": 1
     }
   ]
 }

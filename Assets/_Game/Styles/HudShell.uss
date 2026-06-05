@@ -1,6 +1,7 @@
 @import url("./GeneratorsSection.uss");
 @import url("./CraftSection.uss");
 @import url("./OrdersSection.uss");
+@import url("./QuestSection.uss");
 @import url("./Products.uss");
 @import url("./Shop.uss");
 

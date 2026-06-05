@@ -24,6 +24,7 @@ namespace App.Boot
                 routing.Map<ShopFlowHandler>();
                 routing.Map<StartGameFlowHandler>();
                 routing.Map<LevelUpFlowHandler>();
+                routing.Map<QuestFlowHandler>();
             });
 
             builder.Register<HudSectionFactory>(Lifetime.Scoped);

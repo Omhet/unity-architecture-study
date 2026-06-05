@@ -1,0 +1,31 @@
+{
+  "quests": [
+    {
+      "id": "earn_first_money",
+      "xpReward": 50,
+      "conditionData": {
+        "type": "money_threshold",
+        "targetId": null,
+        "threshold": 15
+      }
+    },
+    {
+      "id": "gather_wood",
+      "xpReward": 50,
+      "conditionData": {
+        "type": "resource_threshold",
+        "targetId": "wood",
+        "threshold": 6
+      }
+    },
+    {
+      "id": "craft_first_hammer",
+      "xpReward": 50,
+      "conditionData": {
+        "type": "product_threshold",
+        "targetId": "wooden_hammer",
+        "threshold": 1
+      }
+    }
+  ]
+}
