@@ -4,6 +4,7 @@ namespace App.Flow.Handlers
     using App.Flow.Events;
     using App.Progression.Core;
     using App.Shop.Core;
+    using App.Talents.Core;
     using R3;
     using VitalRouter;
 
@@ -12,12 +13,14 @@ namespace App.Flow.Handlers
     {
         private readonly ProgressionState _progressionState;
         private readonly ShopService _shopService;
+        private readonly TalentService _talentService;
         private IDisposable _subscription;
 
-        public LevelUpFlowHandler(ProgressionState progressionState, ShopService shopService)
+        public LevelUpFlowHandler(ProgressionState progressionState, ShopService shopService, TalentService talentService)
         {
             _progressionState = progressionState;
             _shopService = shopService;
+            _talentService = talentService;
         }
 
         [Route]
@@ -31,6 +34,12 @@ namespace App.Flow.Handlers
             if (pair.previousLevel == pair.currentLevel)
             {
                 return;
+            }
+
+            int levelsGained = pair.currentLevel - pair.previousLevel;
+            for (int i = 0; i < levelsGained; i++)
+            {
+                _talentService.AddPoint();
             }
 
             _shopService.RefreshAvailability(pair.currentLevel);

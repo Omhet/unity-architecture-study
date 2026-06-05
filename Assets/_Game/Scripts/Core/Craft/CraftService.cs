@@ -1,8 +1,10 @@
 namespace App.Craft.Core
 {
+    using System;
     using App.Products.Core;
     using App.Recipes.Core;
     using App.Resources.Core;
+    using App.Talents.Core;
 
     public class CraftService
     {
@@ -10,16 +12,19 @@ namespace App.Craft.Core
         private readonly RecipeState _recipeState;
         private readonly ResourceState _resourceState;
         private readonly ProductState _productState;
+        private readonly TalentService _talentService;
 
         public CraftService(RecipeRegistry recipeRegistry, RecipeState recipeState,
         ResourceState resourceState,
-        ProductState productState
+        ProductState productState,
+        TalentService talentService
         )
         {
             _recipeRegistry = recipeRegistry;
             _recipeState = recipeState;
             _resourceState = resourceState;
             _productState = productState;
+            _talentService = talentService;
         }
 
         public void Craft(string recipeId)
@@ -56,8 +61,10 @@ namespace App.Craft.Core
             }
 
             // Add output product
-            // TODO: Hardcode quantity to 1 for now, but this can be extended in the future if needed.
-            _productState.AddAmount(recipe.OutputProductId, 1);
+            int baseAmount = 1;
+            float multiplier = _talentService.GetMultiplier("craft_boost");
+            int amount = (int)Math.Ceiling(baseAmount * multiplier);
+            _productState.AddAmount(recipe.OutputProductId, amount);
         }
     }
 }

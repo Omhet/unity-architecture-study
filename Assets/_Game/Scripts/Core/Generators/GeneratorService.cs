@@ -1,21 +1,26 @@
 namespace App.Generators.Core
 {
+    using System;
     using App.Resources.Core;
+    using App.Talents.Core;
 
     public class GeneratorService
     {
         private readonly GeneratorRegistry _generatorRegistry;
         private readonly GeneratorState _generatorState;
         private readonly ResourceState _resourceState;
+        private readonly TalentService _talentService;
 
         public GeneratorService(
             GeneratorRegistry generatorRegistry,
             GeneratorState generatorState,
-            ResourceState resourceState)
+            ResourceState resourceState,
+            TalentService talentService)
         {
             _generatorRegistry = generatorRegistry;
             _generatorState = generatorState;
             _resourceState = resourceState;
+            _talentService = talentService;
         }
 
         public bool TryGenerate(string generatorId)
@@ -35,8 +40,10 @@ namespace App.Generators.Core
                 return false;
             }
 
-            // TODO: Hardcode to 1 for now, but eventually this should be based on generator level or something similar like player progression
-            _resourceState.AddAmount(generator.ResourceId, 1);
+            int baseAmount = 1;
+            float multiplier = _talentService.GetMultiplier("generator_boost");
+            int amount = (int)Math.Ceiling(baseAmount * multiplier);
+            _resourceState.AddAmount(generator.ResourceId, amount);
 
             return true;
         }

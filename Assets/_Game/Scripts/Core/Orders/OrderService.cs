@@ -4,21 +4,25 @@ namespace App.Orders.Core
     using System.Linq;
     using App.Economy.Core;
     using App.Products.Core;
+    using App.Talents.Core;
 
     public class OrderService
     {
         private readonly OrderState _orderState;
         private readonly ProductState _productState;
         private readonly EconomyService _economyService;
+        private readonly TalentService _talentService;
 
         public OrderService(
             OrderState orderState,
             ProductState productState,
-            EconomyService economyService)
+            EconomyService economyService,
+            TalentService talentService)
         {
             _orderState = orderState;
             _productState = productState;
             _economyService = economyService;
+            _talentService = talentService;
         }
 
         public bool TryCompleteOrder(string orderId)
@@ -47,8 +51,10 @@ namespace App.Orders.Core
             // Deduct the required quantity from the product
             _productState.AddAmount(requirements.ProductId, -requirements.Quantity);
 
-            // Add the reward to the economy
-            _economyService.Add(order.Reward);
+            // Add the reward to the economy (with talent multiplier)
+            float multiplier = _talentService.GetMultiplier("order_boost");
+            int reward = (int)Math.Ceiling(order.Reward * multiplier);
+            _economyService.Add(reward);
 
             // Remove the completed order from active orders
             _orderState.ActiveOrders.Remove(order);

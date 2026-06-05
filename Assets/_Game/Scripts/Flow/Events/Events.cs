@@ -59,4 +59,14 @@ namespace App.Flow.Events
             QuestId = questId;
         }
     }
+
+    public readonly struct PurchaseTalentEvent : ICommand
+    {
+        public readonly string TalentId;
+
+        public PurchaseTalentEvent(string talentId)
+        {
+            TalentId = talentId;
+        }
+    }
 }

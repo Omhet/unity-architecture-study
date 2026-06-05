@@ -24,6 +24,7 @@ namespace App.Boot
                 routing.Map<ShopFlowHandler>();
                 routing.Map<StartGameFlowHandler>();
                 routing.Map<LevelUpFlowHandler>();
+                routing.Map<TalentFlowHandler>();
                 routing.Map<QuestFlowHandler>();
             });
 

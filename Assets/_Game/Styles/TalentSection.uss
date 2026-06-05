@@ -1,0 +1,90 @@
+.talents-section {
+    padding-top: 8px;
+}
+
+.talent-points-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.talent-points-label {
+    font-size: 14px;
+    color: #e0e0e0;
+    -unity-font-style: bold;
+}
+
+.talent-points-value {
+    font-size: 16px;
+    color: #f2c14e;
+    -unity-font-style: bold;
+    margin-left: 4px;
+}
+
+.talents-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.talent-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.08);
+    border-right-color: rgba(255, 255, 255, 0.08);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    border-left-color: rgba(255, 255, 255, 0.08);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding-top: 12px;
+    padding-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    margin-bottom: 8px;
+}
+
+.talent-name {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: #e0e0e0;
+    flex-grow: 1;
+}
+
+.talent-investment {
+    font-size: 13px;
+    color: #a0a0a0;
+    margin-right: 12px;
+    min-width: 40px;
+    -unity-text-align: right;
+}
+
+.talent-buy-button {
+    background-color: #6c5ce7;
+    color: #ffffff;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    padding-top: 6px;
+    padding-right: 12px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+}
+
+.talent-buy-button:hover {
+    background-color: #7f70f0;
+}
+
+.talent-buy-button:active {
+    background-color: #5a4bd6;
+}

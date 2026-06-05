@@ -1,0 +1,25 @@
+{
+  "talents": [
+    {
+      "id": "generator_boost",
+      "name": "Generator Boost",
+      "cost": 1,
+      "increasePerPoint": 1,
+      "maxPoints": 10
+    },
+    {
+      "id": "craft_boost",
+      "name": "Craft Boost",
+      "cost": 1,
+      "increasePerPoint": 1,
+      "maxPoints": 10
+    },
+    {
+      "id": "order_boost",
+      "name": "Order Boost",
+      "cost": 1,
+      "increasePerPoint": 1,
+      "maxPoints": 10
+    }
+  ]
+}

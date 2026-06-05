@@ -6,6 +6,7 @@ namespace App.Hud.View
     using App.Quests.Core;
     using App.Recipes.Core;
     using App.Shop.Core;
+    using App.Talents.Core;
     using App.View;
     using VitalRouter;
 
@@ -20,6 +21,9 @@ namespace App.Hud.View
         private readonly ShopRegistry _shopRegistry;
         private readonly QuestState _questState;
         private readonly QuestRegistry _questRegistry;
+        private readonly TalentState _talentState;
+        private readonly TalentRegistry _talentRegistry;
+        private readonly TalentService _talentService;
         private readonly ICommandPublisher _publisher;
 
         public HudSectionFactory(
@@ -32,6 +36,9 @@ namespace App.Hud.View
             ShopRegistry shopRegistry,
             QuestState questState,
             QuestRegistry questRegistry,
+            TalentState talentState,
+            TalentRegistry talentRegistry,
+            TalentService talentService,
             ICommandPublisher publisher
             )
         {
@@ -44,6 +51,9 @@ namespace App.Hud.View
             _shopRegistry = shopRegistry;
             _questState = questState;
             _questRegistry = questRegistry;
+            _talentState = talentState;
+            _talentRegistry = talentRegistry;
+            _talentService = talentService;
             _publisher = publisher;
         }
 
@@ -62,7 +72,7 @@ namespace App.Hud.View
                 case "quests":
                     return new QuestSectionView(_publisher, _questState, _questRegistry);
                 case "talents":
-                    return new PlaceholderSectionView(definition, "Talent upgrades will appear here.");
+                    return new TalentSectionView(_talentState, _talentRegistry, _talentService, _publisher);
                 default:
                     return new PlaceholderSectionView(definition, definition.TabTitle + " section is not available.");
             }

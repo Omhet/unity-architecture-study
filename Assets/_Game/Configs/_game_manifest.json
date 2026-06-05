@@ -35,6 +35,11 @@
       "key": "quests",
       "address": "config/quests_catalog",
       "schemaVersion": 1
+    },
+    {
+      "key": "talents",
+      "address": "config/talents_catalog",
+      "schemaVersion": 1
     }
   ]
 }

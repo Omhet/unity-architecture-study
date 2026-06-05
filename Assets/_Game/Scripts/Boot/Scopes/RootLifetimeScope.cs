@@ -15,6 +15,7 @@ namespace App.Boot
     using App.Systems.Configuration;
     using App.Systems.Saving;
     using App.Systems.Scene;
+    using App.Talents.Core;
     using UnityEngine;
     using VContainer;
     using VContainer.Unity;
@@ -73,6 +74,10 @@ namespace App.Boot
             builder.Register<QuestState>(Lifetime.Singleton);
             builder.Register<QuestService>(Lifetime.Singleton);
 
+            builder.Register<TalentRegistry>(Lifetime.Singleton);
+            builder.Register<TalentState>(Lifetime.Singleton);
+            builder.Register<TalentService>(Lifetime.Singleton);
+
             builder.RegisterInstance(new GameConfigBootstrapOptions
             {
                 ManifestAddress = _manifestAddress
@@ -86,6 +91,7 @@ namespace App.Boot
             builder.Register<ShopConfigModule>(Lifetime.Singleton).As<IConfigModule>();
             builder.Register<ProgressionConfigModule>(Lifetime.Singleton).As<IConfigModule>();
             builder.Register<QuestConfigModule>(Lifetime.Singleton).As<IConfigModule>();
+            builder.Register<TalentConfigModule>(Lifetime.Singleton).As<IConfigModule>();
 
             // Register orchestrators - they receive IEnumerable<IConfigModule> from the container
             builder.Register<GameConfigLoader>(Lifetime.Singleton);
