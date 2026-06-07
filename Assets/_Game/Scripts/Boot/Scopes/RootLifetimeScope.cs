@@ -1,6 +1,7 @@
 namespace App.Boot
 {
     using App.Boot.ConfigModules;
+    using App.Boot.SaveModules;
     using App.Craft.Core;
     using App.Economy.Core;
     using App.Flow.Handlers;
@@ -24,6 +25,7 @@ namespace App.Boot
     using VContainer.Unity;
     using VitalRouter;
     using VitalRouter.VContainer;
+    using App.Systems.Saving.Modules;
 
     public class RootLifetimeScope : LifetimeScope
     {
@@ -53,9 +55,9 @@ namespace App.Boot
             // Migration chain builder - collects all ISaveMigration instances from DI
             builder.Register<MigrationChainBuilder>(Lifetime.Singleton);
 
-            // Placeholder for future IEnumerable<ISaveModule> consumers (empty collection initially)
-            // Domain save modules will be registered as ISaveModule in a future change:
-            // builder.Register<ResourceSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            // Domain save modules - registered as ISaveModule for SaveLoadSystem discovery
+            builder.Register<EconomySaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<ResourceSaveModule>(Lifetime.Singleton).As<ISaveModule>();
 
             // Save orchestration - SaveLoadSystem and SlotManager receive dependencies via DI
             builder.Register<SaveLoadSystem>(Lifetime.Singleton);
