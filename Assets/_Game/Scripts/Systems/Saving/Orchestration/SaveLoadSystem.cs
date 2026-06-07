@@ -52,10 +52,14 @@ namespace App.Systems.Saving.Orchestration
 
             // Step 4: Run migrations if version mismatch
             int fileVersion;
-            if (saveData.TryGetValue("version", out var versionObj) && versionObj is JsonToken token && token == JsonToken.Integer)
-                fileVersion = Convert.ToInt32(saveData["version"]);
+            if (saveData.TryGetValue("version", out var versionObj))
+            {
+                fileVersion = Convert.ToInt32(versionObj);
+            }
             else
-                fileVersion = 0; // Assume oldest version if missing
+            {
+                throw new InvalidOperationException($"Save data for slot {slotIndex} is missing 'version' field.");
+            }
 
             if (fileVersion < SaveSchemaVersion.Current)
             {
