@@ -95,18 +95,6 @@ namespace App.Systems.Saving.Orchestration
                 if (saveData.TryGetValue(module.Key, out var sectionData))
                     module.Deserialize(sectionData!);
             }
-
-            // Update metadata play session count
-            if (saveData.TryGetValue("metadata", out var metaObj) && metaObj is JObject metaData)
-            {
-                var sessionCount = metaData.Value<int?>("playSessionCount") ?? 0;
-                metaData["playSessionCount"] = sessionCount + 1;
-
-                // Write updated metadata back immediately
-                saveData["metadata"] = metaData;
-                string updatedJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-                await _storage.WriteAsync(slotKey, updatedJson);
-            }
         }
 
         /// <summary>
@@ -116,32 +104,13 @@ namespace App.Systems.Saving.Orchestration
         {
             var slotKey = slotIndex.ToString();
 
-            // Read existing metadata to preserve session count
-            string? existingJson = await _storage.ReadAsync(slotKey);
-            int playSessionCount = 0;
-
-            if (!string.IsNullOrEmpty(existingJson))
-            {
-                try
-                {
-                    var existingData = JsonConvert.DeserializeObject<Dictionary<string, object>>(existingJson);
-                    if (existingData?.TryGetValue("metadata", out var metaObj) == true && metaObj is JObject metaData)
-                        playSessionCount = metaData.Value<int?>("playSessionCount") ?? 0;
-                }
-                catch
-                {
-                    // If we can't read existing metadata, start fresh
-                }
-            }
-
             // Build save data dictionary
             var saveData = new Dictionary<string, object>
             {
                 ["version"] = SaveSchemaVersion.Current,
                 ["metadata"] = new JObject
                 {
-                    ["lastPlayed"] = DateTime.UtcNow,
-                    ["playSessionCount"] = playSessionCount + 1
+                    ["lastPlayed"] = DateTime.UtcNow
                 }
             };
 

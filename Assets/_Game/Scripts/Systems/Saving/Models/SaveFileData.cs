@@ -22,8 +22,5 @@ namespace App.Systems.Saving.Models
     {
         [JsonProperty("lastPlayed")]
         public DateTime LastPlayed { get; set; }
-
-        [JsonProperty("playSessionCount")]
-        public int PlaySessionCount { get; set; }
     }
 }

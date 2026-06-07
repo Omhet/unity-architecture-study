@@ -19,14 +19,11 @@ namespace App.Systems.Saving.Models
         [JsonProperty("lastPlayed")]
         public DateTime? LastPlayed { get; set; }
 
-        [JsonProperty("playSessionCount")]
-        public int PlaySessionCount { get; set; }
-
         /// <summary>
         /// Human-readable summary for UI display.
         /// </summary>
         public string Summary => HasData
-            ? $"Slot {SlotIndex} - Last played: {LastPlayed?.ToString("g") ?? "Unknown"} ({PlaySessionCount} sessions)"
+            ? $"Slot {SlotIndex} - Last played: {LastPlayed?.ToString("g") ?? "Unknown"}"
             : $"Slot {SlotIndex} - Empty";
     }
 }

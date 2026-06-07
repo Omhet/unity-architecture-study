@@ -41,7 +41,6 @@ namespace App.Systems.Saving.Orchestration
 
                 bool hasData = !string.IsNullOrEmpty(json);
                 DateTime? lastPlayed = null;
-                int playSessionCount = 0;
 
                 if (hasData)
                 {
@@ -51,7 +50,6 @@ namespace App.Systems.Saving.Orchestration
                         if (data?.TryGetValue("metadata", out var metaObj) == true && metaObj is JObject metaData)
                         {
                             lastPlayed = metaData.Value<DateTime?>("lastPlayed");
-                            playSessionCount = metaData.Value<int?>("playSessionCount") ?? 0;
                         }
                     }
                     catch
@@ -64,8 +62,7 @@ namespace App.Systems.Saving.Orchestration
                 {
                     SlotIndex = i,
                     HasData = hasData,
-                    LastPlayed = lastPlayed,
-                    PlaySessionCount = playSessionCount
+                    LastPlayed = lastPlayed
                 });
             }
 
