@@ -6,6 +6,5 @@ namespace App.Systems.Saving.Options
     public class SaveBootstrapOptions
     {
         public int SlotCount = 4;
-        public int ActiveSlotIndex = 0;
     }
 }

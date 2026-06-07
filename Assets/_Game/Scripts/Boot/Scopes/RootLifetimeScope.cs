@@ -48,7 +48,7 @@ namespace App.Boot
             builder.Register<FileSystemSaveStorage>(Lifetime.Singleton).As<ISaveStorage>();
 
             // Save bootstrap options
-            builder.RegisterInstance(new SaveBootstrapOptions { SlotCount = 4, ActiveSlotIndex = 0 });
+            builder.RegisterInstance(new SaveBootstrapOptions { SlotCount = 4 });
 
             // Migration chain builder - collects all ISaveMigration instances from DI
             builder.Register<MigrationChainBuilder>(Lifetime.Singleton);

@@ -21,8 +21,6 @@ namespace App.Systems.Saving.Orchestration
         private readonly IEnumerable<ISaveModule> _modules;
         private readonly MigrationChainBuilder _chainBuilder;
 
-        private int _activeSlot = 0;
-
         public SaveLoadSystem(
             ISaveStorage storage,
             IEnumerable<ISaveModule> modules,
@@ -31,14 +29,6 @@ namespace App.Systems.Saving.Orchestration
             _storage = storage;
             _modules = modules;
             _chainBuilder = chainBuilder;
-        }
-
-        public int GetActiveSlot() => _activeSlot;
-
-        public void SetActiveSlot(int slotIndex)
-        {
-            if (slotIndex < 0) throw new ArgumentOutOfRangeException(nameof(slotIndex));
-            _activeSlot = slotIndex;
         }
 
         /// <summary>

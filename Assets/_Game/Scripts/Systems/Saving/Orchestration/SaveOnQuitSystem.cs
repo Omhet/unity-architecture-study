@@ -11,10 +11,12 @@ namespace App.Systems.Saving.Orchestration
     public class SaveOnQuitSystem
     {
         private readonly SaveLoadSystem _saveLoadSystem;
+        private readonly SlotManager _slotManager;
 
-        public SaveOnQuitSystem(SaveLoadSystem saveLoadSystem)
+        public SaveOnQuitSystem(SaveLoadSystem saveLoadSystem, SlotManager slotManager)
         {
             _saveLoadSystem = saveLoadSystem;
+            _slotManager = slotManager;
             Application.quitting += OnApplicationQuitting;
         }
 
@@ -22,7 +24,7 @@ namespace App.Systems.Saving.Orchestration
         {
             // Fire-and-forget synchronous save on quit.
             // We can't await here, so we do a best-effort sync write.
-            var activeSlot = _saveLoadSystem.GetActiveSlot();
+            var activeSlot = _slotManager.GetActiveSlot();
 
             // Note: SaveLoadSystem.SaveSlotAsync is async, but Application.quitting
             // doesn't support awaiting. This is a safety net - primary saves happen

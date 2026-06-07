@@ -5,26 +5,35 @@ namespace App.Systems.Saving.Orchestration
     using System;
     using System.Collections.Generic;
     using App.Systems.Saving.Models;
+    using App.Systems.Saving.Options;
     using App.Systems.Saving.Storage;
     using Cysharp.Threading.Tasks;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// Data service for slot management operations: list, load, save, delete.
-    /// Delegates actual load/save through SaveLoadSystem.
+    /// Manages slot state: slot count (from boot config), active slot (mutable runtime state).
+    /// Provides slot listing and deletion. Load/save pipeline is handled by SaveLoadSystem.
     /// </summary>
     public class SlotManager
     {
         private readonly ISaveStorage _storage;
-        private readonly SaveLoadSystem _saveLoadSystem;
         private readonly int _slotCount;
+        private int _activeSlot;
 
-        public SlotManager(ISaveStorage storage, SaveLoadSystem saveLoadSystem, int slotCount = 4)
+        public SlotManager(ISaveStorage storage, SaveBootstrapOptions options)
         {
             _storage = storage;
-            _saveLoadSystem = saveLoadSystem;
-            _slotCount = slotCount;
+            _slotCount = options.SlotCount;
+        }
+
+        public int GetActiveSlot() => _activeSlot;
+
+        public void SetActiveSlot(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= _slotCount)
+                throw new ArgumentOutOfRangeException(nameof(slotIndex), $"Slot index must be between 0 and {_slotCount - 1}");
+            _activeSlot = slotIndex;
         }
 
         /// <summary>
@@ -67,26 +76,6 @@ namespace App.Systems.Saving.Orchestration
             }
 
             return descriptors.ToArray();
-        }
-
-        /// <summary>
-        /// Load a slot by delegating to SaveLoadSystem.
-        /// </summary>
-        public async UniTask LoadSlotAsync(int slotIndex)
-        {
-            if (slotIndex < 0 || slotIndex >= _slotCount)
-                throw new ArgumentOutOfRangeException(nameof(slotIndex), $"Slot index must be between 0 and {_slotCount - 1}");
-
-            _saveLoadSystem.SetActiveSlot(slotIndex);
-            await _saveLoadSystem.LoadSlotAsync(slotIndex);
-        }
-
-        /// <summary>
-        /// Save the active slot by delegating to SaveLoadSystem.
-        /// </summary>
-        public async UniTask SaveActiveSlotAsync()
-        {
-            await _saveLoadSystem.SaveSlotAsync(_saveLoadSystem.GetActiveSlot());
         }
 
         /// <summary>

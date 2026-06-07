@@ -13,17 +13,20 @@ namespace App.Flow.Handlers
         private readonly SceneLoadSystem _sceneLoader;
         private readonly GameConfigInitializationSystem _initializationService;
         private readonly SaveLoadSystem _saveLoadSystem;
+        private readonly SlotManager _slotManager;
         private readonly ICommandPublisher _publisher;
 
         public SceneFlowHandler(
             SceneLoadSystem sceneLoader,
             GameConfigInitializationSystem initializationService,
             SaveLoadSystem saveLoadSystem,
+            SlotManager slotManager,
             ICommandPublisher publisher)
         {
             _sceneLoader = sceneLoader;
             _initializationService = initializationService;
             _saveLoadSystem = saveLoadSystem;
+            _slotManager = slotManager;
             _publisher = publisher;
         }
 
@@ -36,7 +39,7 @@ namespace App.Flow.Handlers
             await _initializationService.InitializeAsync();
 
             // Load save data after config hydration completes
-            int activeSlot = _saveLoadSystem.GetActiveSlot();
+            int activeSlot = _slotManager.GetActiveSlot();
             await _saveLoadSystem.LoadSlotAsync(activeSlot);
 
             _sceneLoader.HideLoading();
@@ -52,7 +55,7 @@ namespace App.Flow.Handlers
             await _sceneLoader.LoadSceneAsync("Menu");
 
             // Save before exiting gameplay scene
-            int activeSlot = _saveLoadSystem.GetActiveSlot();
+            int activeSlot = _slotManager.GetActiveSlot();
             await _saveLoadSystem.SaveSlotAsync(activeSlot);
 
             _sceneLoader.HideLoading();
