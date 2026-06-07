@@ -12,6 +12,8 @@ namespace App.Hud.View
     using UnityEngine;
     using UnityEngine.UIElements;
     using VContainer;
+    using VitalRouter;
+    using App.Flow.Events;
 
     [RequireComponent(typeof(UIDocument))]
     public class HudShellView : GameplayViewBase
@@ -36,17 +38,23 @@ namespace App.Hud.View
         private IDisposable _xpSubscription;
         private IDisposable _nextLevelSubscription;
 
+        private ICommandPublisher _publisher;
+        private Button _saveButton;
+        private Button _menuButton;
+
         [Inject]
         public void Construct(
             EconomyState economyState,
             ResourceState resourceState,
             ProgressionState progressionState,
-            Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory)
+            Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory,
+            ICommandPublisher publisher)
         {
             _economyState = economyState;
             _resourceState = resourceState;
             _progressionState = progressionState;
             _sectionFactory = sectionFactory;
+            _publisher = publisher;
         }
 
         protected override void BuildView()
@@ -57,6 +65,7 @@ namespace App.Hud.View
             var shell = new VisualElement();
             shell.AddToClassList("hud-shell");
 
+            var actionRow = BuildActionRow();
             var statusBar = BuildStatusBar();
 
             var tabs = new VisualElement();
@@ -65,6 +74,7 @@ namespace App.Hud.View
             var content = new VisualElement();
             content.AddToClassList("hud-content");
 
+            shell.Add(actionRow);
             shell.Add(statusBar);
             shell.Add(tabs);
             shell.Add(content);
@@ -121,6 +131,8 @@ namespace App.Hud.View
             _resourcesRow = null;
             _levelLabel = null;
             _xpLabel = null;
+            _saveButton = null;
+            _menuButton = null;
         }
 
         protected override void BindView()
@@ -212,6 +224,37 @@ namespace App.Hud.View
             }
 
             return new PlaceholderSectionView(definition, definition.TabTitle + " section is not available.");
+        }
+
+        private VisualElement BuildActionRow()
+        {
+            var actionRow = new VisualElement();
+            actionRow.AddToClassList("hud-actions-row");
+
+            _saveButton = new Button
+            {
+                text = "Save"
+            };
+            _saveButton.AddToClassList("hud-action-button");
+            _saveButton.clicked += () =>
+            {
+                _publisher.PublishAsync(new ManualSaveEvent());
+            };
+
+            _menuButton = new Button
+            {
+                text = "← Menu"
+            };
+            _menuButton.AddToClassList("hud-action-button");
+            _menuButton.clicked += () =>
+            {
+                _publisher.PublishAsync(new ExitToMenuEvent());
+            };
+
+            actionRow.Add(_saveButton);
+            actionRow.Add(_menuButton);
+
+            return actionRow;
         }
 
         private VisualElement BuildStatusBar()

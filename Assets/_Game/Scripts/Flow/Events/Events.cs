@@ -73,4 +73,8 @@ namespace App.Flow.Events
     public readonly struct ExitToMenuEvent : ICommand
     {
     }
+
+    public readonly struct ManualSaveEvent : ICommand
+    {
+    }
 }

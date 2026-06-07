@@ -135,6 +135,30 @@
     -unity-font-style: bold;
 }
 
+.hud-actions-row {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.hud-action-button {
+    min-width: 120px;
+    min-height: 34px;
+    border-radius: 8px;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    color: rgb(220, 230, 244);
+    background-color: rgba(34, 45, 70, 0.9);
+}
+
+.hud-action-button:hover {
+    background-color: rgba(48, 62, 95, 0.95);
+}
+
 .hud-content {
     flex-grow: 1;
     min-height: 220px;
