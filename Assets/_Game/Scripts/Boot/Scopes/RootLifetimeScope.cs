@@ -13,7 +13,10 @@ namespace App.Boot
     using App.Shop.Core;
     using App.Progression.Core;
     using App.Systems.Configuration;
-    using App.Systems.Saving;
+    using App.Systems.Saving.Migrations;
+    using App.Systems.Saving.Options;
+    using App.Systems.Saving.Orchestration;
+    using App.Systems.Saving.Storage;
     using App.Systems.Scene;
     using App.Talents.Core;
     using UnityEngine;
@@ -37,8 +40,26 @@ namespace App.Boot
                 routing.Map<SceneFlowHandler>();
             });
 
-            builder.Register<SaveSystem>(Lifetime.Singleton);
+            // Scene system
             builder.Register<SceneLoadSystem>(Lifetime.Singleton);
+
+            // Save storage - FileSystemSaveStorage for desktop/mobile
+            // TODO: Swap to LocalStorageSaveStorage for WebGL by registering it conditionally based on platform
+            builder.Register<FileSystemSaveStorage>(Lifetime.Singleton).As<ISaveStorage>();
+
+            // Save bootstrap options
+            builder.RegisterInstance(new SaveBootstrapOptions { SlotCount = 4, ActiveSlotIndex = 0 });
+
+            // Migration chain builder - collects all ISaveMigration instances from DI
+            builder.Register<MigrationChainBuilder>(Lifetime.Singleton);
+
+            // Placeholder for future IEnumerable<ISaveModule> consumers (empty collection initially)
+            // Domain save modules will be registered as ISaveModule in a future change:
+            // builder.Register<ResourceSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+
+            // Save orchestration - SaveLoadSystem and SlotManager receive dependencies via DI
+            builder.Register<SaveLoadSystem>(Lifetime.Singleton);
+            builder.Register<SlotManager>(Lifetime.Singleton);
 
             builder.Register<EconomyState>(Lifetime.Singleton);
             builder.Register<EconomyService>(Lifetime.Singleton);
@@ -98,6 +119,9 @@ namespace App.Boot
             builder.Register<GameConfigValidator>(Lifetime.Singleton);
             builder.Register<GameConfigHydrator>(Lifetime.Singleton);
             builder.Register<GameConfigInitializationSystem>(Lifetime.Singleton);
+
+            // Save on quit safety net (fire-and-forget save when Application.quitting fires)
+            builder.Register<SaveOnQuitSystem>(Lifetime.Singleton);
 
             if (_loadingScreenViewPrefab != null)
             {

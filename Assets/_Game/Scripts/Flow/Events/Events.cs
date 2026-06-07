@@ -69,4 +69,8 @@ namespace App.Flow.Events
             TalentId = talentId;
         }
     }
+
+    public readonly struct ExitToMenuEvent : ICommand
+    {
+    }
 }
