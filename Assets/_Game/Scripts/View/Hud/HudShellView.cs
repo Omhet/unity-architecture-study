@@ -166,13 +166,10 @@ namespace App.Hud.View
             {
                 Func<int> getNextLevelXp = () => _progressionRegistry.GetNextLevelXpForLevel(_progressionState.Level.Value);
 
-                var updates = Observable.Merge(
-                    _progressionState.Level.Select(_ => Unit.Default),
-                    _progressionState.Xp.Select(_ => Unit.Default));
-
                 _levelSubscription = _progressionState.Level.Subscribe(level => UpdateLevel(level));
-                _xpSubscription = Observable.Return(Unit.Default)
-                    .Concat(updates)
+                _xpSubscription = Observable.Merge(
+                        _progressionState.Level.Select(_ => Unit.Default),
+                        _progressionState.Xp.Select(_ => Unit.Default))
                     .Subscribe(_ => UpdateXp(_progressionState.Xp.Value, getNextLevelXp()));
             }
         }
@@ -328,7 +325,6 @@ namespace App.Hud.View
 
         private void UpdateXp(int xp, int next)
         {
-            Debug.Log($"Updating XP display: xp={xp}, next={next}");
             if (_xpLabel != null)
             {
                 if (next > 0)
