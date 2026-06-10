@@ -28,14 +28,10 @@ namespace App.Editor
             {
                 UniTask.Void(async () =>
                 {
-                    await UniTask.Yield();
-                    await UniTask.Yield();
-
                     try
                     {
                         // Load Menu scene so RootLifetimeScope is ready, then trigger normal flow.
                         await SceneManager.LoadSceneAsync(MenuSceneName, LoadSceneMode.Single).ToUniTask();
-                        await UniTask.Yield(); // Let the new scene settle
 
                         await Router.Default.PublishAsync(new PlayGameEvent());
                     }
