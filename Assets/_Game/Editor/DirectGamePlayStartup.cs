@@ -11,6 +11,7 @@ namespace App.Editor
     public static class DirectGamePlayStartup
     {
         private const string GameplaySceneName = "Game";
+        private const string MenuSceneName = "Menu";
 
         static DirectGamePlayStartup()
         {
@@ -19,31 +20,31 @@ namespace App.Editor
 
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state != PlayModeStateChange.EnteredPlayMode)
-            {
-                return;
-            }
+            if (state != PlayModeStateChange.EnteredPlayMode) return;
 
-            if (SceneManager.GetActiveScene().name != GameplaySceneName)
+            // If the Game scene is open, redirect to Menu first so the normal flow runs.
+            // This avoids stale default state — config and save data load before views bind.
+            if (SceneManager.GetActiveScene().name == GameplaySceneName)
             {
-                return;
-            }
-
-            UniTask.Void(async () =>
-            {
-                // Give root scope/router a couple frames to initialize before publishing.
-                await UniTask.Yield();
-                await UniTask.Yield();
-
-                try
+                UniTask.Void(async () =>
                 {
-                    await Router.Default.PublishAsync(new PlayGameEvent());
-                }
-                catch (System.Exception exception)
-                {
-                    Debug.LogException(exception);
-                }
-            });
+                    await UniTask.Yield();
+                    await UniTask.Yield();
+
+                    try
+                    {
+                        // Load Menu scene so RootLifetimeScope is ready, then trigger normal flow.
+                        await SceneManager.LoadSceneAsync(MenuSceneName, LoadSceneMode.Single).ToUniTask();
+                        await UniTask.Yield(); // Let the new scene settle
+
+                        await Router.Default.PublishAsync(new PlayGameEvent());
+                    }
+                    catch (System.Exception exception)
+                    {
+                        Debug.LogException(exception);
+                    }
+                });
+            }
         }
     }
 }
