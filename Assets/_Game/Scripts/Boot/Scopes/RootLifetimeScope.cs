@@ -45,9 +45,12 @@ namespace App.Boot
             // Scene system
             builder.Register<SceneLoadSystem>(Lifetime.Singleton);
 
-            // Save storage - FileSystemSaveStorage for desktop/mobile
-            // TODO: Swap to LocalStorageSaveStorage for WebGL by registering it conditionally based on platform
+            // Save storage - conditional by platform
+#if UNITY_WEBGL
+                builder.Register<LocalStorageSaveStorage>(Lifetime.Singleton).As<ISaveStorage>();
+#else
             builder.Register<FileSystemSaveStorage>(Lifetime.Singleton).As<ISaveStorage>();
+#endif
 
             // Save bootstrap options
             builder.RegisterInstance(new SaveBootstrapOptions { SlotCount = 4 });
