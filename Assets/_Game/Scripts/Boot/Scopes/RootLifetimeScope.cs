@@ -61,6 +61,11 @@ namespace App.Boot
             // Domain save modules - registered as ISaveModule for SaveLoadSystem discovery
             builder.Register<EconomySaveModule>(Lifetime.Singleton).As<ISaveModule>();
             builder.Register<ResourceSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<ProductSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<ProgressionSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<RecipeSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<GeneratorSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<TalentSaveModule>(Lifetime.Singleton).As<ISaveModule>();
 
             // Save orchestration - SaveLoadSystem and SlotManager receive dependencies via DI
             builder.Register<SaveLoadSystem>(Lifetime.Singleton);

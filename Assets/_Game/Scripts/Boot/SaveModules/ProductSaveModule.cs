@@ -1,55 +1,54 @@
 namespace App.Boot.SaveModules
 {
     using System.Collections.Generic;
-    using App.Economy.Core;
+    using App.Products.Core;
     using App.Systems.Saving.Modules;
     using Newtonsoft.Json.Linq;
 
-    public class EconomySaveData
+    public class ProductSaveData
     {
-        public int Balance { get; set; }
+        public Dictionary<string, int> Amounts { get; set; } = new Dictionary<string, int>();
     }
 
-    public class EconomySaveModule : ISaveModule
+    public class ProductSaveModule : ISaveModule
     {
-        private readonly EconomyState _state;
+        private readonly ProductState _state;
 
-        public string Key => "economy";
+        public string Key => "products";
 
-        public EconomySaveModule(EconomyState state)
+        public ProductSaveModule(ProductState state)
         {
             _state = state;
         }
 
         public void Serialize(SaveDataBundle bundle)
         {
-            var data = new EconomySaveData
+            var data = new ProductSaveData
             {
-                Balance = _state.Balance.Value
+                Amounts = new Dictionary<string, int>(_state.PlayerOwnedProductAmounts)
             };
             bundle.SetData(Key, data);
         }
 
         public void Deserialize(JToken section, SaveDataBundle bundle)
         {
-            var data = section.ToObject<EconomySaveData>()
+            var data = section.ToObject<ProductSaveData>()
                 ?? throw new System.InvalidOperationException($"Failed to deserialize '{Key}' save section.");
             bundle.SetData(Key, data);
         }
 
         public void Validate(SaveDataBundle bundle, List<string> errors)
         {
-            var data = bundle.GetData<EconomySaveData>(Key);
-            if (data.Balance < 0)
-            {
-                errors.Add("Economy balance must be >= 0.");
-            }
         }
 
         public void Apply(SaveDataBundle bundle)
         {
-            var data = bundle.GetData<EconomySaveData>(Key);
-            _state.Balance.Value = data.Balance;
+            var data = bundle.GetData<ProductSaveData>(Key);
+            _state.Clear();
+            foreach (var entry in data.Amounts)
+            {
+                _state.SetAmount(entry.Key, entry.Value);
+            }
         }
     }
 }

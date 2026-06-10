@@ -139,6 +139,7 @@ namespace App.Boot.ConfigModules
             }
 
             // Initialize shop state with first level from progression config, if available
+            // TODO: Move it into a flow handler
             if (config?.Progression != null)
             {
                 var unlockedIds = _progressionRegistry.GetUnlockedUpToLevel(1);

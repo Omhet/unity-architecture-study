@@ -41,18 +41,6 @@ namespace App.Boot.ConfigModules
         {
             var config = bundle.GetConfig<ResourceCatalogConfig>(Key);
             _resourceRegistry.Load(config);
-
-            if (config?.Resources != null)
-            {
-                for (int i = 0; i < config.Resources.Length; i++)
-                {
-                    var resource = config.Resources[i];
-                    if (resource != null && !string.IsNullOrWhiteSpace(resource.Id))
-                    {
-                        _resourceState.Balances[resource.Id] = 0;
-                    }
-                }
-            }
         }
     }
 }

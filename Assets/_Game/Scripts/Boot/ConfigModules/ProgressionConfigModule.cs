@@ -59,6 +59,7 @@ namespace App.Boot.ConfigModules
             _progressionRegistry.Load(config?.Levels);
 
             // initialize state's next-level xp based on first level
+            // TODO: Move it into a flow handler
             _progressionState.NextLevelXp.Value = _progressionRegistry.GetNextLevelXpForLevel(1);
         }
     }

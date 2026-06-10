@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace App.Systems.Saving.Models
 {
     using System;

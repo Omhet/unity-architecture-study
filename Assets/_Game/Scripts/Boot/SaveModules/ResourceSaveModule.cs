@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace App.Boot.SaveModules
 {
     using System.Collections.Generic;
@@ -54,6 +52,7 @@ namespace App.Boot.SaveModules
         public void Apply(SaveDataBundle bundle)
         {
             var data = bundle.GetData<ResourceSaveData>(Key);
+            _state.Clear();
             foreach (var entry in data.Balances)
             {
                 _state.SetAmount(entry.Key, entry.Value);

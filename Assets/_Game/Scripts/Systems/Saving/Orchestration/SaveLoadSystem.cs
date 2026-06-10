@@ -80,8 +80,6 @@ namespace App.Systems.Saving.Orchestration
                 var sectionToken = saveData[module.Key];
                 if (sectionToken != null)
                     module.Deserialize(sectionToken, bundle);
-                else
-                    throw new InvalidOperationException($"Save data for slot {slotIndex} is missing expected section '{module.Key}'. The save file may be corrupted or a migration failed to add this section.");
             }
 
             // Step 6: Validate all modules - collect ALL errors before any mutation
@@ -90,8 +88,6 @@ namespace App.Systems.Saving.Orchestration
             {
                 if (bundle.HasData(module.Key))
                     module.Validate(bundle, errors);
-                else
-                    throw new InvalidOperationException($"Save data bundle is missing expected section '{module.Key}' for validation. The save file may be corrupted or a migration failed to add this section.");
             }
 
             if (errors.Count > 0)
