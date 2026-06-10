@@ -21,35 +21,34 @@ namespace App.Systems.Saving.Storage
             Directory.CreateDirectory(_backupDirectory);
         }
 
-        public async UniTask<string?> ReadAsync(string slotKey)
+        public UniTask<string?> ReadAsync(string slotKey)
         {
             var path = GetSlotPath(slotKey);
-            if (!File.Exists(path)) return null;
-
-            return await File.ReadAllTextAsync(path);
+            return UniTask.FromResult(File.Exists(path) ? File.ReadAllText(path) : null);
         }
 
-        public async UniTask WriteAsync(string slotKey, string json)
+        public UniTask WriteAsync(string slotKey, string json)
         {
             var path = GetSlotPath(slotKey);
-            await File.WriteAllTextAsync(path, json);
+            File.WriteAllText(path, json);
+            return default;
         }
 
-        public async UniTask DeleteAsync(string slotKey)
+        public UniTask DeleteAsync(string slotKey)
         {
             var path = GetSlotPath(slotKey);
             if (File.Exists(path))
-                await TaskExtensions.DeleteFileAsync(path);
+                File.Delete(path);
 
             var backupPath = GetBackupPath(slotKey);
             if (File.Exists(backupPath))
-                await TaskExtensions.DeleteFileAsync(backupPath);
+                File.Delete(backupPath);
+
+            return default;
         }
 
-        public async UniTask<List<string>> ListSlotsAsync()
+        public UniTask<List<string>> ListSlotsAsync()
         {
-            await UniTask.SwitchToThreadPool();
-
             var slots = new List<string>();
             var files = Directory.GetFiles(_saveDirectory, "slot_*.json");
 
@@ -64,35 +63,20 @@ namespace App.Systems.Saving.Storage
             }
 
             slots.Sort();
-            return slots;
+            return UniTask.FromResult(slots);
         }
 
-        public async UniTask CopyToBackupAsync(string slotKey)
+        public UniTask CopyToBackupAsync(string slotKey)
         {
             var sourcePath = GetSlotPath(slotKey);
-            if (!File.Exists(sourcePath)) return;
+            if (!File.Exists(sourcePath)) return default;
 
             var backupPath = GetBackupPath(slotKey);
-            await TaskExtensions.CopyFileAsync(sourcePath, backupPath, overwrite: true);
+            File.Copy(sourcePath, backupPath, overwrite: true);
+            return default;
         }
 
         private string GetSlotPath(string slotKey) => Path.Combine(_saveDirectory, $"slot_{slotKey}.json");
         private string GetBackupPath(string slotKey) => Path.Combine(_backupDirectory, $"slot_{slotKey}_backup.json");
-    }
-
-    // Helper for File.DeleteAsync and File.CopyAsync which aren't available in all Unity API compat levels
-    static class TaskExtensions
-    {
-        public static async UniTask DeleteFileAsync(string path)
-        {
-            await UniTask.SwitchToThreadPool();
-            File.Delete(path);
-        }
-
-        public static async UniTask CopyFileAsync(string source, string dest, bool overwrite)
-        {
-            await UniTask.SwitchToThreadPool();
-            File.Copy(source, dest, overwrite);
-        }
     }
 }
