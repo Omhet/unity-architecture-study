@@ -7,6 +7,11 @@ namespace App.Boot.SaveModules
     using App.Systems.Saving.Modules;
     using Newtonsoft.Json.Linq;
 
+    public class EconomySaveData
+    {
+        public int Balance { get; set; }
+    }
+
     public class EconomySaveModule : ISaveModule
     {
         private readonly EconomyState _state;
@@ -18,25 +23,35 @@ namespace App.Boot.SaveModules
             _state = state;
         }
 
-        public object? Serialize()
+        public void Serialize(SaveDataBundle bundle)
         {
-            return new { balance = _state.Balance.Value };
+            var data = new EconomySaveData
+            {
+                Balance = _state.Balance.Value
+            };
+            bundle.SetData(Key, data);
         }
 
-        public void Deserialize(object data)
+        public void Deserialize(JToken section, SaveDataBundle bundle)
         {
-            var obj = (JObject)data;
-            _state.Balance.Value = obj["balance"]!.Value<int>();
+            var data = section.ToObject<EconomySaveData>()
+                ?? throw new System.InvalidOperationException($"Failed to deserialize '{Key}' save section.");
+            bundle.SetData(Key, data);
         }
 
-        public void Validate(object data, List<string> errors)
+        public void Validate(SaveDataBundle bundle, List<string> errors)
         {
-            var obj = (JObject)data;
-            var balanceToken = obj["balance"];
-            if (balanceToken != null && balanceToken.Type == JTokenType.Integer && balanceToken.Value<int>() < 0)
+            var data = bundle.GetData<EconomySaveData>(Key);
+            if (data.Balance < 0)
             {
                 errors.Add("Economy balance must be >= 0.");
             }
+        }
+
+        public void Apply(SaveDataBundle bundle)
+        {
+            var data = bundle.GetData<EconomySaveData>(Key);
+            _state.Balance.Value = data.Balance;
         }
     }
 }

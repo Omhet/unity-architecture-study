@@ -5,6 +5,12 @@ namespace App.Boot.SaveModules
     using System.Collections.Generic;
     using App.Resources.Core;
     using App.Systems.Saving.Modules;
+    using Newtonsoft.Json.Linq;
+
+    public class ResourceSaveData
+    {
+        public Dictionary<string, int> Balances { get; set; } = new Dictionary<string, int>();
+    }
 
     public class ResourceSaveModule : ISaveModule
     {
@@ -17,29 +23,40 @@ namespace App.Boot.SaveModules
             _state = state;
         }
 
-        public object? Serialize()
+        public void Serialize(SaveDataBundle bundle)
         {
-            return new Dictionary<string, int>(_state.Balances);
-        }
-
-        public void Deserialize(object data)
-        {
-            var balances = (Dictionary<string, int>)data;
-            foreach (var entry in balances)
+            var data = new ResourceSaveData
             {
-                _state.SetAmount(entry.Key, entry.Value);
-            }
+                Balances = new Dictionary<string, int>(_state.Balances)
+            };
+            bundle.SetData(Key, data);
         }
 
-        public void Validate(object data, List<string> errors)
+        public void Deserialize(JToken section, SaveDataBundle bundle)
         {
-            var balances = (Dictionary<string, int>)data;
-            foreach (var entry in balances)
+            var data = section.ToObject<ResourceSaveData>()
+                ?? throw new System.InvalidOperationException($"Failed to deserialize '{Key}' save section.");
+            bundle.SetData(Key, data);
+        }
+
+        public void Validate(SaveDataBundle bundle, List<string> errors)
+        {
+            var data = bundle.GetData<ResourceSaveData>(Key);
+            foreach (var entry in data.Balances)
             {
                 if (entry.Value < 0)
                 {
                     errors.Add($"Resource '{entry.Key}' amount must be >= 0.");
                 }
+            }
+        }
+
+        public void Apply(SaveDataBundle bundle)
+        {
+            var data = bundle.GetData<ResourceSaveData>(Key);
+            foreach (var entry in data.Balances)
+            {
+                _state.SetAmount(entry.Key, entry.Value);
             }
         }
     }

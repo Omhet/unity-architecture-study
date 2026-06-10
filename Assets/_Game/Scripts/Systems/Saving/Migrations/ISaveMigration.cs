@@ -1,9 +1,9 @@
 namespace App.Systems.Saving.Migrations
 {
-    using System.Collections.Generic;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// Interface for save file schema migrations. Operates on raw JSON (Dictionary&lt;string, object&gt;)
+    /// Interface for save file schema migrations. Operates on JObject
     /// rather than domain objects, so migrations are pure data transforms independent of runtime state.
     /// </summary>
     public interface ISaveMigration
@@ -12,8 +12,8 @@ namespace App.Systems.Saving.Migrations
         int ToVersion { get; }
 
         /// <summary>
-        /// Mutate the save data dictionary in place to transform from FromVersion to ToVersion structure.
+        /// Mutate the save data JObject in place to transform from FromVersion to ToVersion structure.
         /// </summary>
-        void Migrate(Dictionary<string, object> saveData);
+        void Migrate(JObject saveData);
     }
 }

@@ -32,7 +32,8 @@ namespace App.Systems.Saving.Orchestration
         }
 
         /// <summary>
-        /// Full load pipeline: backup → read → parse JSON → run migrations → validate → deserialize.
+        /// Full load pipeline: backup → read → parse JSON → run migrations → deserialize → validate → apply.
+        /// Transaction semantics: all modules are validated before any Apply is called.
         /// </summary>
         public async UniTask LoadSlotAsync(int slotIndex)
         {
@@ -46,15 +47,16 @@ namespace App.Systems.Saving.Orchestration
             if (string.IsNullOrEmpty(json))
                 return; // Empty slot - no-op, domain states retain defaults
 
-            // Step 3: Parse JSON into raw dictionary for migration
-            var saveData = JsonConvert.DeserializeObject<Dictionary<string, object>>(json)
+            // Step 3: Parse JSON into JObject for migration and module deserialization
+            var saveData = JsonConvert.DeserializeObject<JObject>(json)
                 ?? throw new InvalidOperationException($"Failed to parse save data for slot {slotIndex}");
 
             // Step 4: Run migrations if version mismatch
             int fileVersion;
-            if (saveData.TryGetValue("version", out var versionObj))
+            var versionToken = saveData["version"];
+            if (versionToken != null)
             {
-                fileVersion = Convert.ToInt32(versionObj);
+                fileVersion = versionToken.Value<int>();
             }
             else
             {
@@ -67,39 +69,59 @@ namespace App.Systems.Saving.Orchestration
                 foreach (var migration in chain)
                     migration.Migrate(saveData);
 
-                // Update version in the dictionary after migrations
+                // Update version after migrations
                 saveData["version"] = SaveSchemaVersion.Current;
             }
 
-            // Step 5: Validate all domain sections
+            // Step 5: Create bundle and deserialize all module sections
+            var bundle = new SaveDataBundle();
+            foreach (var module in _modules)
+            {
+                var sectionToken = saveData[module.Key];
+                if (sectionToken != null)
+                    module.Deserialize(sectionToken, bundle);
+                else
+                    throw new InvalidOperationException($"Save data for slot {slotIndex} is missing expected section '{module.Key}'. The save file may be corrupted or a migration failed to add this section.");
+            }
+
+            // Step 6: Validate all modules - collect ALL errors before any mutation
             var errors = new List<string>();
             foreach (var module in _modules)
             {
-                if (saveData.TryGetValue(module.Key, out var sectionData))
-                    module.Validate(sectionData!, errors);
+                if (bundle.HasData(module.Key))
+                    module.Validate(bundle, errors);
+                else
+                    throw new InvalidOperationException($"Save data bundle is missing expected section '{module.Key}' for validation. The save file may be corrupted or a migration failed to add this section.");
             }
 
             if (errors.Count > 0)
                 throw new InvalidOperationException(
                     $"Save validation failed for slot {slotIndex}: {string.Join("; ", errors)}");
 
-            // Step 6: Dispatch to matching ISaveModule.Deserialize()
+            // Step 7: Apply validated data to domain state (transaction - only after all validations pass)
             foreach (var module in _modules)
             {
-                if (saveData.TryGetValue(module.Key, out var sectionData))
-                    module.Deserialize(sectionData!);
+                if (bundle.HasData(module.Key))
+                    module.Apply(bundle);
             }
         }
 
         /// <summary>
-        /// Full save pipeline: collect from all modules → merge with version + metadata → write JSON.
+        /// Full save pipeline: create bundle → collect from all modules → build JObject → write JSON.
         /// </summary>
         public async UniTask SaveSlotAsync(int slotIndex)
         {
             var slotKey = slotIndex.ToString();
 
-            // Build save data dictionary
-            var saveData = new Dictionary<string, object>
+            // Create bundle for save pipeline
+            var bundle = new SaveDataBundle();
+
+            // Collect from all ISaveModule.Serialize()
+            foreach (var module in _modules)
+                module.Serialize(bundle);
+
+            // Build JObject from bundle data
+            var saveData = new JObject
             {
                 ["version"] = SaveSchemaVersion.Current,
                 ["metadata"] = new JObject
@@ -108,15 +130,20 @@ namespace App.Systems.Saving.Orchestration
                 }
             };
 
-            // Collect from all ISaveModule.Serialize()
             foreach (var module in _modules)
             {
-                var serialized = module.Serialize();
-                if (serialized != null)
-                    saveData[module.Key] = serialized;
+                if (bundle.HasData(module.Key))
+                {
+                    var data = bundle.GetData<object>(module.Key);
+                    saveData[module.Key] = JToken.FromObject(data);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Save data bundle is missing expected section '{module.Key}' for serialization. This indicates a module failed to serialize its data.");
+                }
             }
 
-            string json = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+            string json = saveData.ToString(Formatting.Indented);
             await _storage.WriteAsync(slotKey, json);
         }
     }
