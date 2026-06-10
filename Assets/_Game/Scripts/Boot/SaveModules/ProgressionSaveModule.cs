@@ -9,7 +9,6 @@ namespace App.Boot.SaveModules
     {
         public int Level { get; set; }
         public int Xp { get; set; }
-        public int NextLevelXp { get; set; }
     }
 
     public class ProgressionSaveModule : ISaveModule
@@ -28,8 +27,7 @@ namespace App.Boot.SaveModules
             var data = new ProgressionSaveData
             {
                 Level = _state.Level.Value,
-                Xp = _state.Xp.Value,
-                NextLevelXp = _state.NextLevelXp.Value
+                Xp = _state.Xp.Value
             };
             bundle.SetData(Key, data);
         }
@@ -55,7 +53,6 @@ namespace App.Boot.SaveModules
             var data = bundle.GetData<ProgressionSaveData>(Key);
             _state.Level.Value = data.Level;
             _state.Xp.Value = data.Xp;
-            _state.NextLevelXp.Value = data.NextLevelXp;
         }
     }
 }

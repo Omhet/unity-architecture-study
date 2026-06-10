@@ -28,7 +28,6 @@ namespace App.Progression.Core
                 {
                     // No further levels defined - just store XP
                     _progressionState.Xp.Value = xp;
-                    _progressionState.NextLevelXp.Value = 0;
                     break;
                 }
 
@@ -41,7 +40,6 @@ namespace App.Progression.Core
                 }
 
                 _progressionState.Xp.Value = xp;
-                _progressionState.NextLevelXp.Value = threshold;
                 break;
             }
         }

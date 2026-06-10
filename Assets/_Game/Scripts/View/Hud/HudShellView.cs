@@ -26,6 +26,7 @@ namespace App.Hud.View
         private EconomyState _economyState;
         private ResourceState _resourceState;
         private ProgressionState _progressionState;
+        private ProgressionRegistry _progressionRegistry;
         private Func<GameplaySectionDefinition, IGameplaySectionView> _sectionFactory;
         private string _activeSection;
         private Label _moneyValue;
@@ -36,7 +37,6 @@ namespace App.Hud.View
         private IDisposable _resourceSubscription;
         private IDisposable _levelSubscription;
         private IDisposable _xpSubscription;
-        private IDisposable _nextLevelSubscription;
 
         private ICommandPublisher _publisher;
         private Button _saveButton;
@@ -47,12 +47,14 @@ namespace App.Hud.View
             EconomyState economyState,
             ResourceState resourceState,
             ProgressionState progressionState,
+            ProgressionRegistry progressionRegistry,
             Func<GameplaySectionDefinition, IGameplaySectionView> sectionFactory,
             ICommandPublisher publisher)
         {
             _economyState = economyState;
             _resourceState = resourceState;
             _progressionState = progressionState;
+            _progressionRegistry = progressionRegistry;
             _sectionFactory = sectionFactory;
             _publisher = publisher;
         }
@@ -141,7 +143,6 @@ namespace App.Hud.View
             _resourceSubscription?.Dispose();
             _levelSubscription?.Dispose();
             _xpSubscription?.Dispose();
-            _nextLevelSubscription?.Dispose();
 
             if (_economyState != null)
             {
@@ -163,14 +164,17 @@ namespace App.Hud.View
 
             if (_progressionState != null)
             {
-                _levelSubscription = _progressionState.Level.Subscribe(UpdateLevel);
-                _xpSubscription = _progressionState.Xp.Subscribe(x => UpdateXp(x, _progressionState.NextLevelXp.Value));
-                _nextLevelSubscription = _progressionState.NextLevelXp.Subscribe(n => UpdateXp(_progressionState.Xp.Value, n));
-            }
+                Func<int> getNextLevelXp = () => _progressionRegistry.GetNextLevelXpForLevel(_progressionState.Level.Value);
 
-            UpdateMoney(_economyState != null ? _economyState.Balance.Value : 0);
-            UpdateLevel(_progressionState != null ? _progressionState.Level.Value : 1);
-            UpdateXp(_progressionState != null ? _progressionState.Xp.Value : 0, _progressionState != null ? _progressionState.NextLevelXp.Value : 0);
+                var updates = Observable.Merge(
+                    _progressionState.Level.Select(_ => Unit.Default),
+                    _progressionState.Xp.Select(_ => Unit.Default));
+
+                _levelSubscription = _progressionState.Level.Subscribe(level => UpdateLevel(level));
+                _xpSubscription = Observable.Return(Unit.Default)
+                    .Concat(updates)
+                    .Subscribe(_ => UpdateXp(_progressionState.Xp.Value, getNextLevelXp()));
+            }
         }
 
         protected override void UnbindView()
@@ -181,10 +185,8 @@ namespace App.Hud.View
             _resourceSubscription = null;
             _levelSubscription?.Dispose();
             _xpSubscription?.Dispose();
-            _nextLevelSubscription?.Dispose();
             _levelSubscription = null;
             _xpSubscription = null;
-            _nextLevelSubscription = null;
         }
 
         private HudSectionRegistry BuildRegistry()
@@ -326,6 +328,7 @@ namespace App.Hud.View
 
         private void UpdateXp(int xp, int next)
         {
+            Debug.Log($"Updating XP display: xp={xp}, next={next}");
             if (_xpLabel != null)
             {
                 if (next > 0)
