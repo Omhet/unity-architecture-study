@@ -57,11 +57,11 @@ namespace App.Flow.Handlers
         {
             _sceneLoader.ShowLoading();
 
-            await _sceneLoader.LoadSceneAsync("Menu");
-
             // Save before exiting gameplay scene
             int activeSlot = _slotManager.GetActiveSlot();
             await _saveLoadSystem.SaveSlotAsync(activeSlot);
+
+            await _sceneLoader.LoadSceneAsync("Menu");
 
             _sceneLoader.HideLoading();
         }
