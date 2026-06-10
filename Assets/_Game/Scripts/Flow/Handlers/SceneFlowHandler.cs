@@ -35,12 +35,17 @@ namespace App.Flow.Handlers
         {
             _sceneLoader.ShowLoading();
 
-            await _sceneLoader.LoadSceneAsync("Game");
+            // Initialize game config before loading gameplay scene
+            // TODO: Rename the service to be more scpecific that it loads config data
             await _initializationService.InitializeAsync();
 
             // Load save data after config hydration completes
             int activeSlot = _slotManager.GetActiveSlot();
             await _saveLoadSystem.LoadSlotAsync(activeSlot);
+
+            // Load gameplay scene after config and save data are ready, 
+            // so that scene can access them during its initialization
+            await _sceneLoader.LoadSceneAsync("Game");
 
             _sceneLoader.HideLoading();
 
