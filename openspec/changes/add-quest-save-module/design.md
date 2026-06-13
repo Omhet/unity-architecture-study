@@ -31,7 +31,7 @@ PROPOSED (single source of truth):
 **Current boot sequence:**
 
 ```
-PlayGameEvent → Config hydration → Save load (ISaveModule.Apply) → Scene load → StartGameEvent
+LoadGameEvent → Config hydration → Save load (ISaveModule.Apply) → Scene load → StartGameEvent
                                                                          └─ QuestFlowHandler creates ActiveQuests here
 ```
 

@@ -33,7 +33,7 @@ namespace App.Editor
                         // Load Menu scene so RootLifetimeScope is ready, then trigger normal flow.
                         await SceneManager.LoadSceneAsync(MenuSceneName, LoadSceneMode.Single).ToUniTask();
 
-                        await Router.Default.PublishAsync(new PlayGameEvent());
+                        await Router.Default.PublishAsync(new LoadGameEvent());
                     }
                     catch (System.Exception exception)
                     {

@@ -4,7 +4,7 @@
 
 The save system has a complete orchestration layer (`SaveLoadSystem`, `SlotManager`, `FileSystemSaveStorage`) with an `ISaveModule` interface, but no concrete implementations. `IEnumerable<ISaveModule>` resolves to an empty collection, so the load pipeline skips deserialization and the save pipeline collects nothing.
 
-The boot sequence in `SceneFlowHandler.On(PlayGameEvent)` is:
+The boot sequence in `SceneFlowHandler.On(LoadGameEvent)` is:
 
 1. Load game scene
 2. Hydrate all config (registries + default state values)

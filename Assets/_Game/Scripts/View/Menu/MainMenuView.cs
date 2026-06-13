@@ -46,7 +46,7 @@ namespace App.Menu.View
 
         private void HandlePlayClicked()
         {
-            _publisher.PublishAsync(new PlayGameEvent());
+            _publisher.PublishAsync(new LoadGameEvent());
         }
     }
 }

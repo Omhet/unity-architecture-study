@@ -31,7 +31,7 @@ namespace App.Flow.Handlers
         }
 
         [Route(CommandOrdering.Drop)]
-        async UniTask On(PlayGameEvent _)
+        async UniTask On(LoadGameEvent _)
         {
             _sceneLoader.ShowLoading();
 

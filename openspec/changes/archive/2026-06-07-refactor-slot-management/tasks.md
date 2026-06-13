@@ -17,7 +17,7 @@
 ## 4. Update SceneFlowHandler to use both dependencies
 
 - [x] 4.1 Add `SlotManager` constructor parameter alongside existing `SaveLoadSystem`
-- [x] 4.2 Replace `_saveLoadSystem.GetActiveSlot()` calls with `_slotManager.GetActiveSlot()` in `On(PlayGameEvent)` and `On(ExitToMenuEvent)`
+- [x] 4.2 Replace `_saveLoadSystem.GetActiveSlot()` calls with `_slotManager.GetActiveSlot()` in `On(LoadGameEvent)` and `On(ExitToMenuEvent)`
 
 ## 5. Update SaveOnQuitSystem to use SlotManager
 
