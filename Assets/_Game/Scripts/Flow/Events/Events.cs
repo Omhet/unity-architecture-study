@@ -77,4 +77,24 @@ namespace App.Flow.Events
     public readonly struct ManualSaveEvent : ICommand
     {
     }
+
+    public readonly struct SelectSlotEvent : ICommand
+    {
+        public readonly int SlotIndex;
+
+        public SelectSlotEvent(int slotIndex)
+        {
+            SlotIndex = slotIndex;
+        }
+    }
+
+    public readonly struct DeleteSlotEvent : ICommand
+    {
+        public readonly int SlotIndex;
+
+        public DeleteSlotEvent(int slotIndex)
+        {
+            SlotIndex = slotIndex;
+        }
+    }
 }

@@ -28,3 +28,84 @@
 .play-button:active {
     background-color: #3d8b40;
 }
+
+.slots-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px 20px 20px;
+}
+
+.slots-list {
+    flex-direction: column;
+    width: 600px;
+    max-height: 400px;
+    overflow: scroll;
+    padding: 10px;
+}
+
+.slot-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.slot-info {
+    flex-direction: column;
+}
+
+.slot-index {
+    color: white;
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.slot-meta {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.slot-buttons {
+    flex-direction: row;
+}
+
+.slot-play-button {
+    font-size: 16px;
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 6px;
+    -unity-font-style: bold;
+    margin-right: 8px;
+}
+
+.slot-play-button:hover {
+    background-color: #45a049;
+}
+
+.slot-play-button:active {
+    background-color: #3d8b40;
+}
+
+.slot-delete-button {
+    font-size: 16px;
+    padding: 8px 20px;
+    background-color: #c0392b;
+    color: white;
+    border-radius: 6px;
+    -unity-font-style: bold;
+}
+
+.slot-delete-button:hover {
+    background-color: #a93226;
+}
+
+.slot-delete-button:active {
+    background-color: #922b21;
+}

@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "App.Core",
+        "App.Systems",
         "VContainer",
         "UniTask",
         "R3.Unity",
