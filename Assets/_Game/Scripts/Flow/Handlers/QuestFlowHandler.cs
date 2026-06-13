@@ -4,6 +4,7 @@ namespace App.Flow.Handlers
     using App.Flow.Events;
     using App.Quests.Core;
     using R3;
+    using UnityEngine;
     using VitalRouter;
 
     [Routes]
@@ -35,7 +36,7 @@ namespace App.Flow.Handlers
                     continue;
                 }
 
-                // Ensure each quest has a progress entry (create if missing)
+                // Ensure each quest has a progress entry
                 if (!_questState.ProgressMap.ContainsKey(definition.Id))
                 {
                     _questState.ProgressMap[definition.Id] = new QuestProgressData();
@@ -49,11 +50,15 @@ namespace App.Flow.Handlers
                     continue;
                 }
 
+                Debug.Log($"Initialized progress for quest '{definition.Id}': IsCompleted={progress.IsCompleted.Value}, IsClaimable={progress.IsClaimable.Value}");
+
                 var evaluator = _questService.CreateEvaluator(definition.ConditionData);
                 if (evaluator != null)
                 {
+                    Debug.Log($"Created evaluator for quest '{definition.Id}' and subscribing to changes.");
                     var subscription = evaluator.Observe().Subscribe(claimed =>
                     {
+                        Debug.Log($"Quest '{definition.Id}' condition evaluated: claimed={claimed}");
                         progress.IsClaimable.Value = claimed;
                     });
                     _evaluatorSubscriptions[definition.Id] = subscription;

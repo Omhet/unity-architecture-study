@@ -4,6 +4,7 @@ namespace App.Boot.SaveModules
     using App.Quests.Core;
     using App.Systems.Saving.Modules;
     using Newtonsoft.Json.Linq;
+    using UnityEngine;
 
     public class QuestEntrySaveData
     {
@@ -60,11 +61,15 @@ namespace App.Boot.SaveModules
 
             foreach (var entry in data.Progress)
             {
-                if (_questState.ProgressMap.TryGetValue(entry.Key, out var progress))
+                // Create entry if it doesn't exist yet
+                if (!_questState.ProgressMap.TryGetValue(entry.Key, out var progress))
                 {
-                    progress.IsCompleted.Value = entry.Value.IsCompleted;
-                    progress.IsClaimable.Value = entry.Value.IsClaimable;
+                    progress = new QuestProgressData();
+                    _questState.ProgressMap[entry.Key] = progress;
                 }
+                Debug.Log($"Applying saved progress for quest '{entry.Key}': IsCompleted={entry.Value.IsCompleted}, IsClaimable={entry.Value.IsClaimable}");
+                progress.IsCompleted.Value = entry.Value.IsCompleted;
+                progress.IsClaimable.Value = entry.Value.IsClaimable;
             }
         }
     }

@@ -55,6 +55,7 @@ namespace App.Quests.Core
             }
 
             progress.IsCompleted.Value = true;
+            progress.IsClaimable.Value = false;
         }
 
         public IConditionEvaluator CreateEvaluator(ConditionData conditionData)
