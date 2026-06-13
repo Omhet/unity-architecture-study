@@ -33,8 +33,6 @@ namespace App.Shop.Core
         {
             var unlockedIds = _progressionRegistry.GetUnlockedUpToLevel(playerLevel);
 
-            _shopState.AvailableShopItemIds.Clear();
-
             for (int i = 0; i < unlockedIds.Count; i++)
             {
                 // Check if shopr already contains this item (in case multiple progression entries unlock the same item)
