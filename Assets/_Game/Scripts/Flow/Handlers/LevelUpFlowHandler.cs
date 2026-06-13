@@ -14,7 +14,8 @@ namespace App.Flow.Handlers
         private readonly ProgressionState _progressionState;
         private readonly ShopService _shopService;
         private readonly TalentService _talentService;
-        private IDisposable _subscription;
+        private IDisposable _newLevelSubscription;
+        private IDisposable _newLevelPairSubscription;
 
         public LevelUpFlowHandler(ProgressionState progressionState, ShopService shopService, TalentService talentService)
         {
@@ -26,28 +27,31 @@ namespace App.Flow.Handlers
         [Route]
         void On(StartGameEvent _)
         {
-            _subscription = _progressionState.Level.Pairwise().Subscribe(HandleLevelChange);
+            // This fires only when new value is different from the previous one
+            _newLevelPairSubscription = _progressionState.Level.Pairwise().Subscribe(HandleLevelChange);
+
+            // This fires on every value change and on initial value
+            _newLevelSubscription = _progressionState.Level.Subscribe(HandleLevelChange);
+        }
+
+        private void HandleLevelChange(int newLevel)
+        {
+            _shopService.RefreshAvailability(newLevel);
         }
 
         private void HandleLevelChange((int previousLevel, int currentLevel) pair)
         {
-            if (pair.previousLevel == pair.currentLevel)
-            {
-                return;
-            }
-
             int levelsGained = pair.currentLevel - pair.previousLevel;
             for (int i = 0; i < levelsGained; i++)
             {
                 _talentService.AddPoint();
             }
-
-            _shopService.RefreshAvailability(pair.currentLevel);
         }
 
         public void Dispose()
         {
-            _subscription?.Dispose();
+            _newLevelSubscription?.Dispose();
+            _newLevelPairSubscription?.Dispose();
         }
     }
 }

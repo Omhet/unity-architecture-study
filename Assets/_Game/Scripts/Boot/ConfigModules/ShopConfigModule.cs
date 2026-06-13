@@ -12,17 +12,15 @@ namespace App.Boot.ConfigModules
     {
         private readonly ShopRegistry _shopRegistry;
         private readonly ShopProgressionRegistry _progressionRegistry;
-        private readonly ShopState _shopState;
 
         public string Key => "shop";
 
         public ShopConfigModule(ShopRegistry shopRegistry,
-        ShopProgressionRegistry progressionRegistry,
-        ShopState shopState)
+        ShopProgressionRegistry progressionRegistry
+        )
         {
             _shopRegistry = shopRegistry;
             _progressionRegistry = progressionRegistry;
-            _shopState = shopState;
         }
 
         public void Deserialize(string json, GameCatalogBundle bundle)
@@ -136,20 +134,6 @@ namespace App.Boot.ConfigModules
             if (config?.Progression != null)
             {
                 _progressionRegistry.Load(config.Progression);
-            }
-
-            // Initialize shop state with first level from progression config, if available
-            // TODO: Move it into a flow handler
-            if (config?.Progression != null)
-            {
-                var unlockedIds = _progressionRegistry.GetUnlockedUpToLevel(1);
-
-                _shopState.AvailableShopItemIds.Clear();
-
-                for (int i = 0; i < unlockedIds.Count; i++)
-                {
-                    _shopState.AvailableShopItemIds.Add(unlockedIds[i]);
-                }
             }
         }
     }
