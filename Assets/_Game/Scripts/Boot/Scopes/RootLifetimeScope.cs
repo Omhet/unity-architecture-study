@@ -66,6 +66,7 @@ namespace App.Boot
             builder.Register<RecipeSaveModule>(Lifetime.Singleton).As<ISaveModule>();
             builder.Register<GeneratorSaveModule>(Lifetime.Singleton).As<ISaveModule>();
             builder.Register<TalentSaveModule>(Lifetime.Singleton).As<ISaveModule>();
+            builder.Register<QuestSaveModule>(Lifetime.Singleton).As<ISaveModule>();
 
             // Save orchestration - SaveLoadSystem and SlotManager receive dependencies via DI
             builder.Register<SaveLoadSystem>(Lifetime.Singleton);

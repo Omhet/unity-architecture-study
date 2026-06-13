@@ -1,11 +1,10 @@
 namespace App.Hud.View
 {
-    using ObservableCollections;
+    using System;
     using App.Flow.Events;
     using App.Quests.Core;
     using App.View;
     using R3;
-    using System;
     using UnityEngine.UIElements;
     using VitalRouter;
 
@@ -15,7 +14,7 @@ namespace App.Hud.View
         private readonly QuestRegistry _questRegistry;
         private readonly ICommandPublisher _publisher;
         private VisualElement _list;
-        private IDisposable _activeQuestsSubscription;
+        private IDisposable _progressSubscription;
 
         public QuestSectionView(
             ICommandPublisher publisher,
@@ -45,65 +44,62 @@ namespace App.Hud.View
 
         protected override void Bind()
         {
-            _activeQuestsSubscription?.Dispose();
+            _progressSubscription?.Dispose();
 
-            if (_questState == null)
+            if (_questState == null || _questRegistry == null)
             {
                 return;
             }
 
-            var updates = Observable.Merge(
-                _questState.ActiveQuests.ObserveAdd().Select(_ => Unit.Default),
-                _questState.ActiveQuests.ObserveRemove().Select(_ => Unit.Default),
-                _questState.ActiveQuests.ObserveReplace().Select(_ => Unit.Default),
-                _questState.ActiveQuests.ObserveReset().Select(_ => Unit.Default));
-
-            _activeQuestsSubscription = Observable.Return(Unit.Default)
-                .Concat(updates)
-                .Subscribe(_ => RebuildRows());
+            // Registry is static, so we just rebuild once and subscribe to reactive properties
+            RebuildRows();
         }
 
         protected override void Unbind()
         {
-            _activeQuestsSubscription?.Dispose();
-            _activeQuestsSubscription = null;
+            _progressSubscription?.Dispose();
+            _progressSubscription = null;
         }
 
-        private VisualElement BuildQuestCard(ActiveQuest quest)
+        private VisualElement BuildQuestCard(QuestDefinition definition)
         {
+            var progress = _questState.ProgressMap[definition.Id];
+
             var row = new VisualElement();
             row.AddToClassList("quest-card");
 
-            var title = new Label(quest.Id);
+            var title = new Label(definition.Id);
             title.AddToClassList("quest-title");
             row.Add(title);
 
-            // Show condition description from registry
-            if (_questRegistry.TryGetById(quest.Id, out var definition) && definition.ConditionData != null)
+            // Show condition description from registry definition
+            if (definition.ConditionData != null)
             {
                 var conditionLabel = new Label(FormatCondition(definition.ConditionData));
                 conditionLabel.AddToClassList("quest-condition");
                 row.Add(conditionLabel);
             }
 
-            var rewardLabel = new Label($"XP: +{quest.XpReward}");
+            var rewardLabel = new Label($"XP: +{definition.XpReward}");
             rewardLabel.AddToClassList("quest-reward");
             row.Add(rewardLabel);
 
             // Subscribe to IsClaimable and IsCompleted for reactive UI updates
-            var claimableSub = quest.IsClaimable.Subscribe(_ => UpdateCardState(row, quest));
-            var completedSub = quest.IsCompleted.Subscribe(_ => UpdateCardState(row, quest));
+            var claimableSub = progress.IsClaimable.Subscribe(_ => UpdateCardState(row, definition.Id));
+            var completedSub = progress.IsCompleted.Subscribe(_ => UpdateCardState(row, definition.Id));
             TrackDisposable(claimableSub);
             TrackDisposable(completedSub);
 
             // Initial state
-            UpdateCardState(row, quest);
+            UpdateCardState(row, definition.Id);
 
             return row;
         }
 
-        private void UpdateCardState(VisualElement card, ActiveQuest quest)
+        private void UpdateCardState(VisualElement card, string questId)
         {
+            var progress = _questState.ProgressMap[questId];
+
             // Remove old action elements (button or checkmark)
             var oldAction = card.Q<VisualElement>("quest-action");
             if (oldAction != null)
@@ -111,7 +107,7 @@ namespace App.Hud.View
                 oldAction.RemoveFromHierarchy();
             }
 
-            if (quest.IsCompleted.Value)
+            if (progress.IsCompleted.Value)
             {
                 // Show checkmark for completed quests
                 var checkmark = new Label("✓");
@@ -122,13 +118,13 @@ namespace App.Hud.View
             else
             {
                 // Show claim button (enabled when claimable)
-                var claimButton = new Button(() => HandleClaimClicked(quest.Id))
+                var claimButton = new Button(() => HandleClaimClicked(questId))
                 {
                     text = "Claim"
                 };
                 claimButton.AddToClassList("quest-button");
                 claimButton.name = "quest-action";
-                claimButton.SetEnabled(quest.IsClaimable.Value);
+                claimButton.SetEnabled(progress.IsClaimable.Value);
                 card.Add(claimButton);
             }
         }
@@ -162,13 +158,13 @@ namespace App.Hud.View
 
             _list.Clear();
 
-            for (int i = 0; i < _questState.ActiveQuests.Count; i++)
+            for (int i = 0; i < _questRegistry.Count; i++)
             {
-                var quest = _questState.ActiveQuests[i];
+                var definition = _questRegistry[i];
 
-                if (quest != null)
+                if (definition != null && _questState.ProgressMap.ContainsKey(definition.Id))
                 {
-                    _list.Add(BuildQuestCard(quest));
+                    _list.Add(BuildQuestCard(definition));
                 }
             }
         }

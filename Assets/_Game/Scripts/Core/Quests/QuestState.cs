@@ -1,9 +1,9 @@
 namespace App.Quests.Core
 {
-    using ObservableCollections;
+    using System.Collections.Generic;
 
     public class QuestState
     {
-        public ObservableList<ActiveQuest> ActiveQuests { get; } = new ObservableList<ActiveQuest>();
+        public Dictionary<string, QuestProgressData> ProgressMap { get; } = new Dictionary<string, QuestProgressData>();
     }
 }

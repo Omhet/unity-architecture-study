@@ -26,7 +26,7 @@ namespace App.Flow.Handlers
         [Route]
         void On(StartGameEvent _)
         {
-            // Initialize active quests based on registry and set up evaluators
+            // Initialize progress entries from registry and set up evaluators
             for (int i = 0; i < _questRegistry.Count; i++)
             {
                 var definition = _questRegistry[i];
@@ -35,15 +35,26 @@ namespace App.Flow.Handlers
                     continue;
                 }
 
-                var activeQuest = new ActiveQuest(definition.Id, definition.XpReward);
-                _questState.ActiveQuests.Add(activeQuest);
+                // Ensure each quest has a progress entry (create if missing)
+                if (!_questState.ProgressMap.ContainsKey(definition.Id))
+                {
+                    _questState.ProgressMap[definition.Id] = new QuestProgressData();
+                }
+
+                var progress = _questState.ProgressMap[definition.Id];
+
+                // Skip evaluator creation for already-completed quests
+                if (progress.IsCompleted.Value)
+                {
+                    continue;
+                }
 
                 var evaluator = _questService.CreateEvaluator(definition.ConditionData);
                 if (evaluator != null)
                 {
                     var subscription = evaluator.Observe().Subscribe(claimed =>
                     {
-                        activeQuest.IsClaimable.Value = claimed;
+                        progress.IsClaimable.Value = claimed;
                     });
                     _evaluatorSubscriptions[definition.Id] = subscription;
                 }

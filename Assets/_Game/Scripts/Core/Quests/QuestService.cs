@@ -9,6 +9,7 @@ namespace App.Quests.Core
     public class QuestService
     {
         private readonly QuestState _questState;
+        private readonly QuestRegistry _questRegistry;
         private readonly ProgressionService _progressionService;
         private readonly EconomyState _economyState;
         private readonly ResourceState _resourceState;
@@ -16,12 +17,14 @@ namespace App.Quests.Core
 
         public QuestService(
             QuestState questState,
+            QuestRegistry questRegistry,
             ProgressionService progressionService,
             EconomyState economyState,
             ResourceState resourceState,
             ProductState productState)
         {
             _questState = questState;
+            _questRegistry = questRegistry;
             _progressionService = progressionService;
             _economyState = economyState;
             _resourceState = resourceState;
@@ -30,35 +33,28 @@ namespace App.Quests.Core
 
         public void Claim(string questId)
         {
-            ActiveQuest targetQuest = null;
-
-            for (int i = 0; i < _questState.ActiveQuests.Count; i++)
-            {
-                var quest = _questState.ActiveQuests[i];
-                if (quest != null && quest.Id == questId)
-                {
-                    targetQuest = quest;
-                    break;
-                }
-            }
-
-            if (targetQuest == null)
+            if (!_questState.ProgressMap.TryGetValue(questId, out var progress))
             {
                 return;
             }
 
-            if (!targetQuest.IsClaimable.Value)
+            if (!progress.IsClaimable.Value)
             {
                 return;
             }
 
-            if (targetQuest.IsCompleted.Value)
+            if (progress.IsCompleted.Value)
             {
                 return;
             }
 
-            _progressionService.AddXp(targetQuest.XpReward);
-            targetQuest.IsCompleted.Value = true;
+            // Get XP reward from registry
+            if (_questRegistry.TryGetById(questId, out var definition))
+            {
+                _progressionService.AddXp(definition.XpReward);
+            }
+
+            progress.IsCompleted.Value = true;
         }
 
         public IConditionEvaluator CreateEvaluator(ConditionData conditionData)
